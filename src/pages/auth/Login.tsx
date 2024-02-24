@@ -4,9 +4,9 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 import logo from "../../assets/logo/logo-dark.svg";
 
-import ErrorMessage from "../../components/ErrorMessage";
+import ErrorMessage from "../../components/inputs/ErrorMessage";
 import { P } from "../../components/Texts";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/inputs/Input";
 import Button from "../../components/Buttons";
 
 import { loginAPI } from "../../api/authAPI";

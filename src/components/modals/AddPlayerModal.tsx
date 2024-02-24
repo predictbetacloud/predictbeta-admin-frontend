@@ -9,8 +9,8 @@ import {
 	setShowAddPlayerModal,
 } from "../../state/slices/teams";
 import { P } from "../Texts";
-import { Input } from "../Input";
-import ErrorMessage from "../ErrorMessage";
+import { Input } from "../inputs/Input";
+import ErrorMessage from "../inputs/ErrorMessage";
 import Button from "../Buttons";
 
 const AddPlayerModal = () => {

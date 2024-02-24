@@ -13,7 +13,7 @@ import {
 import { IClub, IPlayer } from "../types/types";
 import Button from "./Buttons";
 import { P } from "./Texts";
-import { TextSkeleton } from "./TextSkeleton";
+import { TextSkeleton } from "./loaders/TextSkeleton";
 
 const TableHolder = styled.table`
 	max-height: 80vh;

@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authSlice } from "./slices/auth";
 import { teamsSlice } from "./slices/teams";
+import { fixtureSlice } from "./slices/fixtures";
 // ...
 
 export const store = configureStore({
 	reducer: {
+		fixtures: fixtureSlice.reducer,
 		teams: teamsSlice.reducer,
 		auth: authSlice.reducer,
 	},

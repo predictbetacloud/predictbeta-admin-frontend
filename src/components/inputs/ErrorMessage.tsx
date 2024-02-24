@@ -1,4 +1,4 @@
-import { P } from "./Texts";
+import { P } from "../Texts";
 
 type Props = {
 	message: string | undefined;

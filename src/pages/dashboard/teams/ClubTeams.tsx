@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 
 import Button from "../../../components/Buttons";
-import DashboardLayout from "../../../components/DashboardLayout";
-import TabNav from "../../../components/TabNav";
+import DashboardLayout from "../../../components/layout/DashboardLayout";
+import TabNav from "../../../components/layout/TabNav";
 import { P } from "../../../components/Texts";
 import Table from "../../../components/Table";
 

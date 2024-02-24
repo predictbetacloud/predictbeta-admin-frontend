@@ -27,3 +27,23 @@ export function convertToBase64(file: File): Promise<string> {
 		reader.onerror = (error) => reject(error);
 	});
 }
+
+// Function to format the date into YYYY-MM-DDTHH:MM format
+export function formatDateToDateTimeLocal(utcString: string): string {
+	const date: Date = new Date(utcString);
+
+	// Padding function to ensure two digits
+	function pad(number: number): string {
+		return (number < 10 ? "0" : "") + number.toString();
+	}
+
+	// Format year, month, day, hours, and minutes
+	const year: string = date.getFullYear().toString();
+	const month: string = pad(date.getMonth() + 1); // getMonth() returns 0-11
+	const day: string = pad(date.getDate());
+	const hours: string = pad(date.getHours());
+	const minutes: string = pad(date.getMinutes());
+
+	// Combine into the final string
+	return `${year}-${month}-${day}T${hours}:${minutes}`;
+}

@@ -1,11 +1,12 @@
 import styled from "styled-components";
-
-import logo from "../assets/logo/logo-dark.svg";
 import { Link, useLocation } from "react-router-dom";
-import { P } from "./Texts";
-import { useAppSelector } from "../state/hooks";
-import { selectAuth } from "../state/slices/auth";
-import Button from "./Buttons";
+
+import logo from "../../assets/logo/logo-dark.svg";
+
+import { useAppSelector } from "../../state/hooks";
+import { selectAuth } from "../../state/slices/auth";
+import { P } from "../Texts";
+import Button from "../Buttons";
 
 const Style = styled.aside`
 	max-width: 300px;

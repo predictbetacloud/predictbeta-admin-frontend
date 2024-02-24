@@ -1,11 +1,11 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import Button from "../../../components/Buttons";
-import DashboardLayout from "../../../components/DashboardLayout";
+import DashboardLayout from "../../../components/layout/DashboardLayout";
 import { P } from "../../../components/Texts";
 import { useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
-import { Input } from "../../../components/Input";
-import ErrorMessage from "../../../components/ErrorMessage";
+import { Input } from "../../../components/inputs/Input";
+import ErrorMessage from "../../../components/inputs/ErrorMessage";
 import { AiOutlineClose, AiOutlineCloudUpload } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import { createTeamAPI } from "../../../api/teamsAPI";

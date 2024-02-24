@@ -5,7 +5,7 @@ export const Input = styled.input`
 	border-radius: 4px;
 	padding: 10px 16px;
 	color: var(--primary-black);
-	background: #F5F6F8;
+	background: #f5f6f8;
 	font-size: 14px;
 
 	&:focus,
@@ -25,8 +25,17 @@ export const Input = styled.input`
 		border-color: var(--alert-red);
 		background: #d52a2a40;
 
-    &::placeholder {
-      color: var(--primary-red);
-    }
+		&::placeholder {
+			color: var(--primary-red);
+		}
 	}
+`;
+
+export const InputPlaceholder = styled.div`
+	border: 1px solid #dbdfe6;
+	border-radius: 4px;
+	padding: 10px 16px;
+	color: var(--primary-black);
+	background: #f5f6f8;
+	font-size: 14px;
 `;

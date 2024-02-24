@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ErrorBoundary } from "react-error-boundary";
+// import { ErrorBoundary } from "react-error-boundary";
 
 import { refreshTokenAPI } from "./api/authAPI";
 import { useAppDispatch, useAppSelector } from "./state/hooks";
@@ -8,7 +8,7 @@ import { selectAuth } from "./state/slices/auth";
 import { callFunctionInInterval } from "./utils/helpers";
 import { globalRouter } from "./utils/utils";
 
-import ErrorFallback from "./components/ErrorFallback";
+// import ErrorFallback from "./components/layout/ErrorFallback";
 
 import Login from "./pages/auth/Login";
 import AllFixtures from "./pages/dashboard/fixtures/AllFixtures";
@@ -42,23 +42,20 @@ function App() {
 	}, []);
 
 	return (
-		<ErrorBoundary FallbackComponent={ErrorFallback}>
-			<Routes>
-				<Route path="/" element={<Login />} />
-				<Route path="/dashboard/fixtures" element={<AllFixtures />} />
-				<Route path="/dashboard/teams" element={<ClubTeams />} />
-				<Route path="/dashboard/teams/new-club" element={<AddClubTeam />} />
-				<Route
-					path="/dashboard/teams/edit/:clubId"
-					element={<EditClubTeam />}
-				/>
-				<Route
-					path="/dashboard/teams/view/:clubId"
-					element={<SpecificClubTeam />}
-				/>
-				<Route path="*" element={<NotFound />} />
-			</Routes>
-		</ErrorBoundary>
+		// <ErrorBoundary FallbackComponent={ErrorFallback}>
+		<Routes>
+			<Route path="/" element={<Login />} />
+			<Route path="/dashboard/fixtures" element={<AllFixtures />} />
+			<Route path="/dashboard/teams" element={<ClubTeams />} />
+			<Route path="/dashboard/teams/new-club" element={<AddClubTeam />} />
+			<Route path="/dashboard/teams/edit/:clubId" element={<EditClubTeam />} />
+			<Route
+				path="/dashboard/teams/view/:clubId"
+				element={<SpecificClubTeam />}
+			/>
+			<Route path="*" element={<NotFound />} />
+		</Routes>
+		// </ErrorBoundary>
 	);
 }
 

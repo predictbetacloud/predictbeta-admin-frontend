@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 
 import Button from "../../../components/Buttons";
-import DashboardLayout from "../../../components/DashboardLayout";
+import DashboardLayout from "../../../components/layout/DashboardLayout";
 import { P } from "../../../components/Texts";
 import Table from "../../../components/Table";
 
@@ -27,12 +27,12 @@ import {
 	getSpecificClubTeamAPI,
 } from "../../../api/teamsAPI";
 import { IPlayer } from "../../../types/types";
-import PageLoading from "../../../components/PageLoading";
+import PageLoading from "../../../components/loaders/PageLoading";
 import { RiDeleteBinFill } from "react-icons/ri";
 import { TiArrowBackOutline } from "react-icons/ti";
 import AddPlayerModal from "../../../components/modals/AddPlayerModal";
 import EditPlayerModal from "../../../components/modals/EditPlayerModal";
-import DeletePlayerModal from "../../../components/modals/deletePlayerModal";
+import DeletePlayerModal from "../../../components/modals/DeletePlayerModal";
 
 const SpecificClubTeam = () => {
 	const dispatch = useAppDispatch();
