@@ -47,3 +47,11 @@ export function formatDateToDateTimeLocal(utcString: string): string {
 	// Combine into the final string
 	return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
+
+// Format currency
+export const formatCurrency = (number: number) => {
+	return Number(number).toLocaleString(undefined, {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	});
+};

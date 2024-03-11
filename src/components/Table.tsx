@@ -10,7 +10,7 @@ import {
 	flexRender,
 } from "@tanstack/react-table";
 
-import { IClub, IPlayer } from "../types/types";
+import { IClub, IPlayer, IUser, WalletHistoryItem } from "../types/types";
 import Button from "./Buttons";
 import { P } from "./Texts";
 import { TextSkeleton } from "./loaders/TextSkeleton";
@@ -26,6 +26,23 @@ const TableHolder = styled.table`
 
 	tr:nth-child(even) {
 		background: #f5f8fa;
+		box-shadow: 0px -1px 0px 0px #e1e7ec inset;
+	}
+
+	tr:nth-child(odd):not(:last-of-type) {
+		background: #ffffff;
+		box-shadow: 0px -1px 0px 0px #e1e7ec inset;
+	}
+
+	tbody {
+		tr:last-of-type {
+			td:first-of-type {
+				border-radius: 0 0 0 10px;
+			}
+			td:last-of-type {
+				border-radius: 0 0 10px 0;
+			}
+		}
 	}
 `;
 
@@ -39,8 +56,12 @@ const TableHeadStyle = styled.th`
 `;
 
 type Props = {
-	data: IClub[] | IPlayer[];
-	columns: ColumnDef<IClub>[] | ColumnDef<IPlayer>[];
+	data: IClub[] | IPlayer[] | IUser[] | WalletHistoryItem[];
+	columns:
+		| ColumnDef<IClub>[]
+		| ColumnDef<IPlayer>[]
+		| ColumnDef<IUser>[]
+		| ColumnDef<WalletHistoryItem>[];
 	rows: number;
 	loading?: boolean;
 	totalPages: number;

@@ -88,9 +88,7 @@ export const loginAPI = createAsyncThunk(
 				dispatch(setIsPerformingAuthAction(false));
 
 				if (globalRouter.navigate) {
-					console.log(globalRouter.location);
 					if (globalRouter.location?.state?.from) {
-						console.log("navigate exists");
 						globalRouter.navigate(globalRouter?.location?.state?.from);
 					} else {
 						globalRouter.navigate("/dashboard/fixtures");

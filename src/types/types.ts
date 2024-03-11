@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { colors } from "../utils/colors";
 
 // Buttons
 export type ButtonAction = "button" | "submit" | "reset" | undefined;
@@ -40,7 +41,7 @@ export interface ICreateClub {
 
 // Auth Types
 
-export interface UserType {
+export interface AdminType {
 	id: string;
 	email: string;
 	fullName: string;
@@ -48,7 +49,7 @@ export interface UserType {
 	username: string;
 }
 export interface AuthType {
-	user?: Partial<UserType> | null;
+	user?: Partial<AdminType> | null;
 	token?: string | null;
 	refresh_token?: string | null;
 	retryCount?: number | string | null;
@@ -134,22 +135,89 @@ export interface FixtureState {
 	showPublishWeekModal: boolean;
 }
 
+export interface WalletType {
+	userId: number;
+	currency: string;
+	id: number;
+	balance: number;
+}
 export interface IUser {
 	userId: string;
+	username: string;
 	firstName: string;
 	middleName: string;
 	surname: string;
 	email: string;
 	profilePicUrl: string;
 	mobileNumber: string;
+	isBlocked: boolean;
+}
+
+export interface WalletHistoryItem {
+	amount: number;
+	balanceAfter: number;
+	balanceBefore: number;
+	createdAt: string;
+	currency: string;
+	deletedAt: string | null;
+	id: number;
+	reference: string;
+	type: "credit" | "debit";
+}
+
+export interface UserWithWallet {
+	user: IUser;
+	wallet: WalletType;
 }
 
 export interface UserState {
 	users: IUser[];
-	specificUser: IUser | null;
+	specificUser: UserWithWallet | null;
+	specificUserWalletHistory: WalletHistoryItem[];
 	isCreatingUser: boolean;
+	isFundingUser: boolean;
 	isFetchingAllUsers: boolean;
 	isFetchingSpecificUser: boolean;
+	isFetchingSpecificUserWalletHistory: boolean;
 	isEditingUser: boolean;
 	isDeletingUser: boolean;
+	isBlockingUser: boolean;
+	isUnblockingUser: boolean;
+	showAddUserModal: boolean;
+	showFundUserModal: boolean;
+	showBlockUserModal: boolean;
+	showUnblockUserModal: boolean;
+	showDeleteUserModal: boolean;
+	showEditUserModal: boolean;
 }
+
+export const statusEnum = {
+	success: {
+		bg: colors.green200,
+		color: colors.green700,
+	},
+	pending: {
+		bg: colors.orange200,
+		color: colors.orange700,
+	},
+	warning: {
+		bg: colors.orange200,
+		color: colors.orange700,
+	},
+	error: {
+		bg: colors.red200,
+		color: colors.red700,
+	},
+	failed: {
+		bg: colors.red200,
+		color: colors.red700,
+	},
+	credit: {
+		bg: colors.green200,
+		color: colors.green700,
+	},
+	debit: {
+		bg: colors.orange200,
+		color: colors.orange700,
+	},
+};

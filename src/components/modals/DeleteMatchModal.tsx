@@ -9,7 +9,15 @@ import {
 	setShowDeleteMatchModal,
 } from "../../state/slices/fixtures";
 
-const DeleteMatchModal = ({ match }: { match: IMatch | null }) => {
+const DeleteMatchModal = ({
+	match,
+	seasonId,
+	weekId,
+}: {
+	match: IMatch | null;
+	seasonId: number;
+	weekId: number;
+}) => {
 	const dispatch = useAppDispatch();
 
 	const isDeletingMatch = useAppSelector(selectIsDeletingMatch);
@@ -19,6 +27,8 @@ const DeleteMatchModal = ({ match }: { match: IMatch | null }) => {
 		dispatch(
 			deleteMatchAPI({
 				matchId: match?.id,
+				seasonId,
+				weekId,
 			})
 		);
 	};

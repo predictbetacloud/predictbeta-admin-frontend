@@ -9,7 +9,6 @@ import ErrorMessage from "../../../components/inputs/ErrorMessage";
 import { AiOutlineClose, AiOutlineCloudUpload } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import { getSpecificClubTeamAPI, updateTeamAPI } from "../../../api/teamsAPI";
-import { convertToBase64 } from "../../../utils/utils";
 import { toastError } from "../../../utils/toast";
 import {
 	selectIsFetchingSpecificTeam,
@@ -40,10 +39,8 @@ const EditClubTeam = () => {
 
 	const updateTeam = async ({ name, shortName, logo }: FieldValues) => {
 		try {
-			const clubLogo = await convertToBase64(logo?.[0]);
-			dispatch(updateTeamAPI({ name, shortName, clubLogo, clubId }));
+			dispatch(updateTeamAPI({ name, shortName, clubLogo: logo?.[0], clubId }));
 		} catch (error) {
-			console.log(error);
 			toastError("An error occured! Please try again");
 		}
 	};

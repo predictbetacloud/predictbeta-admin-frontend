@@ -6,7 +6,7 @@ type Props = { children: ReactNode; title: string };
 
 const DashboardLayout = ({ children, title }: Props) => {
 	return (
-		<section className="flex">
+		<section className="flex items-start">
 			<Sidebar />
 			<main className="flex-grow">
 				<Header title={title} />

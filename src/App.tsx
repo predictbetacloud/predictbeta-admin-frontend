@@ -17,6 +17,9 @@ import ClubTeams from "./pages/dashboard/teams/ClubTeams";
 import AddClubTeam from "./pages/dashboard/teams/AddClubTeam";
 import EditClubTeam from "./pages/dashboard/teams/EditClubTeam";
 import SpecificClubTeam from "./pages/dashboard/teams/SpecificClubTeam";
+import Results from "./pages/dashboard/fixtures/Results";
+import AllUsers from "./pages/dashboard/users/AllUsers";
+import SpecificUser from "./pages/dashboard/users/SpecificUser";
 
 function App() {
 	const navigate = useNavigate();
@@ -45,6 +48,9 @@ function App() {
 		// <ErrorBoundary FallbackComponent={ErrorFallback}>
 		<Routes>
 			<Route path="/" element={<Login />} />
+			<Route path="/dashboard/users" element={<AllUsers />} />
+			<Route path="/dashboard/users/view/:userId" element={<SpecificUser />} />
+			<Route path="/dashboard/results" element={<Results />} />
 			<Route path="/dashboard/fixtures" element={<AllFixtures />} />
 			<Route path="/dashboard/teams" element={<ClubTeams />} />
 			<Route path="/dashboard/teams/new-club" element={<AddClubTeam />} />

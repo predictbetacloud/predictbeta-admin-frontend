@@ -113,7 +113,7 @@ export const publishWeekAPI = createAsyncThunk(
 		dispatch(setIsPublishingWeek(true));
 
 		axiosInstance
-			.post(`/fixtures/publish/${weekId}`)
+			.post(`/weeks/publish/${weekId}`)
 			.then((data) => {
 				dispatch(setIsPublishingWeek(false));
 				toastSuccess(data?.data?.message ?? "Week published successfully");
@@ -256,6 +256,26 @@ export const deleteMatchAPI = createAsyncThunk(
 
 export const getAllMatchesAPI = createAsyncThunk(
 	"fixtures/getAllMatches",
+	({ seasonId, weekId }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingMatches(true));
+		axiosInstance
+			.get(`/fixtures/season/${seasonId}/week/${weekId}/unpublished`)
+			.then((data) => {
+				dispatch(setIsFetchingMatches(false));
+				const matches = Array.isArray(data?.data?.data)
+					? data?.data?.data.reverse()
+					: [];
+				dispatch(setMatches(matches));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingMatches(false));
+				toastError(error?.response?.data?.message);
+			});
+	}
+);
+
+export const getPublishedMatchesAPI = createAsyncThunk(
+	"fixtures/getPublishedMatches",
 	({ seasonId, weekId }: FieldValues, { dispatch }) => {
 		dispatch(setIsFetchingMatches(true));
 		axiosInstance

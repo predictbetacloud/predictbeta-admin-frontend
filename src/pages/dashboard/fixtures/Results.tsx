@@ -25,9 +25,9 @@ import {
 	setShowPublishWeekModal,
 } from "../../../state/slices/fixtures";
 import {
-	getAllMatchesAPI,
 	getAllSeasonsAPI,
 	getAllWeeksAPI,
+	getPublishedMatchesAPI,
 } from "../../../api/fixturesAPI";
 import CreateWeekModal from "../../../components/modals/CreateWeekModal";
 import { VscFilter } from "react-icons/vsc";
@@ -43,7 +43,7 @@ import { IMatch } from "../../../types/types";
 import EditMatchModal from "../../../components/modals/EditMatchModal";
 import DeleteMatchModal from "../../../components/modals/DeleteMatchModal";
 
-const AllFixtures = () => {
+const Results = () => {
 	const dispatch = useAppDispatch();
 	const [, setSearchParams] = useSearchParams();
 	const l = useLocation();
@@ -109,7 +109,7 @@ const AllFixtures = () => {
 	useMemo(() => {
 		if (seasons?.[0]?.id && selectedWeek?.id) {
 			dispatch(
-				getAllMatchesAPI({
+				getPublishedMatchesAPI({
 					seasonId: seasons?.[0]?.id,
 					weekId: selectedWeek?.id,
 				})
@@ -233,4 +233,4 @@ const AllFixtures = () => {
 	);
 };
 
-export default AllFixtures;
+export default Results;

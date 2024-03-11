@@ -19,7 +19,11 @@ import {
 	selectShowCreateMatchModal,
 	setShowCreateMatchModal,
 } from "../../state/slices/fixtures";
-import { createMatchAPI, getAllSeasonsAPI } from "../../api/fixturesAPI";
+import {
+	createMatchAPI,
+	getAllSeasonsAPI,
+	getAllWeeksAPI,
+} from "../../api/fixturesAPI";
 import { defaultStyle, invalidStyle } from "../../utils/selectStyle";
 import {
 	selectAllClubTeams,
@@ -48,6 +52,7 @@ const CreateMatchModal = () => {
 		handleSubmit,
 		reset,
 		control,
+		watch,
 		formState: { errors },
 	} = useForm();
 
@@ -69,11 +74,18 @@ const CreateMatchModal = () => {
 		);
 	};
 
+	const season = watch("season");
+
 	useEffect(() => {
 		dispatch(getAllSeasonsAPI({}));
 		dispatch(getAllClubTeamsAPI({}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		dispatch(getAllWeeksAPI({ seasonId: season?.id }));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [season?.id]);
 
 	return (
 		<Modal

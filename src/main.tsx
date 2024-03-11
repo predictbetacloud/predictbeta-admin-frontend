@@ -6,6 +6,8 @@ import App from "./App.tsx";
 import { store } from "./state/store.ts";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'react-phone-number-input/style.css'
+
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

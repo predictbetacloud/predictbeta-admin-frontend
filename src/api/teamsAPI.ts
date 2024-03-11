@@ -23,7 +23,11 @@ export const createTeamAPI = createAsyncThunk(
 		dispatch(setIsCreatingTeam(true));
 
 		axiosInstance
-			.post(`/teams`, { name, shortName, clubLogo })
+			.post(
+				`/teams`,
+				{ name, shortName, clubLogo },
+				{ headers: { "Content-Type": "multipart/form-data" } }
+			)
 			.then((data) => {
 				dispatch(setIsCreatingTeam(false));
 				toastSuccess(data?.data?.message ?? "Team added successfully");
@@ -45,7 +49,15 @@ export const updateTeamAPI = createAsyncThunk(
 		dispatch(setIsUpdatingTeam(true));
 
 		axiosInstance
-			.patch(`/teams/${clubId}`, { name, shortName, clubLogo })
+			.patch(
+				`/teams/${clubId}`,
+				{ name, shortName, clubLogo },
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
+			)
 			.then((data) => {
 				dispatch(setIsUpdatingTeam(false));
 				toastSuccess(data?.data?.message ?? "Team updated successfully");
@@ -103,7 +115,6 @@ export const getSpecificClubPlayersAPI = createAsyncThunk(
 			.get(`/teams/${clubId}/players`)
 			.then((data) => {
 				dispatch(setIsFetchingSpecificTeamPlayers(false));
-				console.log(data);
 				dispatch(setSpecificTeamPlayers(data.data?.data));
 			})
 			.catch((error) => {

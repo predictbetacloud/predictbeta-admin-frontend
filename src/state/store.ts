@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authSlice } from "./slices/auth";
 import { teamsSlice } from "./slices/teams";
 import { fixtureSlice } from "./slices/fixtures";
+import { userSlice } from "./slices/users";
 // ...
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
 		fixtures: fixtureSlice.reducer,
 		teams: teamsSlice.reducer,
 		auth: authSlice.reducer,
+		users: userSlice.reducer,
 	},
 });
 
