@@ -15,7 +15,7 @@ const DeletePlayerModal = ({
 	playerName: string;
 }) => {
 	const dispatch = useAppDispatch();
-	// const { clubId } = useParams().;
+	// const { clubId } = useParams();
 
 	const isDeletingPlayer = useAppSelector(selectIsDeletingPlayer);
 	const showDeletePlayerModal = useAppSelector(selectShowDeletePlayerModal);
