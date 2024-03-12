@@ -3,6 +3,8 @@ import { FaPlus } from "react-icons/fa6";
 import * as dfn from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
+import { RiDeleteBinFill } from "react-icons/ri";
+import { TiArrowBackOutline } from "react-icons/ti";
 
 import Button from "../../../components/Buttons";
 import DashboardLayout from "../../../components/layout/DashboardLayout";
@@ -28,8 +30,6 @@ import {
 } from "../../../api/teamsAPI";
 import { IPlayer } from "../../../types/types";
 import PageLoading from "../../../components/loaders/PageLoading";
-import { RiDeleteBinFill } from "react-icons/ri";
-import { TiArrowBackOutline } from "react-icons/ti";
 import AddPlayerModal from "../../../components/modals/AddPlayerModal";
 import EditPlayerModal from "../../../components/modals/EditPlayerModal";
 import DeletePlayerModal from "../../../components/modals/DeletePlayerModal";

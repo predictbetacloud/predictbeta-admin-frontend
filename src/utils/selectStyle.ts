@@ -28,6 +28,10 @@ export const defaultStyle = {
 		fontSize: "14px",
 		lineHeight: "22px",
 	}),
+	menuContainer: (baseStyles: any) => ({
+		...baseStyles,
+		zIndex: 20
+	}),
 	option: (baseStyles: any, state: { isFocused: any; isSelected: any }) => ({
 		...baseStyles,
 		fontFamily: "Rubik",
@@ -57,6 +61,7 @@ export const defaultStyle = {
 		lineHeight: "22px",
 	}),
 };
+
 export const invalidStyle = {
 	control: (baseStyles: any, state: { isFocused: any }) => ({
 		...baseStyles,
