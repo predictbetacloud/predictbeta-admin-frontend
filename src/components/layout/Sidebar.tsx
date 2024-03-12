@@ -3,10 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 
 import logo from "../../assets/logo/logo-dark.svg";
 
-import { useAppSelector } from "../../state/hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { selectAuth } from "../../state/slices/auth";
 import { P } from "../Texts";
 import Button from "../Buttons";
+import { logOutAPI } from "../../api/authAPI";
 
 const Style = styled.aside`
 	max-width: 300px;
@@ -50,6 +51,7 @@ const routes: { path: string; title: string }[] = [
 const Sidebar = () => {
 	const location = useLocation();
 	const { user } = useAppSelector(selectAuth);
+	const dispatch = useAppDispatch();
 
 	return (
 		<Style className="flex-shrink-0 bg-[#051B30] w-1/5 h-screen top-0 sticky pt-2.5 pb-10 flex flex-col">
@@ -84,7 +86,11 @@ const Sidebar = () => {
 							<P className="text-[#8C97A7] text-xs">({user?.email})</P>
 						</div>
 					</div>
-					<Button.Blue title="Log out"className="mt-3 w-full" />
+					<Button.Blue
+						onClick={() => dispatch(logOutAPI())}
+						title="Log out"
+						className="mt-3 w-full"
+					/>
 				</div>
 			</div>
 		</Style>

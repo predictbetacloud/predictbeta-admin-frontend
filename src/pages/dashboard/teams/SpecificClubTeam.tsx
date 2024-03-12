@@ -56,6 +56,7 @@ const SpecificClubTeam = () => {
 	useMemo(() => {
 		dispatch(getSpecificClubTeamAPI({ clubId }));
 		dispatch(getSpecificClubPlayersAPI({ clubId }));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clubId]);
 
 	const columns = useMemo<ColumnDef<IPlayer>[]>(
@@ -119,6 +120,7 @@ const SpecificClubTeam = () => {
 				},
 			},
 		],
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	);
 
