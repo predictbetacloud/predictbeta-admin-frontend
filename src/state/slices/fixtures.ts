@@ -7,6 +7,7 @@ const initialState: FixtureState = {
 	seasons: [],
 	specificSeason: null,
 	weeks: [],
+	dropDownWeeks: [],
 	specificWeek: null,
 	matches: [],
 	isFetchingSeasons: false,
@@ -42,6 +43,9 @@ export const fixtureSlice = createSlice({
 		},
 		setWeeks: (state, action: PayloadAction<IWeek[]>) => {
 			state.weeks = action.payload;
+		},
+		setDropdownWeeks: (state, action: PayloadAction<IWeek[]>) => {
+			state.dropDownWeeks = action.payload;
 		},
 		setSpecificWeek: (state, action: PayloadAction<IWeek>) => {
 			state.specificWeek = action.payload;
@@ -157,6 +161,7 @@ export const fixtureSlice = createSlice({
 export const {
 	setSeasons,
 	setWeeks,
+	setDropdownWeeks,
 	setSpecificSeason,
 	setSpecificWeek,
 	setMatches,
@@ -186,6 +191,9 @@ export const selectSpecificSeason = (state: RootState) =>
 	state.fixtures.specificSeason;
 
 export const selectAllWeeks = (state: RootState) => state.fixtures.weeks;
+
+export const selectDropdownWeeks = (state: RootState) =>
+	state.fixtures.dropDownWeeks;
 
 export const selectSpecificWeek = (state: RootState) =>
 	state.fixtures.specificWeek;

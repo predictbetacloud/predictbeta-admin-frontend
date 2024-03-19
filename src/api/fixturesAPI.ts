@@ -4,6 +4,7 @@ import { FieldValues } from "react-hook-form";
 import axiosInstance from "../connection/defaultClient";
 import { toastError, toastSuccess } from "../utils/toast";
 import {
+	setDropdownWeeks,
 	setIsCreatingMatch,
 	setIsCreatingSeason,
 	setIsCreatingWeek,
@@ -148,6 +149,26 @@ export const getAllWeeksAPI = createAsyncThunk(
 	}
 );
 
+export const getWeeksForDropdownAPI = createAsyncThunk(
+	"fixtures/getWeeksForDropdown",
+	({ seasonId }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingAllWeeks(true));
+		axiosInstance
+			.get(`/weeks/season/${seasonId}`)
+			.then((data) => {
+				dispatch(setIsFetchingAllWeeks(false));
+				const weeks = Array.isArray(data?.data?.data)
+					? data?.data?.data.reverse()
+					: [];
+				dispatch(setDropdownWeeks(weeks));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingAllWeeks(false));
+				toastError(error?.response?.data?.message);
+			});
+	}
+);
+
 export const getSpecificWeekAPI = createAsyncThunk(
 	"fixtures/getSpecificWeek",
 	({ weekId }: FieldValues, { dispatch }) => {
@@ -259,26 +280,6 @@ export const getAllMatchesAPI = createAsyncThunk(
 	({ seasonId, weekId }: FieldValues, { dispatch }) => {
 		dispatch(setIsFetchingMatches(true));
 		axiosInstance
-			.get(`/fixtures/season/${seasonId}/week/${weekId}/unpublished`)
-			.then((data) => {
-				dispatch(setIsFetchingMatches(false));
-				const matches = Array.isArray(data?.data?.data)
-					? data?.data?.data.reverse()
-					: [];
-				dispatch(setMatches(matches));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingMatches(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
-);
-
-export const getPublishedMatchesAPI = createAsyncThunk(
-	"fixtures/getPublishedMatches",
-	({ seasonId, weekId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingMatches(true));
-		axiosInstance
 			.get(`/fixtures/season/${seasonId}/week/${weekId}`)
 			.then((data) => {
 				dispatch(setIsFetchingMatches(false));
@@ -293,20 +294,3 @@ export const getPublishedMatchesAPI = createAsyncThunk(
 			});
 	}
 );
-
-// export const getSpecificWeekAPI = createAsyncThunk(
-// 	"fixtures/getSpecificWeek",
-// 	({ weekId }: FieldValues, { dispatch }) => {
-// 		dispatch(setIsFetchingSpecificWeek(true));
-// 		axiosInstance
-// 			.get(`/weeks/${weekId}`)
-// 			.then((data) => {
-// 				dispatch(setIsFetchingSpecificWeek(false));
-// 				dispatch(setSpecificWeek(data.data?.data));
-// 			})
-// 			.catch((error) => {
-// 				dispatch(setIsFetchingSpecificWeek(false));
-// 				toastError(error?.response?.data?.message);
-// 			});
-// 	}
-// );

@@ -25,9 +25,9 @@ import {
 	setShowPublishWeekModal,
 } from "../../../state/slices/fixtures";
 import {
+	getAllMatchesAPI,
 	getAllSeasonsAPI,
 	getAllWeeksAPI,
-	getPublishedMatchesAPI,
 } from "../../../api/fixturesAPI";
 import CreateWeekModal from "../../../components/modals/CreateWeekModal";
 import { VscFilter } from "react-icons/vsc";
@@ -109,7 +109,7 @@ const Results = () => {
 	useMemo(() => {
 		if (seasons?.[0]?.id && selectedWeek?.id) {
 			dispatch(
-				getPublishedMatchesAPI({
+				getAllMatchesAPI({
 					seasonId: seasons?.[0]?.id,
 					weekId: selectedWeek?.id,
 				})

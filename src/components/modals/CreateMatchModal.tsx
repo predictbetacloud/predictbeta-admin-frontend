@@ -12,7 +12,7 @@ import Modal from "./Modal";
 
 import {
 	selectAllSeasons,
-	selectAllWeeks,
+	selectDropdownWeeks,
 	selectIsCreatingMatch,
 	selectIsFetchingAllSeasons,
 	selectIsFetchingAllWeeks,
@@ -22,7 +22,7 @@ import {
 import {
 	createMatchAPI,
 	getAllSeasonsAPI,
-	getAllWeeksAPI,
+	getWeeksForDropdownAPI,
 } from "../../api/fixturesAPI";
 import { defaultStyle, invalidStyle } from "../../utils/selectStyle";
 import {
@@ -39,7 +39,7 @@ const CreateMatchModal = () => {
 	const dispatch = useAppDispatch();
 
 	const seasons = useAppSelector(selectAllSeasons);
-	const weeks = useAppSelector(selectAllWeeks);
+	const weeks = useAppSelector(selectDropdownWeeks);
 	const clubs = useAppSelector(selectAllClubTeams);
 	const isFetchingSeasons = useAppSelector(selectIsFetchingAllSeasons);
 	const isFetchingWeeks = useAppSelector(selectIsFetchingAllWeeks);
@@ -83,7 +83,7 @@ const CreateMatchModal = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getAllWeeksAPI({ seasonId: season?.id }));
+		dispatch(getWeeksForDropdownAPI({ seasonId: season?.id }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [season?.id]);
 

@@ -44,7 +44,7 @@ const CreateWeekModal = () => {
 		dispatch(
 			createWeekAPI({
 				seasonId: season.id,
-				number,
+				number: Number(number),
 			})
 		);
 	};

@@ -114,6 +114,7 @@ export interface FixtureState {
 	seasons: ISeason[];
 	specificSeason: ISeason | null;
 	weeks: IWeek[];
+	dropDownWeeks: IWeek[];
 	matches: IMatch[];
 	isCreatingSeason: boolean;
 	isCreatingWeek: boolean;

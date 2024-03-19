@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import queryString from "query-string";
 
 import Button from "../../../components/Buttons";
@@ -50,6 +50,7 @@ const AllFixtures = () => {
 
 	const queries = queryString.parse(l.search);
 	const query_week = queries?.week;
+	const query_season = queries?.season;
 
 	const isFetchingWeeks = useAppSelector(selectIsFetchingAllWeeks);
 	const isFetchingMatches = useAppSelector(selectIsFetchingMatches);
@@ -72,13 +73,13 @@ const AllFixtures = () => {
 	const [selectedMatch, setSelectedMatch] = useState<IMatch | null>(null);
 
 	// Get all Season
-	useMemo(() => {
+	useEffect(() => {
 		dispatch(getAllSeasonsAPI({}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Get all weeks in the latest season
-	useMemo(() => {
+	useEffect(() => {
 		if (seasons?.[0]?.id) {
 			dispatch(getAllWeeksAPI({ seasonId: seasons?.[0]?.id }));
 		}
@@ -87,7 +88,7 @@ const AllFixtures = () => {
 
 	// Make latest week the active week
 	useEffect(() => {
-		if (allWeeks?.[0]?.id) {
+		if (allWeeks?.[0]?.number) {
 			// if week is in query use that week
 			if (query_week) {
 				const activeWeek = allWeeks.find(
@@ -100,13 +101,32 @@ const AllFixtures = () => {
 					});
 				}
 			} else {
-				setSearchParams({ week: String(allWeeks?.[0]?.id) });
+				setSearchParams({
+					season: query_season
+						? String(query_season)
+						: String(seasons?.[0]?.name),
+					week: String(allWeeks?.[0]?.number),
+				});
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [allWeeks, query_week]);
 
-	useMemo(() => {
+	// Make latest season the active season
+	useEffect(() => {
+		if (query_season) {
+			const activeSeason = seasons.find(
+				(_season) => _season.name === query_season
+			);
+
+			console.log(query_season, activeSeason);
+			dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [seasons, query_season]);
+
+	useEffect(() => {
 		if (seasons?.[0]?.id && selectedWeek?.id) {
 			dispatch(
 				getAllMatchesAPI({
@@ -132,18 +152,38 @@ const AllFixtures = () => {
 							/>
 						</InputPlaceholder>
 					) : (
-						<CustomListBox
-							options={allWeeks?.map((week) => ({
-								name: `Week ${week.number}`,
-								value: String(week.id),
-							}))}
-							onChange={(value: string): void => {
-								setSearchParams({ week: String(value) });
-							}}
-							defaultOption={selectedWeek?.id}
-							title={"Week"}
-							icon={<VscFilter />}
-						/>
+						<div className="flex items-center gap-4">
+							<CustomListBox
+								options={seasons?.map((season) => ({
+									name: season.name,
+									value: String(season.name),
+								}))}
+								onChange={(value: string): void => {
+									setSearchParams({
+										season: String(value),
+										week: "",
+									});
+								}}
+								defaultOption={String(query_season)}
+								title={"Season"}
+								icon={<VscFilter />}
+							/>
+							<CustomListBox
+								options={allWeeks?.map((week) => ({
+									name: `Week ${week.number}`,
+									value: String(week.number),
+								}))}
+								onChange={(value: string): void => {
+									setSearchParams({
+										season: String(query_season),
+										week: String(value),
+									});
+								}}
+								defaultOption={selectedWeek?.number}
+								title={"Week"}
+								icon={<VscFilter />}
+							/>
+						</div>
 					)}
 				</div>
 
