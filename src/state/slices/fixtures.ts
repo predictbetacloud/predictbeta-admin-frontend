@@ -15,6 +15,7 @@ const initialState: FixtureState = {
 	isFetchingWeeks: false,
 	isFetchingSpecificWeek: false,
 	isPublishingWeek: false,
+	isSubmittingWeekResult: false,
 	isFetchingMatches: false,
 	isCreatingSeason: false,
 	isCreatingWeek: false,
@@ -76,6 +77,12 @@ export const fixtureSlice = createSlice({
 			action: PayloadAction<FixtureState["isFetchingSpecificWeek"]>
 		) => {
 			state.isFetchingSpecificWeek = action.payload;
+		},
+		setIsSubmittingWeekResult: (
+			state,
+			action: PayloadAction<FixtureState["isSubmittingWeekResult"]>
+		) => {
+			state.isSubmittingWeekResult = action.payload;
 		},
 		setIsPublishingWeek: (
 			state,
@@ -171,6 +178,7 @@ export const {
 	setIsFetchingSpecificWeek,
 	setIsFetchingMatches,
 	setIsPublishingWeek,
+	setIsSubmittingWeekResult,
 	setIsCreatingSeason,
 	setIsCreatingWeek,
 	setIsCreatingMatch,
@@ -214,6 +222,9 @@ export const selectIsFetchingSpecificWeek = (state: RootState) =>
 
 export const selectIsPublishingWeek = (state: RootState) =>
 	state.fixtures.isPublishingWeek;
+
+export const selectIsSubmittingWeekResult = (state: RootState) =>
+	state.fixtures.isSubmittingWeekResult;
 
 export const selectIsFetchingMatches = (state: RootState) =>
 	state.fixtures.isFetchingMatches;

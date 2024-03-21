@@ -119,7 +119,6 @@ const AllFixtures = () => {
 				(_season) => _season.name === query_season
 			);
 
-			console.log(query_season, activeSeason);
 			dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
 		}
 

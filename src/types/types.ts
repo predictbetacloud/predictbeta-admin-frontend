@@ -125,6 +125,7 @@ export interface FixtureState {
 	isFetchingWeeks: boolean;
 	isFetchingSpecificWeek: boolean;
 	isPublishingWeek: boolean;
+	isSubmittingWeekResult: boolean;
 	isFetchingMatches: boolean;
 	isEditingMatch: boolean;
 	isDeletingMatch: boolean;

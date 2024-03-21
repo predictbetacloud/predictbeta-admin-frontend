@@ -240,6 +240,7 @@ const CreateMatchModal = () => {
 									placeholder="e.g 1"
 									classNamePrefix="react-select"
 									isClearable
+									menuPlacement="auto"
 									styles={errors?.away ? invalidStyle : defaultStyle}
 								/>
 							)}

@@ -16,6 +16,7 @@ import {
 	setIsFetchingSpecificSeason,
 	setIsFetchingSpecificWeek,
 	setIsPublishingWeek,
+	setIsSubmittingWeekResult,
 	setMatches,
 	setSeasons,
 	setShowCreateMatchModal,
@@ -108,13 +109,40 @@ export const createWeekAPI = createAsyncThunk(
 	}
 );
 
+export const submitWeekResultAPI = createAsyncThunk(
+	"fixtures/submit-result",
+	(
+		{ seasonId, weekId, fixturResults, scorers, timeOfFirstGoal }: FieldValues,
+		{ dispatch }
+	) => {
+		dispatch(setIsSubmittingWeekResult(true));
+
+		axiosInstance
+			.post(`/weeks/${weekId}/submit-result`, {
+				fixturResults,
+				scorers,
+				timeOfFirstGoal,
+			})
+			.then((data) => {
+				dispatch(setIsSubmittingWeekResult(false));
+				toastSuccess(data?.data?.message ?? "Result submitted successfully");
+				dispatch(getAllMatchesAPI({ seasonId, weekId }));
+			})
+			.catch((error) => {
+				dispatch(setIsSubmittingWeekResult(false));
+				toastError(error?.response?.data?.message);
+				console.error(error);
+			});
+	}
+);
+
 export const publishWeekAPI = createAsyncThunk(
 	"fixtures/publishWeek",
 	({ seasonId, weekId }: FieldValues, { dispatch }) => {
 		dispatch(setIsPublishingWeek(true));
 
 		axiosInstance
-			.post(`/weeks/publish/${weekId}`)
+			.post(`/weeks/${weekId}/publish`)
 			.then((data) => {
 				dispatch(setIsPublishingWeek(false));
 				toastSuccess(data?.data?.message ?? "Week published successfully");
