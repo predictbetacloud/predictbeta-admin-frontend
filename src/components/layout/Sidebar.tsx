@@ -42,10 +42,10 @@ const routes: { path: string; title: string }[] = [
 		path: "/dashboard/leaderboard",
 		title: "Leaderboard",
 	},
-	{
-		path: "/dashboard/predictions",
-		title: "Predictions",
-	},
+	// {
+	// 	path: "/dashboard/predictions",
+	// 	title: "Predictions",
+	// },
 ];
 
 const Sidebar = () => {
