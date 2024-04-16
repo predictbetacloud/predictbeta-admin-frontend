@@ -112,14 +112,14 @@ export const createWeekAPI = createAsyncThunk(
 export const submitWeekResultAPI = createAsyncThunk(
 	"fixtures/submit-result",
 	(
-		{ seasonId, weekId, fixturResults, scorers, timeOfFirstGoal }: FieldValues,
+		{ seasonId, weekId, fixtureResults, scorers, timeOfFirstGoal }: FieldValues,
 		{ dispatch }
 	) => {
 		dispatch(setIsSubmittingWeekResult(true));
 
 		axiosInstance
 			.post(`/weeks/${weekId}/submit-result`, {
-				fixturResults,
+				fixtureResults,
 				scorers,
 				timeOfFirstGoal,
 			})

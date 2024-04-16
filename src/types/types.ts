@@ -62,6 +62,8 @@ export interface TeamState {
 	searchQuery: string;
 	specificTeam: IClub | null;
 	specificTeamPlayers: IPlayer[];
+	allPlayers: IPlayer[];
+	isFetchingAllPlayers: boolean;
 	noMoreTeams: boolean;
 	isFetchingTeams: boolean;
 	isFetchingSpecificTeam: boolean;
@@ -89,6 +91,7 @@ export interface IWeek {
 	createdAt: string;
 }
 export interface IMatch {
+	prediction: "" | "HOME" | "DRAW" | "AWAY" | undefined;
 	awayTeam: IClub;
 	homeTeam: IClub;
 	id: number;
@@ -99,15 +102,14 @@ export interface IMatch {
 }
 
 export const predictionEnum = {
-	AWAY: "2",
-	HOME: "1",
-	DRAW: "X",
+	AWAY: "AWAY",
+	HOME: "HOME",
+	DRAW: "DRAW",
 };
 
-export const reversePredictionEnum = {
-	1: "HOME",
-	X: "DRAW",
-	2: "AWAY",
+export type Result = {
+	id: number;
+	result: "HOME" | "AWAY" | "DRAW";
 };
 
 export interface FixtureState {
@@ -191,6 +193,18 @@ export interface UserState {
 	showUnblockUserModal: boolean;
 	showDeleteUserModal: boolean;
 	showEditUserModal: boolean;
+}
+
+export interface LeaderboardItem {
+	position: number;
+	username: string;
+	location: string | null;
+	points: number;
+}
+export interface LeaderboardState {
+	leaderboard: LeaderboardItem[];
+	isFetchingWeekLeaderboard: boolean;
+	isFetchingSeasonLeaderboard: boolean;
 }
 
 export const statusEnum = {

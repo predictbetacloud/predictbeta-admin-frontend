@@ -1,4 +1,5 @@
 import { NavigateFunction, Location } from "react-router-dom";
+import { IClub, Result } from "../types/types";
 
 export const globalRouter = { navigate: null } as {
 	navigate: null | NavigateFunction;
@@ -55,3 +56,31 @@ export const formatCurrency = (number: number) => {
 		maximumFractionDigits: 2,
 	});
 };
+
+// Format Predictions
+export function formatPredictionsFromObjectToArray(results: {
+	[key: number]: "HOME" | "AWAY" | "DRAW";
+}): Result[] {
+	return Object.entries(results).map(([key, value]) => ({
+		id: parseInt(key),
+		result: value,
+	}));
+}
+
+// Format Scorers
+export function formatScorersFromObjectToArray(
+	scorers: {
+		id: number;
+		createdAt: string;
+		deletedAt: string | null;
+		name: string;
+		number: number;
+		team: IClub;
+	}[]
+): {
+	playerId: number;
+}[] {
+	return scorers.map((scorer) => ({
+		playerId: scorer.id,
+	}));
+}

@@ -4,9 +4,11 @@ import { FieldValues } from "react-hook-form";
 import axiosInstance from "../connection/defaultClient";
 import { toastError, toastSuccess } from "../utils/toast";
 import {
+	setAllPlayers,
 	setClubTeams,
 	setIsCreatingPlayer,
 	setIsCreatingTeam,
+	setIsFetchingAllPlayers,
 	setIsFetchingAllTeams,
 	setIsFetchingSpecificTeam,
 	setIsFetchingSpecificTeamPlayers,
@@ -183,6 +185,24 @@ export const deletetPlayerAPI = createAsyncThunk(
 				dispatch(setIsCreatingPlayer(false));
 				toastError(error?.response?.data?.message);
 				console.error(error);
+			});
+	}
+);
+
+export const getAllPlayersAPI = createAsyncThunk(
+	"teams/getAllPlayers",
+	(_: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingAllPlayers(true));
+		axiosInstance
+			.get(`/players`)
+			.then((data) => {
+				dispatch(setIsFetchingAllPlayers(false));
+				console.log(data);
+				dispatch(setAllPlayers(data.data?.data));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingAllPlayers(false));
+				toastError(error?.response?.data?.message);
 			});
 	}
 );

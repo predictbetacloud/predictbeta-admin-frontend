@@ -1,47 +1,45 @@
 import { useEffect, useMemo, useState } from "react";
 import queryString from "query-string";
+import Select from "react-select";
 
-import Button from "../../../components/Buttons";
 import DashboardLayout from "../../../components/layout/DashboardLayout";
-import CreateSeasonModal from "../../../components/modals/CreateSeasonModal";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import {
 	selectAllSeasons,
 	selectAllWeeks,
+	selectIsFetchingAllSeasons,
 	selectIsFetchingAllWeeks,
 	selectIsFetchingMatches,
+	selectIsSubmittingWeekResult,
 	selectMatches,
-	selectShowCreateMatchModal,
-	selectShowCreateSeasonModal,
-	selectShowCreateWeekModal,
-	selectShowDeleteMatchModal,
-	selectShowEditMatchModal,
-	selectShowPublishWeekModal,
-	setShowCreateMatchModal,
-	setShowCreateSeasonModal,
-	setShowCreateWeekModal,
-	setShowDeleteMatchModal,
-	setShowEditMatchModal,
-	setShowPublishWeekModal,
 } from "../../../state/slices/fixtures";
 import {
 	getAllMatchesAPI,
 	getAllSeasonsAPI,
 	getAllWeeksAPI,
+	submitWeekResultAPI,
 } from "../../../api/fixturesAPI";
-import CreateWeekModal from "../../../components/modals/CreateWeekModal";
 import { VscFilter } from "react-icons/vsc";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { InputPlaceholder } from "../../../components/inputs/Input";
+import { Input, InputPlaceholder } from "../../../components/inputs/Input";
 import { AiOutlineLoading } from "react-icons/ai";
 import CustomListBox from "../../../components/inputs/CustomListBox";
-import CreateMatchModal from "../../../components/modals/CreateMatchModal";
-import PublishWeekModal from "../../../components/modals/PublishWeekModal";
 import PageLoading from "../../../components/loaders/PageLoading";
 import { MatchCard } from "../../../components/fixtures/MatchCard";
-import { IMatch } from "../../../types/types";
-import EditMatchModal from "../../../components/modals/EditMatchModal";
-import DeleteMatchModal from "../../../components/modals/DeleteMatchModal";
+import { getAllPlayersAPI } from "../../../api/teamsAPI";
+import { Controller, FieldValues, useForm } from "react-hook-form";
+import {
+	formatPredictionsFromObjectToArray,
+	formatScorersFromObjectToArray,
+} from "../../../utils/utils";
+import ErrorMessage from "../../../components/inputs/ErrorMessage";
+import {
+	selectAllPlayers,
+	selectIsFetchingAllPlayers,
+} from "../../../state/slices/teams";
+import IndicatorSeparator from "../../../components/IndicatorSeparator";
+import { defaultStyle, invalidStyle } from "../../../utils/selectStyle";
+import Button from "../../../components/Buttons";
 
 const Results = () => {
 	const dispatch = useAppDispatch();
@@ -50,30 +48,51 @@ const Results = () => {
 
 	const queries = queryString.parse(l.search);
 	const query_week = queries?.week;
+	const query_season = queries?.season;
 
 	const isFetchingWeeks = useAppSelector(selectIsFetchingAllWeeks);
 	const isFetchingMatches = useAppSelector(selectIsFetchingMatches);
-	const showCreateSeasonModal = useAppSelector(selectShowCreateSeasonModal);
-	const showCreateWeekModal = useAppSelector(selectShowCreateWeekModal);
-	const showCreateMatchModal = useAppSelector(selectShowCreateMatchModal);
-	const showEditMatchModal = useAppSelector(selectShowEditMatchModal);
-	const showDeleteMatchModal = useAppSelector(selectShowDeleteMatchModal);
-	const showPublishWeekModal = useAppSelector(selectShowPublishWeekModal);
+	const isFetchingAllPlayers = useAppSelector(selectIsFetchingAllPlayers);
+	const isFetchingSeasons = useAppSelector(selectIsFetchingAllSeasons);
+	const isSubmittingResults = useAppSelector(selectIsSubmittingWeekResult);
 
 	const allWeeks = useAppSelector(selectAllWeeks);
 	const allMatches = useAppSelector(selectMatches);
 	const seasons = useAppSelector(selectAllSeasons);
+	const allPlayers = useAppSelector(selectAllPlayers);
 
 	const [selectedWeek, setSelectedWeek] = useState<{
 		id: string;
 		number: string;
 	} | null>(null);
 
-	const [selectedMatch, setSelectedMatch] = useState<IMatch | null>(null);
+	const [matches, setMatches] = useState(allMatches);
+
+	const {
+		register,
+		setValue,
+		handleSubmit,
+		control,
+		trigger,
+		formState: { errors },
+	} = useForm();
+
+	// Set matches
+	useMemo(() => {
+		setMatches(allMatches);
+		allMatches?.forEach((match) => {
+			register(String(match.id), {
+				required: "Select result for match",
+			});
+		});
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [allMatches]);
 
 	// Get all Season
 	useMemo(() => {
 		dispatch(getAllSeasonsAPI({}));
+		dispatch(getAllPlayersAPI({}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -87,7 +106,7 @@ const Results = () => {
 
 	// Make latest week the active week
 	useEffect(() => {
-		if (allWeeks?.[0]?.id) {
+		if (allWeeks?.[0]?.number) {
 			// if week is in query use that week
 			if (query_week) {
 				const activeWeek = allWeeks.find(
@@ -100,11 +119,29 @@ const Results = () => {
 					});
 				}
 			} else {
-				setSearchParams({ week: String(allWeeks?.[0]?.id) });
+				setSearchParams({
+					season: query_season
+						? String(query_season)
+						: String(seasons?.[0]?.name),
+					week: String(allWeeks?.[0]?.number),
+				});
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [allWeeks, query_week]);
+
+	// Make latest season the active season
+	useEffect(() => {
+		if (query_season) {
+			const activeSeason = seasons.find(
+				(_season) => _season.name === query_season
+			);
+
+			dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [seasons, query_season]);
 
 	useMemo(() => {
 		if (seasons?.[0]?.id && selectedWeek?.id) {
@@ -118,11 +155,70 @@ const Results = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedWeek]);
 
+	// Update Selection
+	const updateSelection = (
+		matchId: number,
+		prediction: "" | "HOME" | "DRAW" | "AWAY" | undefined
+	) => {
+		// Update form value for match
+		setValue(String(matchId), prediction);
+		trigger(String(matchId));
+
+		const old_matches_array = [...matches];
+
+		const match_index = matches.findIndex((_match) => matchId === _match.id);
+		const matchToSelect = matches[match_index];
+		const new_match = { ...matchToSelect, prediction: prediction };
+		old_matches_array.splice(match_index, 1, new_match);
+		setMatches(old_matches_array);
+	};
+
+	const onSubmit = ({ scorers, timeOfFirstGoal, ..._results }: FieldValues) => {
+		const results = formatPredictionsFromObjectToArray(_results);
+		const _scorers = formatScorersFromObjectToArray(scorers);
+
+		dispatch(
+			submitWeekResultAPI({
+				weekId: Number(selectedWeek?.id),
+				scorers: _scorers,
+				timeOfFirstGoal: Number(timeOfFirstGoal),
+				fixtureResults: results,
+			})
+		);
+	};
+
 	return (
-		<DashboardLayout title="Fixture management">
+		<DashboardLayout title="Result management">
 			<section className="predictbeta-header w-full px-8 py-3 flex items-center justify-between sticky top-[90px]">
-				{/* week select */}
-				<div>
+				{/* season select */}
+				<div className="flex items-center gap-4">
+					{isFetchingSeasons || !seasons ? (
+						<InputPlaceholder>
+							<AiOutlineLoading
+								className="animate-spin"
+								color="#5D65F6"
+								size={16}
+							/>
+						</InputPlaceholder>
+					) : (
+						<CustomListBox
+							options={seasons?.map((season) => ({
+								name: season.name,
+								value: String(season.name),
+							}))}
+							onChange={(value: string): void => {
+								setSearchParams({
+									season: String(value),
+									week: "",
+								});
+							}}
+							defaultOption={String(query_season)}
+							title={"Season"}
+							icon={<VscFilter />}
+						/>
+					)}
+
+					{/* week select */}
 					{isFetchingWeeks || !allWeeks ? (
 						<InputPlaceholder>
 							<AiOutlineLoading
@@ -135,100 +231,152 @@ const Results = () => {
 						<CustomListBox
 							options={allWeeks?.map((week) => ({
 								name: `Week ${week.number}`,
-								value: String(week.id),
+								value: String(week.number),
 							}))}
 							onChange={(value: string): void => {
-								setSearchParams({ week: String(value) });
+								setSearchParams({
+									season: String(query_season),
+									week: String(value),
+								});
 							}}
-							defaultOption={selectedWeek?.id}
+							defaultOption={selectedWeek?.number}
 							title={"Week"}
 							icon={<VscFilter />}
 						/>
 					)}
 				</div>
-
-				{/* actions */}
-				<div className="flex items-center space-x-4">
-					<Button.Outline
-						title="Create Season"
-						onClick={() => dispatch(setShowCreateSeasonModal(true))}
-					/>
-					<Button.Outline
-						title="Create Week"
-						onClick={() => dispatch(setShowCreateWeekModal(true))}
-					/>
-					<Button.Outline
-						title="Create Match"
-						onClick={() => dispatch(setShowCreateMatchModal(true))}
-					/>
-					<Button
-						title="Publish Week"
-						onClick={() => {
-							dispatch(setShowPublishWeekModal(true));
-						}}
-					/>
-				</div>
 			</section>
 
 			{/* Matches */}
-			{isFetchingMatches ? (
+			{isFetchingMatches || isFetchingWeeks || isFetchingSeasons ? (
 				<PageLoading />
 			) : (
-				<section className="py-10 px-8">
-					{allMatches?.length > 0 ? (
-						<div className="grid md:grid-cols-2 gap-6">
-							{allMatches?.map((match, idx) => (
-								<div key={idx}>
-									<MatchCard
-										key={match.id}
-										home={match.homeTeam}
-										away={match.awayTeam}
-										id={match.id}
-										matchTime={match.fixtureDateTime}
-										adminSet
-										locked
-										toggleUpdateModal={() => {
-											setSelectedMatch(match);
-											dispatch(setShowEditMatchModal(true));
-										}}
-										toggleDeleteModal={() => {
-											setSelectedMatch(match);
-											dispatch(setShowDeleteMatchModal(true));
-										}}
+				<form onSubmit={handleSubmit(onSubmit)} className="py-10 px-8 md:w-4/5">
+					{matches?.length > 0 ? (
+						<section className="flex ">
+							<div className="flex-grow bg-white p-3 md:p-5 border rounded-lg">
+								<div className="grid md:grid-cols-2 gap-6">
+									{matches?.map((match, idx) => (
+										<div key={idx}>
+											<MatchCard
+												key={match.id}
+												home={match.homeTeam}
+												away={match.awayTeam}
+												id={match.id}
+												matchTime={match.fixtureDateTime}
+												prediction={match.prediction}
+												onChange={updateSelection}
+												invalid={!!errors?.[match?.id]}
+											/>
+											{errors?.[match?.id] && (
+												<div className="-mt-0.5">
+													<ErrorMessage
+														message={errors?.[match?.id]?.message?.toString()}
+													/>
+												</div>
+											)}
+										</div>
+									))}
+								</div>
+								<hr className="my-8" />
+								<h3 className="text-[#000] font-medium text-lg text-center">
+									Decider
+								</h3>
+
+								<div className="grid md:grid-cols-2 gap-6 py-6">
+									{/* Most likely To Score to score? */}
+									<div>
+										<label htmlFor="scorers" className="mb-2 block">
+											<p className="text-[#222222] text-sm">Scorers</p>
+										</label>
+										<Controller
+											control={control}
+											name="scorers"
+											rules={{
+												required: "Make a selection",
+											}}
+											render={({ field: { onChange, value, ref } }) => (
+												<Select
+													ref={ref}
+													onChange={onChange}
+													options={allPlayers}
+													value={value}
+													isLoading={isFetchingAllPlayers}
+													components={{
+														IndicatorSeparator,
+													}}
+													getOptionValue={(option) => option["id"]}
+													getOptionLabel={(option) => option["name"]}
+													maxMenuHeight={300}
+													placeholder="- Select -"
+													classNamePrefix="react-select"
+													isMulti
+													isClearable
+													styles={errors?.scorers ? invalidStyle : defaultStyle}
+												/>
+											)}
+										/>
+										{errors?.scorers && (
+											<ErrorMessage
+												message={
+													errors?.scorers && errors?.scorers.message?.toString()
+												}
+											/>
+										)}
+									</div>
+
+									{/* Goal time */}
+									<div className="">
+										<label htmlFor="timeOfFirstGoal" className="mb-2 block">
+											<p className="text-[#222222] text-sm">
+												Minute the first goal in the round be scored
+											</p>
+										</label>
+										<Input
+											id="timeOfFirstGoal"
+											type="number"
+											placeholder="1"
+											max={120}
+											{...register("timeOfFirstGoal", {
+												required: "Enter a valid number",
+												min: {
+													value: 1,
+													message: "Please enter a valid number",
+												},
+											})}
+											className={`w-full input ${
+												errors?.timeOfFirstGoal ? "invalid" : ""
+											}`}
+										/>
+										{errors?.timeOfFirstGoal && (
+											<ErrorMessage
+												message={errors.timeOfFirstGoal.message?.toString()}
+											/>
+										)}
+									</div>
+								</div>
+								<div className="">
+									<Button
+										// className="w-full"
+										type="submit"
+										loading={isSubmittingResults}
+										title="Submit result"
 									/>
 								</div>
-							))}
-						</div>
+							</div>
+						</section>
 					) : (
 						<div className="flex items-center justify-center py-20 lg:py-32 flex-col">
 							<h3 className="font-bold text-3xl mb-2">
 								There no matches for this week
 							</h3>
-							<p className="">Create a match to begin</p>
+							<p className="">
+								Matches will show here once they are published.
+							</p>
 						</div>
 					)}
-				</section>
+				</form>
 			)}
-
-			{showCreateSeasonModal ? <CreateSeasonModal /> : null}
-			{showCreateWeekModal ? <CreateWeekModal /> : null}
-			{showCreateMatchModal ? <CreateMatchModal /> : null}
-			{showEditMatchModal ? <EditMatchModal match={selectedMatch} /> : null}
-			{showDeleteMatchModal ? (
-				<DeleteMatchModal
-					match={selectedMatch}
-					weekId={Number(selectedWeek?.id)}
-					seasonId={seasons?.[0]?.id}
-				/>
-			) : null}
-			{showPublishWeekModal ? (
-				<PublishWeekModal
-					weekId={Number(selectedWeek?.id)}
-					seasonId={seasons?.[0]?.id}
-					season={seasons?.[0]?.name}
-					week={Number(selectedWeek?.number)}
-				/>
-			) : null}
 		</DashboardLayout>
 	);
 };

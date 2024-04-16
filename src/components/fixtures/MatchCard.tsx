@@ -9,8 +9,10 @@ import { colors } from "../../utils/colors";
 import { RiDeleteBin5Line, RiEdit2Line } from "react-icons/ri";
 import Button from "../Buttons";
 
-const Style = styled.div`
-	border: 1px solid #e1e7ec;
+const Style = styled.div<{ invalid: "true" | "false" }>`
+	border: 1px solid;
+	border-color: ${(props) =>
+		props.invalid === "true" ? "#EB1536" : "#e1e7ec"};
 `;
 
 interface PredictionStyle {
@@ -75,6 +77,7 @@ export const MatchCard = ({
 	matchTime,
 	inactive = false,
 	locked = false,
+	invalid = false,
 	adminSet,
 	toggleUpdateModal,
 	toggleDeleteModal,
@@ -88,8 +91,10 @@ export const MatchCard = ({
 	onChange?: (id: number, value: any) => void;
 	locked?: boolean;
 	inactive?: boolean;
+	invalid?: boolean;
+
 	isScoreSet?: boolean;
-	prediction?: "" | "1" | "X" | "2";
+	prediction?: "" | "HOME" | "DRAW" | "AWAY";
 	score?: "" | "AWAY" | "DRAW" | "HOME";
 	adminSet?: boolean;
 	toggleUpdateModal?: () => void;
@@ -100,7 +105,7 @@ export const MatchCard = ({
 	};
 
 	return (
-		<Style className="p-4 rounded-md">
+		<Style className="p-4 rounded-md" invalid={invalid ? "true" : "false"}>
 			<div className="md:flex items-center justify-between">
 				<div className="md:space-y-2 flex md:block items-center justify-between mb-4 md:mb-0">
 					<Team team={home} />
@@ -109,7 +114,7 @@ export const MatchCard = ({
 				<div>
 					<div className="grid grid-cols-3 w-fit ml-auto">
 						<Prediction
-							value={"1"}
+							value={"HOME"}
 							onClick={captureSelection}
 							inactive={inactive}
 							locked={locked}
@@ -121,7 +126,7 @@ export const MatchCard = ({
 						/>
 						<Prediction
 							// title="1"
-							value={"X"}
+							value={"DRAW"}
 							onClick={captureSelection}
 							inactive={inactive}
 							locked={locked}
@@ -133,7 +138,7 @@ export const MatchCard = ({
 							}}
 						/>
 						<Prediction
-							value={"2"}
+							value={"AWAY"}
 							title="A"
 							inactive={inactive}
 							locked={locked}

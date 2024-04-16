@@ -11,11 +11,13 @@ const initialState: TeamState = {
 	searchQuery: search_query || "",
 	specificTeam: null,
 	specificTeamPlayers: [],
+	allPlayers: [],
 	noMoreTeams: false,
 	isFetchingTeams: false,
 	isCreatingTeam: false,
 	isDeletingTeam: false,
 	isUpdatingTeam: false,
+	isFetchingAllPlayers: false,
 	isFetchingSpecificTeam: false,
 	isFetchingSpecificTeamPlayers: false,
 	isCreatingPlayer: false,
@@ -44,6 +46,15 @@ export const teamsSlice = createSlice({
 		},
 		setSpecificTeamPlayers: (state, action: PayloadAction<IPlayer[]>) => {
 			state.specificTeamPlayers = action.payload;
+		},
+		setAllPlayers: (state, action: PayloadAction<IPlayer[]>) => {
+			state.allPlayers = action.payload;
+		},
+		setIsFetchingAllPlayers: (
+			state,
+			action: PayloadAction<TeamState["isFetchingAllPlayers"]>
+		) => {
+			state.isFetchingAllPlayers = action.payload;
 		},
 		setIsFetchingAllTeams: (
 			state,
@@ -125,6 +136,8 @@ export const {
 	setClubTeams,
 	setSpecificTeam,
 	setSpecificTeamPlayers,
+	setAllPlayers,
+	setIsFetchingAllPlayers,
 	setIsDeletingTeam,
 	setIsCreatingTeam,
 	setIsUpdatingTeam,
@@ -147,6 +160,11 @@ export const selectSpecificTeam = (state: RootState) =>
 
 export const selectSpecificTeamPlayers = (state: RootState) =>
 	state.teams.specificTeamPlayers;
+
+export const selectAllPlayers = (state: RootState) => state.teams.allPlayers;
+
+export const selectIsFetchingAllPlayers = (state: RootState) =>
+	state.teams.isFetchingAllPlayers;
 
 export const selectIsFetchingTeams = (state: RootState) =>
 	state.teams.isFetchingTeams;

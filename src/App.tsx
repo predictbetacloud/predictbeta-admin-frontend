@@ -20,6 +20,7 @@ import SpecificClubTeam from "./pages/dashboard/teams/SpecificClubTeam";
 import Results from "./pages/dashboard/fixtures/Results";
 import AllUsers from "./pages/dashboard/users/AllUsers";
 import SpecificUser from "./pages/dashboard/users/SpecificUser";
+import WeekLeaderboard from "./pages/dashboard/leaderboard/WeekLeaderboard";
 
 function App() {
 	const navigate = useNavigate();
@@ -53,6 +54,7 @@ function App() {
 			<Route path="/dashboard/users/view/:userId" element={<SpecificUser />} />
 			<Route path="/dashboard/results" element={<Results />} />
 			<Route path="/dashboard/fixtures" element={<AllFixtures />} />
+			<Route path="/dashboard/leaderboard" element={<WeekLeaderboard />} />
 			<Route path="/dashboard/teams" element={<ClubTeams />} />
 			<Route path="/dashboard/teams/new-club" element={<AddClubTeam />} />
 			<Route path="/dashboard/teams/edit/:clubId" element={<EditClubTeam />} />

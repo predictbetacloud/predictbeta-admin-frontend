@@ -30,7 +30,7 @@ const ClubTeams = () => {
 			dispatch(
 				getAllClubTeamsAPI({
 					params: {
-						limit: 10,
+						limit: 15,
 						// page,
 						// ...params,
 					},
@@ -117,6 +117,8 @@ const ClubTeams = () => {
 		[]
 	);
 
+	console.log(clubs)
+
 	return (
 		<DashboardLayout title="Team management">
 			<section className="predictbeta-header w-full px-8  flex items-center justify-between">
@@ -142,7 +144,7 @@ const ClubTeams = () => {
 					columns={columns}
 					rows={10}
 					loading={isFetchingClubs}
-					totalPages={1}
+					totalPages={5}
 					current_page={page}
 					setCurrentPage={(page: number): void => {
 						setPage(page);

@@ -10,13 +10,19 @@ import {
 	flexRender,
 } from "@tanstack/react-table";
 
-import { IClub, IPlayer, IUser, WalletHistoryItem } from "../types/types";
+import {
+	IClub,
+	IPlayer,
+	IUser,
+	LeaderboardItem,
+	WalletHistoryItem,
+} from "../types/types";
 import Button from "./Buttons";
 import { P } from "./Texts";
 import { TextSkeleton } from "./loaders/TextSkeleton";
 
 const TableHolder = styled.table`
-	max-height: 80vh;
+	// max-height: 80vh;
 	box-shadow: 0px 4px 16px 0px #0000000d;
 	border: 1px solid #e1e7ec;
 
@@ -35,6 +41,19 @@ const TableHolder = styled.table`
 	}
 
 	tbody {
+		tr.leaderboard-table {
+			&.position-1 {
+				background: #27c079;
+				color: #fff;
+			}
+			&.position-2 {
+				background: #71d0a7;
+			}
+			&.position-3 {
+				background: #c4efdf;
+			}
+		}
+
 		tr:last-of-type {
 			td:first-of-type {
 				border-radius: 0 0 0 10px;
@@ -56,16 +75,18 @@ const TableHeadStyle = styled.th`
 `;
 
 type Props = {
-	data: IClub[] | IPlayer[] | IUser[] | WalletHistoryItem[];
+	data: IClub[] | IPlayer[] | IUser[] | WalletHistoryItem[] | LeaderboardItem[];
 	columns:
 		| ColumnDef<IClub>[]
 		| ColumnDef<IPlayer>[]
 		| ColumnDef<IUser>[]
-		| ColumnDef<WalletHistoryItem>[];
+		| ColumnDef<WalletHistoryItem>[]
+		| ColumnDef<LeaderboardItem>[];
 	rows: number;
 	loading?: boolean;
 	totalPages: number;
 	current_page: number;
+	isLeaderboardTable?: boolean;
 	setCurrentPage: (page: number) => void;
 	empty_message?: string;
 	empty_sub_message?: string;
@@ -122,6 +143,7 @@ function Table({
 	loading,
 	current_page,
 	totalPages,
+	isLeaderboardTable,
 	setCurrentPage,
 	empty_message,
 	empty_sub_message,
@@ -134,6 +156,8 @@ function Table({
 	const table = useReactTable({
 		data: tableData,
 		columns,
+		// initialState: { pageIndex: 0, pageSize: 10 },
+		manualPagination: true,
 		// Pipeline
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
@@ -141,6 +165,8 @@ function Table({
 		//
 		debugTable: true,
 	});
+
+	console.log("clubs", data);
 
 	return (
 		<div className={" flex flex-col min-w-0 break-words w-full"}>
@@ -219,7 +245,13 @@ function Table({
 										{table.getRowModel().rows.map((row) => {
 											return (
 												<tr
-													className="border-t-0 px-6 align-middle font-normal text-sm whitespace-nowrap py-6"
+													className={`border-t-0 px-6 align-middle font-normal text-[#3F3E4D] text-sm whitespace-nowrap py-6 ${
+														isLeaderboardTable ? "leaderboard-table" : ""
+													} ${
+														row.original?.position
+															? `position-${row.original.position}`
+															: ""
+													}`}
 													key={row.id}
 												>
 													{row.getVisibleCells().map((cell) => {

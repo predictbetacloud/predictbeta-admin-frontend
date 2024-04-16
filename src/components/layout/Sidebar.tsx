@@ -30,16 +30,16 @@ const routes: { path: string; title: string }[] = [
 		path: "/dashboard/users",
 		title: "User management",
 	},
-	{
-		path: "/dashboard/payouts",
-		title: "Payout",
-	},
+	// {
+	// 	path: "/dashboard/payouts",
+	// 	title: "Payout",
+	// },
 	{
 		path: "/dashboard/private-leagues",
 		title: "Private leagues",
 	},
 	{
-		path: "/dashboard/leaderboards",
+		path: "/dashboard/leaderboard",
 		title: "Leaderboard",
 	},
 	{

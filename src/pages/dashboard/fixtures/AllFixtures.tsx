@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import {
 	selectAllSeasons,
 	selectAllWeeks,
+	selectIsFetchingAllSeasons,
 	selectIsFetchingAllWeeks,
 	selectIsFetchingMatches,
 	selectMatches,
@@ -54,6 +55,7 @@ const AllFixtures = () => {
 
 	const isFetchingWeeks = useAppSelector(selectIsFetchingAllWeeks);
 	const isFetchingMatches = useAppSelector(selectIsFetchingMatches);
+	const isFetchingSeasons = useAppSelector(selectIsFetchingAllSeasons);
 	const showCreateSeasonModal = useAppSelector(selectShowCreateSeasonModal);
 	const showCreateWeekModal = useAppSelector(selectShowCreateWeekModal);
 	const showCreateMatchModal = useAppSelector(selectShowCreateMatchModal);
@@ -140,8 +142,35 @@ const AllFixtures = () => {
 	return (
 		<DashboardLayout title="Fixture management">
 			<section className="predictbeta-header w-full px-8 py-3 flex items-center justify-between sticky top-[90px]">
-				{/* week select */}
-				<div>
+				{/* season select */}
+				<div className="flex items-center gap-4">
+					{isFetchingSeasons || !seasons ? (
+						<InputPlaceholder>
+							<AiOutlineLoading
+								className="animate-spin"
+								color="#5D65F6"
+								size={16}
+							/>
+						</InputPlaceholder>
+					) : (
+						<CustomListBox
+							options={seasons?.map((season) => ({
+								name: season.name,
+								value: String(season.name),
+							}))}
+							onChange={(value: string): void => {
+								setSearchParams({
+									season: String(value),
+									week: "",
+								});
+							}}
+							defaultOption={String(query_season)}
+							title={"Season"}
+							icon={<VscFilter />}
+						/>
+					)}
+
+					{/* week select */}
 					{isFetchingWeeks || !allWeeks ? (
 						<InputPlaceholder>
 							<AiOutlineLoading
@@ -151,38 +180,21 @@ const AllFixtures = () => {
 							/>
 						</InputPlaceholder>
 					) : (
-						<div className="flex items-center gap-4">
-							<CustomListBox
-								options={seasons?.map((season) => ({
-									name: season.name,
-									value: String(season.name),
-								}))}
-								onChange={(value: string): void => {
-									setSearchParams({
-										season: String(value),
-										week: "",
-									});
-								}}
-								defaultOption={String(query_season)}
-								title={"Season"}
-								icon={<VscFilter />}
-							/>
-							<CustomListBox
-								options={allWeeks?.map((week) => ({
-									name: `Week ${week.number}`,
-									value: String(week.number),
-								}))}
-								onChange={(value: string): void => {
-									setSearchParams({
-										season: String(query_season),
-										week: String(value),
-									});
-								}}
-								defaultOption={selectedWeek?.number}
-								title={"Week"}
-								icon={<VscFilter />}
-							/>
-						</div>
+						<CustomListBox
+							options={allWeeks?.map((week) => ({
+								name: `Week ${week.number}`,
+								value: String(week.number),
+							}))}
+							onChange={(value: string): void => {
+								setSearchParams({
+									season: String(query_season),
+									week: String(value),
+								});
+							}}
+							defaultOption={selectedWeek?.number}
+							title={"Week"}
+							icon={<VscFilter />}
+						/>
 					)}
 				</div>
 
@@ -210,7 +222,7 @@ const AllFixtures = () => {
 			</section>
 
 			{/* Matches */}
-			{isFetchingMatches ? (
+			{isFetchingMatches || isFetchingWeeks || isFetchingSeasons ? (
 				<PageLoading />
 			) : (
 				<section className="py-10 px-8">
