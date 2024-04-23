@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import * as dfn from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
+import queryString from "query-string";
 
 import Button from "../../../components/Buttons";
 import DashboardLayout from "../../../components/layout/DashboardLayout";
@@ -19,25 +20,39 @@ import { getAllClubTeamsAPI } from "../../../api/teamsAPI";
 import { IClub } from "../../../types/types";
 
 const ClubTeams = () => {
-	const clubs = useAppSelector(selectAllClubTeams);
+	const l = useLocation();
+
+	const queries = queryString.parse(l.search);
+	const page = queries?.page;
+
+	const club = useAppSelector(selectAllClubTeams);
 	const isFetchingClubs = useAppSelector(selectIsFetchingTeams);
 	const dispatch = useAppDispatch();
 
-	const [page, setPage] = useState(1);
+	const [, setSearchParams] = useSearchParams();
 
 	useMemo(
 		() =>
 			dispatch(
 				getAllClubTeamsAPI({
 					params: {
-						limit: 15,
-						// page,
+						limit: 10,
+						page,
 						// ...params,
 					},
 				})
 			),
-		[]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[page]
 	);
+
+	useEffect(() => {
+		if (!page) {
+			setSearchParams({
+				page: String(1),
+			});
+		}
+	});
 
 	const columns = useMemo<ColumnDef<IClub>[]>(
 		() => [
@@ -117,8 +132,6 @@ const ClubTeams = () => {
 		[]
 	);
 
-	console.log(clubs)
-
 	return (
 		<DashboardLayout title="Team management">
 			<section className="predictbeta-header w-full px-8  flex items-center justify-between">
@@ -140,15 +153,16 @@ const ClubTeams = () => {
 			</section>
 			<section className="w-full p-8">
 				<Table
-					data={clubs}
+					data={club?.items ?? []}
 					columns={columns}
 					rows={10}
 					loading={isFetchingClubs}
-					totalPages={5}
-					current_page={page}
+					totalPages={club?.meta?.totalPages ?? 1}
+					current_page={Number(page ?? 1)}
 					setCurrentPage={(page: number): void => {
-						setPage(page);
-						throw new Error("Function not implemented.");
+						setSearchParams({
+							page: String(page),
+						});
 					}}
 				/>
 			</section>

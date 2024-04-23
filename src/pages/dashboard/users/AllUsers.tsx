@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
+import queryString from "query-string";
 
 import Button from "../../../components/Buttons";
 import DashboardLayout from "../../../components/layout/DashboardLayout";
@@ -20,12 +21,17 @@ import { getAllUsersAPI } from "../../../api/usersAPI";
 import CreateUserModal from "../../../components/modals/CreateUserModal";
 
 const AllUsers = () => {
+	const l = useLocation();
+
+	const queries = queryString.parse(l.search);
+	const page = queries?.page;
+
 	const allUsers = useAppSelector(selectAllUsers);
 	const showAddUserModal = useAppSelector(selectShowAddUserModal);
 	const isFetchingUsers = useAppSelector(selectIsFetchingAllUsers);
 	const dispatch = useAppDispatch();
 
-	const [page, setPage] = useState(1);
+	const [, setSearchParams] = useSearchParams();
 
 	useMemo(
 		() =>
@@ -33,14 +39,22 @@ const AllUsers = () => {
 				getAllUsersAPI({
 					params: {
 						limit: 10,
-						// page,
+						page,
 						// ...params,
 					},
 				})
 			),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
+		[page]
 	);
+
+	useEffect(() => {
+		if (!page) {
+			setSearchParams({
+				page: String(1),
+			});
+		}
+	});
 
 	const columns = useMemo<ColumnDef<IUser>[]>(
 		() => [
@@ -109,17 +123,18 @@ const AllUsers = () => {
 			</section>
 			<section className="w-full p-8">
 				<Table
-					data={allUsers}
+					data={allUsers?.items ?? []}
 					columns={columns}
 					rows={10}
 					loading={isFetchingUsers}
-					totalPages={1}
-					current_page={page}
+					totalPages={allUsers?.meta.totalItems ?? 1}
+					current_page={Number(page ?? 1)}
 					empty_message="There are no registered users"
 					empty_sub_message="You will see users soon"
 					setCurrentPage={(page: number): void => {
-						setPage(page);
-						throw new Error("Function not implemented.");
+						setSearchParams({
+							page: String(page),
+						});
 					}}
 				/>
 			</section>

@@ -35,7 +35,7 @@ const routes: { path: string; title: string }[] = [
 	// 	title: "Payout",
 	// },
 	{
-		path: "/dashboard/private-leagues",
+		path: "/dashboard/private-league",
 		title: "Private leagues",
 	},
 	{

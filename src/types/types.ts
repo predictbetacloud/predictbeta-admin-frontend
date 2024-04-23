@@ -57,8 +57,19 @@ export interface AuthType {
 	isPerformingAuthAction?: boolean;
 }
 
+export interface IPaginatedClubTeams {
+	items: IClub[];
+	meta: {
+		totalItems: number;
+		itemCount: number;
+		itemsPerPage: number;
+		totalPages: number;
+		currentPage: number;
+	};
+}
+
 export interface TeamState {
-	clubTeams: IClub[];
+	clubTeams: IPaginatedClubTeams | null;
 	searchQuery: string;
 	specificTeam: IClub | null;
 	specificTeamPlayers: IPlayer[];
@@ -174,10 +185,32 @@ export interface UserWithWallet {
 	wallet: WalletType;
 }
 
+export interface IPaginatedUsers {
+	items: IUser[];
+	meta: {
+		totalItems: number;
+		itemCount: number;
+		itemsPerPage: number;
+		totalPages: number;
+		currentPage: number;
+	};
+}
+
+export interface IPaginatedWalletHistory {
+	items: WalletHistoryItem[];
+	meta: {
+		totalItems: number;
+		itemCount: number;
+		itemsPerPage: number;
+		totalPages: number;
+		currentPage: number;
+	};
+}
+
 export interface UserState {
-	users: IUser[];
+	users: IPaginatedUsers | null;
 	specificUser: UserWithWallet | null;
-	specificUserWalletHistory: WalletHistoryItem[];
+	specificUserWalletHistory: IPaginatedWalletHistory | null;
 	isCreatingUser: boolean;
 	isFundingUser: boolean;
 	isFetchingAllUsers: boolean;
@@ -206,6 +239,42 @@ export interface LeaderboardState {
 	isFetchingWeekLeaderboard: boolean;
 	isFetchingSeasonLeaderboard: boolean;
 }
+
+export interface PrivateLeagueItem {
+	name: string;
+	leagueCode: string;
+	id?: number;
+	scoringStarts: number;
+	entranceFee: number;
+	numberOfPlayers: number;
+	winningPositions: number;
+	sharingFormula: {
+		position: number;
+		percentage: number;
+	}[];
+}
+export interface PrivateLeagueState {
+	allPrivateLeagues: PrivateLeagueItem[];
+	specificPrivateLeague: PrivateLeagueItem | null;
+	specificPrivateLeagueLeaderboard: LeaderboardItem[];
+	isFetchingAllPrivateLeagues: boolean;
+	isFetchingSpecificPrivateLeague: boolean;
+	isFetchingSpecificPrivateLeagueWeekLeaderboard: boolean;
+	isFetchingSpecificPrivateLeagueSeasonLeaderboard: boolean;
+	isJoiningPrivateLeague: boolean;
+	isCreatingPrivateLeague: boolean;
+	isEditingPrivateLeague: boolean;
+	isDeletingPrivateLeague: boolean;
+	isLeavingPrivateLeague: boolean;
+	showSharePrivateLeagueModal: boolean;
+	showLeavePrivateLeagueModal: boolean;
+	showDeletePrivateLeagueModal: boolean;
+}
+
+export type SharingFormularType = {
+	position: number;
+	percentage: number;
+}[];
 
 export const statusEnum = {
 	success: {

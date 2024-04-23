@@ -1,8 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import * as dfn from "date-fns";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { TiArrowBackOutline } from "react-icons/ti";
+import queryString from "query-string";
 
 import Button from "../../../components/Buttons";
 import DashboardLayout from "../../../components/layout/DashboardLayout";
@@ -41,6 +47,11 @@ import UnblockUserModal from "../../../components/modals/UnblockUserModal";
 import EditUserModal from "../../../components/modals/EditUserModal";
 
 const SpecificUser = () => {
+	const l = useLocation();
+
+	const queries = queryString.parse(l.search);
+	const page = queries?.page;
+
 	const dispatch = useAppDispatch();
 	const { userId } = useParams();
 	const navigate = useNavigate();
@@ -57,13 +68,33 @@ const SpecificUser = () => {
 		selectIsFetchingSpecificUserWalletHistory
 	);
 
-	const [page, setPage] = useState(1);
+	const [, setSearchParams] = useSearchParams();
+
+	useMemo(() => {
+		dispatch(
+			getSpecificUserWalletHistoryAPI({
+				userId,
+				params: {
+					limit: 10,
+					page,
+				},
+			})
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [page]);
+
+	useEffect(() => {
+		if (!page) {
+			setSearchParams({
+				page: String(1),
+			});
+		}
+	});
 
 	useMemo(() => {
 		dispatch(getSpecificUserAPI({ userId }));
-		dispatch(getSpecificUserWalletHistoryAPI({ userId }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userId]);
+	}, []);
 
 	const columns = useMemo<ColumnDef<WalletHistoryItem>[]>(
 		() => [
@@ -208,17 +239,18 @@ const SpecificUser = () => {
 					<hr />
 					<section className="w-full p-8">
 						<Table
-							data={walletHistory}
+							data={walletHistory?.items ?? []}
 							columns={columns}
 							rows={10}
 							loading={isFetchingUserWalletHistory}
-							totalPages={1}
-							current_page={page}
+							totalPages={walletHistory?.meta?.totalItems ?? 1}
+							current_page={Number(page ?? 1)}
 							empty_message="No transactions"
 							empty_sub_message="User hasn't performed any transactions yet."
 							setCurrentPage={(page: number): void => {
-								setPage(page);
-								throw new Error("Function not implemented.");
+								setSearchParams({
+									page: String(page),
+								});
 							}}
 						/>
 					</section>

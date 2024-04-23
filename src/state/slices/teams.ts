@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { type RootState } from "../store";
-import { IClub, IPlayer, TeamState } from "../../types/types";
+import { IClub, IPlayer, IPaginatedClubTeams, TeamState } from "../../types/types";
 
 const sessionName = import.meta.env.VITE_REACT_APP_SLUG;
 const search_query = localStorage.getItem(sessionName + "_search_query");
 
 const initialState: TeamState = {
-	clubTeams: [],
+	clubTeams: null,
 	searchQuery: search_query || "",
 	specificTeam: null,
 	specificTeamPlayers: [],
@@ -34,7 +34,7 @@ export const teamsSlice = createSlice({
 	initialState,
 	reducers: {
 		// Use the PayloadAction type to declare the contents of `action.payload`
-		setClubTeams: (state, action: PayloadAction<IClub[]>) => {
+		setClubTeams: (state, action: PayloadAction<IPaginatedClubTeams>) => {
 			state.clubTeams = action.payload;
 		},
 		setSearchQuery: (state, action: PayloadAction<string>) => {

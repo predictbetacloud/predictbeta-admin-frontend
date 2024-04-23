@@ -8,7 +8,7 @@ body {
 	background-color: #fcfcfe;
 }
 
-*:not(.react-select__input):focus {
+*:not(.react-select__input, .private-league-options):focus {
 	box-shadow: 0px 0px 0px 2px #8c97a790, 0px 0px 0px 3px #8c97a790;
 	outline: none;
 }

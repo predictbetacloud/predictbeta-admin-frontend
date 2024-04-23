@@ -1,5 +1,6 @@
 import { NavigateFunction, Location } from "react-router-dom";
-import { IClub, Result } from "../types/types";
+import { IClub, Result, SharingFormularType } from "../types/types";
+import { toastSuccess } from "./toast";
 
 export const globalRouter = { navigate: null } as {
 	navigate: null | NavigateFunction;
@@ -84,3 +85,67 @@ export function formatScorersFromObjectToArray(
 		playerId: scorer.id,
 	}));
 }
+
+// create positions array
+export const createPositionsArray = (count: number) => {
+	const array = [];
+
+	for (let index = 0; index < count; index++) {
+		const position = index + 1;
+		array.push(position);
+	}
+	return array;
+};
+
+// Change number to ordinal position
+export function numberToOrdinal(n: number): string {
+	// Determine the suffix for numbers ending in 11, 12, or 13, which don't follow the standard rules
+	if (n % 100 >= 11 && n % 100 <= 13) {
+		return n + "th";
+	}
+	// Determine the suffix based on the last digit of the number
+	switch (n % 10) {
+		case 1:
+			return n + "st";
+		case 2:
+			return n + "nd";
+		case 3:
+			return n + "rd";
+		default:
+			return n + "th";
+	}
+}
+
+export function formatSharingFormular(data: {
+	[key: string]: string;
+}): SharingFormularType {
+	const sharingFormula = [];
+	for (const key in data) {
+		if (Object.prototype.hasOwnProperty.call(data, key)) {
+			let position, percentage;
+			if (key.includes("position")) {
+				percentage = Number(data[key]);
+				position = Number(key.split("-")[1]);
+				sharingFormula.push({ position, percentage });
+			}
+		}
+	}
+
+	return sharingFormula;
+}
+
+/**
+ * Copies text to device clipboard
+ *
+ * @param {string} text
+ * @returns {string}
+ */
+export const copyTextToClipboard = async (text: string) => {
+	if ("clipboard" in navigator) {
+		await navigator.clipboard.writeText(text);
+		toastSuccess("Copied text");
+	} else {
+		document.execCommand("copy", true, text);
+		toastSuccess("Copied text");
+	}
+};

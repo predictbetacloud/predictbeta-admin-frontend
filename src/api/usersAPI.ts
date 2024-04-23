@@ -89,7 +89,7 @@ export const getAllUsersAPI = createAsyncThunk(
 		axiosInstance
 			.get(`/users`, { params })
 			.then((data) => {
-				dispatch(setUsers(data.data));
+				dispatch(setUsers(data.data.data));
 				dispatch(setIsFetchingAllUsers(false));
 			})
 			.catch((error) => {
@@ -118,10 +118,10 @@ export const getSpecificUserAPI = createAsyncThunk(
 
 export const getSpecificUserWalletHistoryAPI = createAsyncThunk(
 	"users/getSpecificUserWalletHistory",
-	({ userId }: FieldValues, { dispatch }) => {
+	({ userId, params }: FieldValues, { dispatch }) => {
 		dispatch(setIsFetchingSpecificUserWalletHistory(true));
 		axiosInstance
-			.get(`/users/${userId}/wallet-history`)
+			.get(`/users/${userId}/wallet-history`, { params })
 			.then((data) => {
 				dispatch(setSpecificUserWalletHistory(data.data?.data));
 				dispatch(setIsFetchingSpecificUserWalletHistory(false));

@@ -4,6 +4,7 @@ import { teamsSlice } from "./slices/teams";
 import { fixtureSlice } from "./slices/fixtures";
 import { userSlice } from "./slices/users";
 import { leaderboardSlice } from "./slices/leaderboard";
+import { privateLeagueSlice } from "./slices/privateLeague";
 // ...
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
 		auth: authSlice.reducer,
 		users: userSlice.reducer,
 		leaderboard: leaderboardSlice.reducer,
+		privateLeague: privateLeagueSlice.reducer,
 	},
 });
 

@@ -2,16 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { type RootState } from "../store";
 import {
-	IUser,
+	IPaginatedUsers,
+	IPaginatedWalletHistory,
 	UserState,
 	UserWithWallet,
-	WalletHistoryItem,
 } from "../../types/types";
 
 const initialState: UserState = {
-	users: [],
+	users: null,
 	specificUser: null,
-	specificUserWalletHistory: [],
+	specificUserWalletHistory: null,
 	isFundingUser: false,
 	isCreatingUser: false,
 	isDeletingUser: false,
@@ -33,7 +33,7 @@ export const userSlice = createSlice({
 	name: "users",
 	initialState,
 	reducers: {
-		setUsers: (state, action: PayloadAction<IUser[]>) => {
+		setUsers: (state, action: PayloadAction<IPaginatedUsers>) => {
 			state.users = action.payload;
 		},
 		setSpecificUser: (state, action: PayloadAction<UserWithWallet>) => {
@@ -41,7 +41,7 @@ export const userSlice = createSlice({
 		},
 		setSpecificUserWalletHistory: (
 			state,
-			action: PayloadAction<WalletHistoryItem[]>
+			action: PayloadAction<IPaginatedWalletHistory>
 		) => {
 			state.specificUserWalletHistory = action.payload;
 		},
@@ -153,7 +153,7 @@ export const {
 	setShowDeleteUserModal,
 	setShowEditUserModal,
 	setShowFundUserModal,
-  setShowAddUserModal,
+	setShowAddUserModal,
 	setSpecificUserWalletHistory,
 	setSpecificUser,
 	setUsers,

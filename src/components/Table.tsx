@@ -9,15 +9,16 @@ import {
 	ColumnDef,
 	flexRender,
 } from "@tanstack/react-table";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 
 import {
 	IClub,
 	IPlayer,
 	IUser,
 	LeaderboardItem,
+	PrivateLeagueItem,
 	WalletHistoryItem,
 } from "../types/types";
-import Button from "./Buttons";
 import { P } from "./Texts";
 import { TextSkeleton } from "./loaders/TextSkeleton";
 
@@ -75,13 +76,20 @@ const TableHeadStyle = styled.th`
 `;
 
 type Props = {
-	data: IClub[] | IPlayer[] | IUser[] | WalletHistoryItem[] | LeaderboardItem[];
+	data:
+		| IClub[]
+		| IPlayer[]
+		| IUser[]
+		| WalletHistoryItem[]
+		| LeaderboardItem[]
+		| PrivateLeagueItem[];
 	columns:
 		| ColumnDef<IClub>[]
 		| ColumnDef<IPlayer>[]
 		| ColumnDef<IUser>[]
 		| ColumnDef<WalletHistoryItem>[]
-		| ColumnDef<LeaderboardItem>[];
+		| ColumnDef<LeaderboardItem>[]
+		| ColumnDef<PrivateLeagueItem>[];
 	rows: number;
 	loading?: boolean;
 	totalPages: number;
@@ -109,30 +117,32 @@ export function CardTableFooter({
 	canNextPage?: boolean;
 }) {
 	return (
-		<div className="flex justify-end items-center mt-4 pb-6 px-6 md:px-2 ">
-			<div className="flex">
-				<span className="text-sm leading-7 text-gray-500">
-					{"Page " + pageNumber + " of " + totalPages}
-				</span>
-			</div>
-			<div className="flex">
-				{canPreviousPage && (
-					<Button.Outline
-						disabled={!canPreviousPage}
-						title="Prev"
-						className="font-bold text-base leading-7 text-gray-500"
-						onClick={prevOnClick}
-					/>
-				)}
-				{canNextPage && (
-					<Button.Outline
-						disabled={!canNextPage}
-						title="Next"
-						className="font-bold text-base leading-7 text-gray-500"
-						onClick={nextOnClick}
-					/>
-				)}
-			</div>
+		<div className="flex justify-end items-center mt-4 pb-6 px-6 md:px-2 gap-x-4">
+			{canPreviousPage && (
+				<button
+					type="button"
+					className="text-sm leading-7 text-[#051B30] flex items-center gap-1"
+					disabled={!canPreviousPage}
+					onClick={prevOnClick}
+				>
+					<FiChevronsLeft color="inherit" />
+					Prev
+				</button>
+			)}
+			<span className="text-sm text-[#8895A7]">
+				{"Page " + pageNumber + " of " + totalPages}
+			</span>
+			{canNextPage && (
+				<button
+					type="button"
+					className="text-sm leading-7 text-[#EB1536] flex items-center gap-1"
+					disabled={!canNextPage}
+					onClick={nextOnClick}
+				>
+					Next
+					<FiChevronsRight color="inherit" />
+				</button>
+			)}
 		</div>
 	);
 }
@@ -165,8 +175,6 @@ function Table({
 		//
 		debugTable: true,
 	});
-
-	console.log("clubs", data);
 
 	return (
 		<div className={" flex flex-col min-w-0 break-words w-full"}>
@@ -275,10 +283,10 @@ function Table({
 							</div>
 							<CardTableFooter
 								pageNumber={current_page}
-								totalPages={Math.ceil(Number(totalPages ?? 10) / 10)}
+								totalPages={totalPages}
 								prevOnClick={() => setCurrentPage(Number(current_page) - 1)}
 								nextOnClick={() => setCurrentPage(Number(current_page) + 1)}
-								canNextPage={current_page < totalPages / 10}
+								canNextPage={current_page < totalPages}
 								canPreviousPage={current_page > 1}
 							/>
 						</>
