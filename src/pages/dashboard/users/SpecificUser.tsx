@@ -161,7 +161,7 @@ const SpecificUser = () => {
 					<section className="w-full px-8 pt-8 flex items-center justify-between">
 						<Button.Outline
 							title=""
-							onClick={() => navigate(-1)}
+							onClick={() => navigate("/dashboard/users")}
 							content={
 								<div className="flex items-center space-x-1">
 									<TiArrowBackOutline color="#6D7786" size={20} />
@@ -243,7 +243,7 @@ const SpecificUser = () => {
 							columns={columns}
 							rows={10}
 							loading={isFetchingUserWalletHistory}
-							totalPages={walletHistory?.meta?.totalItems ?? 1}
+							totalPages={walletHistory?.meta?.totalPages ?? 1}
 							current_page={Number(page ?? 1)}
 							empty_message="No transactions"
 							empty_sub_message="User hasn't performed any transactions yet."

@@ -127,7 +127,7 @@ const AllUsers = () => {
 					columns={columns}
 					rows={10}
 					loading={isFetchingUsers}
-					totalPages={allUsers?.meta.totalItems ?? 1}
+					totalPages={allUsers?.meta.totalPages ?? 1}
 					current_page={Number(page ?? 1)}
 					empty_message="There are no registered users"
 					empty_sub_message="You will see users soon"
