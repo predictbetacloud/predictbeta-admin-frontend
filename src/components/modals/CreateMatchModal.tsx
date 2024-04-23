@@ -188,7 +188,7 @@ const CreateMatchModal = () => {
 								<Select
 									ref={ref}
 									onChange={onChange}
-									options={clubs}
+									options={clubs?.items}
 									value={value}
 									isLoading={isFetchingClubs}
 									components={{
@@ -227,7 +227,7 @@ const CreateMatchModal = () => {
 								<Select
 									ref={ref}
 									onChange={onChange}
-									options={clubs}
+									options={clubs?.items}
 									value={value}
 									isLoading={isFetchingClubs}
 									components={{

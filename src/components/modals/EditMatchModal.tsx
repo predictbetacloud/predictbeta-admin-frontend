@@ -184,13 +184,13 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 								required: "Select a home team",
 							}}
 							defaultValue={() =>
-								clubs.find((club) => club.id === match?.homeTeam.id)
+								clubs?.items?.find((club) => club.id === match?.homeTeam.id)
 							}
 							render={({ field: { onChange, value, ref } }) => (
 								<Select
 									ref={ref}
 									onChange={onChange}
-									options={clubs}
+									options={clubs?.items}
 									value={value}
 									isLoading={isFetchingClubs}
 									components={{
@@ -199,7 +199,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 									getOptionValue={(option) => option["id"]}
 									getOptionLabel={(option) => option["name"]}
 									defaultValue={() =>
-										clubs.find((club) => club.id === match?.homeTeam.id)
+										clubs?.items?.find((club) => club.id === match?.homeTeam.id)
 									}
 									maxMenuHeight={300}
 									placeholder="e.g 1"
@@ -228,13 +228,13 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 								required: "Select an away team",
 							}}
 							defaultValue={() =>
-								clubs.find((club) => club.id === match?.awayTeam.id)
+								clubs?.items?.find((club) => club.id === match?.awayTeam.id)
 							}
 							render={({ field: { onChange, value, ref } }) => (
 								<Select
 									ref={ref}
 									onChange={onChange}
-									options={clubs}
+									options={clubs?.items}
 									value={value}
 									isLoading={isFetchingClubs}
 									components={{
@@ -244,7 +244,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 									getOptionValue={(option) => option["id"]}
 									getOptionLabel={(option) => option["name"]}
 									defaultValue={() =>
-										clubs.find((club) => club.id === match?.awayTeam.id)
+										clubs?.items?.find((club) => club.id === match?.awayTeam.id)
 									}
 									maxMenuHeight={300}
 									placeholder="e.g 1"
