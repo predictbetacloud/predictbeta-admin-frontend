@@ -38,7 +38,6 @@ const ClubTeams = () => {
 					params: {
 						limit: 10,
 						page,
-						// ...params,
 					},
 				})
 			),
