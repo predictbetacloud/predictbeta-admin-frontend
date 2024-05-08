@@ -234,12 +234,20 @@ export interface LeaderboardItem {
 	location: string | null;
 	points: number;
 }
+
+export interface IPaginatedLeaderboard {
+	data: LeaderboardItem[];
+	totalElements: number;
+	elementsPerPage: number;
+	totalPages: number;
+	currentPage: number;
+}
 export interface LeaderboardState {
-	leaderboard: LeaderboardItem[];
+	leaderboard: IPaginatedLeaderboard | null;
 	isFetchingWeekLeaderboard: boolean;
+	isFetchingMonthLeaderboard: boolean;
 	isFetchingSeasonLeaderboard: boolean;
 }
-
 export interface PrivateLeagueItem {
 	name: string;
 	leagueCode: string;

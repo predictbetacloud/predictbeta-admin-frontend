@@ -1,4 +1,5 @@
 import React from "react";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import styled from "styled-components";
 
 import {
@@ -8,13 +9,13 @@ import {
 	getPaginationRowModel,
 	ColumnDef,
 	flexRender,
+	getSortedRowModel,
+	SortingState,
 } from "@tanstack/react-table";
-import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 
 import {
 	IClub,
 	IPlayer,
-	IUser,
 	LeaderboardItem,
 	PrivateLeagueItem,
 	WalletHistoryItem,
@@ -79,22 +80,20 @@ type Props = {
 	data:
 		| IClub[]
 		| IPlayer[]
-		| IUser[]
 		| WalletHistoryItem[]
 		| LeaderboardItem[]
 		| PrivateLeagueItem[];
 	columns:
 		| ColumnDef<IClub>[]
 		| ColumnDef<IPlayer>[]
-		| ColumnDef<IUser>[]
 		| ColumnDef<WalletHistoryItem>[]
 		| ColumnDef<LeaderboardItem>[]
 		| ColumnDef<PrivateLeagueItem>[];
 	rows: number;
 	loading?: boolean;
+	isLeaderboardTable?: boolean;
 	totalPages: number;
 	current_page: number;
-	isLeaderboardTable?: boolean;
 	setCurrentPage: (page: number) => void;
 	empty_message?: string;
 	empty_sub_message?: string;
@@ -163,23 +162,28 @@ function Table({
 		[loading, data]
 	);
 
+	const [sorting, setSorting] = React.useState<SortingState>([]);
+
 	const table = useReactTable({
 		data: tableData,
 		columns,
-		// initialState: { pageIndex: 0, pageSize: 10 },
-		manualPagination: true,
-		// Pipeline
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		//
+		getSortedRowModel: getSortedRowModel(),
+		state: {
+			sorting,
+		},
+		onSortingChange: setSorting,
+		manualPagination: true,
 		debugTable: true,
 	});
 
 	return (
-		<div className={" flex flex-col min-w-0 break-words w-full"}>
+		<>
+			{/* <div className=""> */}
 			{loading ? (
-				<div className="block w-full overflow-x-auto">
+				<div className="block max-w-full overflow-x-auto">
 					<TableHolder className="items-center w-full bg-transparent border-collapse relative">
 						<thead className="">
 							{table.getHeaderGroups().map((headerGroup) => (
@@ -226,8 +230,8 @@ function Table({
 				<>
 					{tableData && data?.length > 0 ? (
 						<>
-							<div className="block w-full overflow-x-auto">
-								<TableHolder className="items-center w-full bg-transparent border-collapse relative">
+							<div className="max-w-full overflow-x-scroll">
+								<TableHolder className="w-full bg-transparent border-collapse">
 									<thead className="">
 										{table.getHeaderGroups().map((headerGroup) => (
 											<tr key={headerGroup.id}>
@@ -236,14 +240,30 @@ function Table({
 														key={header.id}
 														colSpan={header.colSpan}
 														scope="col"
-														className={
-															"text-[#3F3E4D] bg-[#E1E7EC] text-xs font-medium px-6 py-4 align-middle  whitespace-nowrap text-left"
+														onClick={header.column.getToggleSortingHandler()}
+														className={`text-[#3F3E4D] bg-[#E1E7EC] text-xs font-medium px-6 py-4 align-middle  whitespace-nowrap text-left ${
+															header.column.getCanSort()
+																? "cursor-pointer select-none"
+																: ""
+														}`}
+														title={
+															header.column.getCanSort()
+																? header.column.getNextSortingOrder() === "asc"
+																	? "Sort ascending"
+																	: header.column.getNextSortingOrder() === "desc"
+																	? "Sort descending"
+																	: "Clear sort"
+																: undefined
 														}
 													>
 														{flexRender(
 															header.column.columnDef.header,
 															header.getContext()
 														)}
+														{{
+															asc: " 🔼",
+															desc: " 🔽",
+														}[header.column.getIsSorted() as string] ?? null}
 													</TableHeadStyle>
 												))}
 											</tr>
@@ -264,10 +284,7 @@ function Table({
 												>
 													{row.getVisibleCells().map((cell) => {
 														return (
-															<td
-																className="px-6 py-3 text-[#3F3E4D]"
-																key={cell.id}
-															>
+															<td className="px-6 py-3" key={cell.id}>
 																{flexRender(
 																	cell.column.columnDef.cell,
 																	cell.getContext()
@@ -302,7 +319,8 @@ function Table({
 					)}
 				</>
 			)}
-		</div>
+			{/* </div> */}
+		</>
 	);
 }
 

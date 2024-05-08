@@ -25,6 +25,8 @@ import EditPrivateLeague from "./pages/dashboard/privateLeague/EditPrivateLeague
 import CreatePrivateLeague from "./pages/dashboard/privateLeague/CreatePrivateLeague";
 import AllPrivateLeagues from "./pages/dashboard/privateLeague/AllPrivateLeagues";
 import PrivateLeagueWeekLeaderboard from "./pages/dashboard/privateLeague/PrivateLeagueWeekLeaderboard";
+import MonthLeaderboard from "./pages/dashboard/leaderboard/MonthLeaderboard";
+import SeasonLeaderboard from "./pages/dashboard/leaderboard/SeasonLeaderboard";
 
 function App() {
 	const navigate = useNavigate();
@@ -61,6 +63,14 @@ function App() {
 				/>
 				<Route path="/dashboard/results" element={<Results />} />
 				<Route path="/dashboard/fixtures" element={<AllFixtures />} />
+				<Route
+					path="/dashboard/leaderboard/month"
+					element={<MonthLeaderboard />}
+				/>
+				<Route
+					path="/dashboard/leaderboard/season"
+					element={<SeasonLeaderboard />}
+				/>
 				<Route path="/dashboard/leaderboard" element={<WeekLeaderboard />} />
 				<Route
 					path="/dashboard/private-league/standing/:leagueId"

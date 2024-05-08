@@ -149,3 +149,60 @@ export const copyTextToClipboard = async (text: string) => {
 		toastSuccess("Copied text");
 	}
 };
+
+/**
+ * Creates an array of objects representing a range of years, including a specified number of years before the given year and the year itself.
+ * Each object has a `name` (the year as a string) and a `value` (the year as a number).
+ *
+ * @param year The year to base the range on.
+ * @param numYearsBefore Optional. The number of years before the year to include in the range. Defaults to 5.
+ * @returns An array of { name: string; value: number } objects representing the year range.
+ */
+export const createYearRange = (
+	year: number,
+	numYearsBefore: number = 5
+): { name: string; value: number }[] => {
+	if (!Number.isInteger(year) || !Number.isInteger(numYearsBefore)) {
+		throw new Error(
+			"Invalid input: 'year' and 'numYearsBefore' must be integers."
+		);
+	}
+
+	const range: { name: string; value: number }[] = [];
+
+	// Create range from numYearsBefore years before the year to the year itself
+	for (let i = numYearsBefore; i > 0; i--) {
+		const _year = year - i;
+		range.push({ name: String(_year), value: _year });
+	}
+
+	// Add current year
+	range.push({ name: String(year), value: year });
+
+	return range;
+};
+
+/**
+ * Defines an array of objects representing the months of the year.
+ * Each object in the array contains the name of the month and its corresponding numerical value (1 for January through 12 for December).
+ * This can be useful for applications that need to display months in a user interface or process date-related information programmatically.
+ *
+ * @returns {Array<{name: string; value: number}>} An array of objects where each object represents a month of the year.
+ */
+export const monthEnum: { name: string; value: number }[] = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+].map((month, index) => ({
+	name: month,
+	value: index + 1,
+}));
