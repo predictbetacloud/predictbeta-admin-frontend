@@ -16,6 +16,7 @@ import {
 import {
 	IClub,
 	IPlayer,
+	IUser,
 	LeaderboardItem,
 	PrivateLeagueItem,
 	WalletHistoryItem,
@@ -82,12 +83,14 @@ type Props = {
 		| IPlayer[]
 		| WalletHistoryItem[]
 		| LeaderboardItem[]
-		| PrivateLeagueItem[];
+		| PrivateLeagueItem[]
+		| IUser[];
 	columns:
 		| ColumnDef<IClub>[]
 		| ColumnDef<IPlayer>[]
 		| ColumnDef<WalletHistoryItem>[]
 		| ColumnDef<LeaderboardItem>[]
+		| ColumnDef<IUser>[]
 		| ColumnDef<PrivateLeagueItem>[];
 	rows: number;
 	loading?: boolean;
@@ -250,7 +253,8 @@ function Table({
 															header.column.getCanSort()
 																? header.column.getNextSortingOrder() === "asc"
 																	? "Sort ascending"
-																	: header.column.getNextSortingOrder() === "desc"
+																	: header.column.getNextSortingOrder() ===
+																	  "desc"
 																	? "Sort descending"
 																	: "Clear sort"
 																: undefined
