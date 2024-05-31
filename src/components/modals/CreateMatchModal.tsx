@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -12,24 +12,28 @@ import Modal from "./Modal";
 
 import {
 	selectAllSeasons,
+	selectCompetitions,
 	selectDropdownWeeks,
 	selectIsCreatingMatch,
 	selectIsFetchingAllSeasons,
 	selectIsFetchingAllWeeks,
+	selectIsFetchingCompetitions,
 	selectShowCreateMatchModal,
 	setShowCreateMatchModal,
 } from "../../state/slices/fixtures";
 import {
 	createMatchAPI,
+	getAllCompetitionsByTypeAPI,
 	getAllSeasonsAPI,
 	getWeeksForDropdownAPI,
 } from "../../api/fixturesAPI";
 import { defaultStyle, invalidStyle } from "../../utils/selectStyle";
 import {
 	selectAllClubTeams,
+	selectAllCountryTeams,
 	selectIsFetchingTeams,
 } from "../../state/slices/teams";
-import { getAllClubTeamsAPI } from "../../api/teamsAPI";
+import { getAllClubTeamsAPI, getAllCountryTeamsAPI } from "../../api/teamsAPI";
 
 const IndicatorSeparator = () => {
 	return null;
@@ -41,9 +45,12 @@ const CreateMatchModal = () => {
 	const seasons = useAppSelector(selectAllSeasons);
 	const weeks = useAppSelector(selectDropdownWeeks);
 	const clubs = useAppSelector(selectAllClubTeams);
+	const countries = useAppSelector(selectAllCountryTeams);
+	const competitions = useAppSelector(selectCompetitions);
+	const isFetchingCompetitions = useAppSelector(selectIsFetchingCompetitions);
 	const isFetchingSeasons = useAppSelector(selectIsFetchingAllSeasons);
 	const isFetchingWeeks = useAppSelector(selectIsFetchingAllWeeks);
-	const isFetchingClubs = useAppSelector(selectIsFetchingTeams);
+	const isFetchingTeams = useAppSelector(selectIsFetchingTeams);
 	const isCreatingMatch = useAppSelector(selectIsCreatingMatch);
 	const showCreateMatchModal = useAppSelector(selectShowCreateMatchModal);
 
@@ -51,6 +58,7 @@ const CreateMatchModal = () => {
 		register,
 		handleSubmit,
 		reset,
+		resetField,
 		control,
 		watch,
 		formState: { errors },
@@ -62,6 +70,7 @@ const CreateMatchModal = () => {
 		home,
 		away,
 		fixtureDateTime,
+		competition,
 	}: FieldValues) => {
 		dispatch(
 			createMatchAPI({
@@ -69,21 +78,43 @@ const CreateMatchModal = () => {
 				weekId: week.id,
 				homeTeamId: home.id,
 				awayTeamId: away.id,
+				leagueId: competition.leagueId,
 				fixtureDateTime,
 			})
 		);
 	};
 
 	const season = watch("season");
+	const clubOrCountry = watch("clubOrCountry");
+	const competitionType = watch("competitionType");
+	const competition = watch("competition");
+
+	console.log("comp", competition);
+
+	useMemo(() => {
+		resetField("home");
+		resetField("away");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [clubOrCountry]);
 
 	useEffect(() => {
 		dispatch(getAllSeasonsAPI({}));
 		dispatch(getAllClubTeamsAPI({}));
+		dispatch(getAllCountryTeamsAPI({}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		dispatch(getWeeksForDropdownAPI({ seasonId: season?.id }));
+		if (competitionType?.id) {
+			dispatch(getAllCompetitionsByTypeAPI({ type: competitionType.id }));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [competitionType?.id]);
+
+	useEffect(() => {
+		if (season?.id) {
+			dispatch(getWeeksForDropdownAPI({ seasonId: season?.id }));
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [season?.id]);
 
@@ -173,26 +204,27 @@ const CreateMatchModal = () => {
 						)}
 					</div>
 
-					{/* Home Team Select */}
+					{/* Competition Type Select */}
 					<div className="mt-4">
-						<label htmlFor="home" className="mb-2 block">
-							<P className="text-[#222222] text-sm">Home Team</P>
+						<label htmlFor="competitionType" className="mb-2 block">
+							<P className="text-[#222222] text-sm">Competition Type</P>
 						</label>
 						<Controller
 							control={control}
-							name="home"
+							name="competitionType"
 							rules={{
-								required: "Select a home team",
+								required: "Select a competition type",
 							}}
 							render={({ field: { onChange, value, ref } }) => (
 								<Select
 									ref={ref}
 									onChange={onChange}
-									options={clubs?.items}
+									options={[
+										{ id: "cup", name: "Cup" },
+										{ id: "league", name: "League" },
+									]}
 									value={value}
-									isLoading={isFetchingClubs}
 									components={{
-										// DropdownIndicator,
 										IndicatorSeparator,
 									}}
 									getOptionValue={(option) => option["id"]}
@@ -201,37 +233,83 @@ const CreateMatchModal = () => {
 									placeholder="e.g 1"
 									classNamePrefix="react-select"
 									isClearable
-									styles={errors?.home ? invalidStyle : defaultStyle}
+									styles={errors?.competitionType ? invalidStyle : defaultStyle}
 								/>
 							)}
 						/>
-						{errors?.home && (
+						{errors?.competitionType && (
 							<ErrorMessage
-								message={errors?.home && errors?.home.message?.toString()}
+								message={
+									errors?.competitionType &&
+									errors?.competitionType.message?.toString()
+								}
 							/>
 						)}
 					</div>
 
-					{/* Away Team Select */}
+					{/* Competition Select */}
 					<div className="mt-4">
-						<label htmlFor="away" className="mb-2 block">
-							<P className="text-[#222222] text-sm">Away Team</P>
+						<label htmlFor="competition" className="mb-2 block">
+							<P className="text-[#222222] text-sm">Competition</P>
 						</label>
 						<Controller
 							control={control}
-							name="away"
+							name="competition"
 							rules={{
-								required: "Select an away team",
+								required: "Select a competition",
 							}}
 							render={({ field: { onChange, value, ref } }) => (
 								<Select
 									ref={ref}
 									onChange={onChange}
-									options={clubs?.items}
+									options={competitions}
 									value={value}
-									isLoading={isFetchingClubs}
+									isLoading={isFetchingCompetitions}
 									components={{
-										// DropdownIndicator,
+										IndicatorSeparator,
+									}}
+									getOptionValue={(option) => option["leagueId"]}
+									getOptionLabel={(option) =>
+										`${option["country"]?.name} - ${option["name"]}`
+									}
+									maxMenuHeight={300}
+									placeholder="e.g 1"
+									classNamePrefix="react-select"
+									isClearable
+									styles={errors?.competition ? invalidStyle : defaultStyle}
+								/>
+							)}
+						/>
+						{errors?.competition && (
+							<ErrorMessage
+								message={
+									errors?.competition && errors?.competition.message?.toString()
+								}
+							/>
+						)}
+					</div>
+
+					{/* Club Or Country Select */}
+					<div className="mt-4">
+						<label htmlFor="clubOrCountry" className="mb-2 block">
+							<P className="text-[#222222] text-sm">Clubs or Countries</P>
+						</label>
+						<Controller
+							control={control}
+							name="clubOrCountry"
+							rules={{
+								required: "Select a match type",
+							}}
+							render={({ field: { onChange, value, ref } }) => (
+								<Select
+									ref={ref}
+									onChange={onChange}
+									options={[
+										{ id: "club", name: "Clubs" },
+										{ id: "country", name: "Countries" },
+									]}
+									value={value}
+									components={{
 										IndicatorSeparator,
 									}}
 									getOptionValue={(option) => option["id"]}
@@ -240,17 +318,187 @@ const CreateMatchModal = () => {
 									placeholder="e.g 1"
 									classNamePrefix="react-select"
 									isClearable
-									menuPlacement="auto"
-									styles={errors?.away ? invalidStyle : defaultStyle}
+									styles={errors?.clubOrCountry ? invalidStyle : defaultStyle}
 								/>
 							)}
 						/>
-						{errors?.away && (
+						{errors?.clubOrCountry && (
 							<ErrorMessage
-								message={errors?.away && errors?.away.message?.toString()}
+								message={
+									errors?.clubOrCountry &&
+									errors?.clubOrCountry.message?.toString()
+								}
 							/>
 						)}
 					</div>
+
+					{/* If club */}
+					{clubOrCountry?.id === "club" && (
+						<>
+							{/* Home Team Select */}
+							<div className="mt-4">
+								<label htmlFor="home" className="mb-2 block">
+									<P className="text-[#222222] text-sm">Home Team</P>
+								</label>
+								<Controller
+									control={control}
+									name="home"
+									rules={{
+										required: "Select a home team",
+									}}
+									render={({ field: { onChange, value, ref } }) => (
+										<Select
+											ref={ref}
+											onChange={onChange}
+											options={clubs?.items}
+											value={value}
+											isLoading={isFetchingTeams}
+											components={{
+												// DropdownIndicator,
+												IndicatorSeparator,
+											}}
+											getOptionValue={(option) => option["id"]}
+											getOptionLabel={(option) => option["name"]}
+											maxMenuHeight={300}
+											placeholder="e.g 1"
+											classNamePrefix="react-select"
+											isClearable
+											styles={errors?.home ? invalidStyle : defaultStyle}
+										/>
+									)}
+								/>
+								{errors?.home && (
+									<ErrorMessage
+										message={errors?.home && errors?.home.message?.toString()}
+									/>
+								)}
+							</div>
+
+							{/* Away Team Select */}
+							<div className="mt-4">
+								<label htmlFor="away" className="mb-2 block">
+									<P className="text-[#222222] text-sm">Away Team</P>
+								</label>
+								<Controller
+									control={control}
+									name="away"
+									rules={{
+										required: "Select an away team",
+									}}
+									render={({ field: { onChange, value, ref } }) => (
+										<Select
+											ref={ref}
+											onChange={onChange}
+											options={clubs?.items}
+											value={value}
+											isLoading={isFetchingTeams}
+											components={{
+												// DropdownIndicator,
+												IndicatorSeparator,
+											}}
+											getOptionValue={(option) => option["id"]}
+											getOptionLabel={(option) => option["name"]}
+											maxMenuHeight={300}
+											placeholder="e.g 1"
+											classNamePrefix="react-select"
+											isClearable
+											menuPlacement="auto"
+											styles={errors?.away ? invalidStyle : defaultStyle}
+										/>
+									)}
+								/>
+								{errors?.away && (
+									<ErrorMessage
+										message={errors?.away && errors?.away.message?.toString()}
+									/>
+								)}
+							</div>
+						</>
+					)}
+
+					{/* If Country */}
+					{clubOrCountry?.id === "country" && (
+						<>
+							{/* Home Team Select */}
+							<div className="mt-4">
+								<label htmlFor="home" className="mb-2 block">
+									<P className="text-[#222222] text-sm">Home Team</P>
+								</label>
+								<Controller
+									control={control}
+									name="home"
+									rules={{
+										required: "Select a home team",
+									}}
+									render={({ field: { onChange, value, ref } }) => (
+										<Select
+											ref={ref}
+											onChange={onChange}
+											options={countries?.items}
+											value={value}
+											isLoading={isFetchingTeams}
+											components={{
+												// DropdownIndicator,
+												IndicatorSeparator,
+											}}
+											getOptionValue={(option) => option["id"]}
+											getOptionLabel={(option) => option["name"]}
+											maxMenuHeight={300}
+											placeholder="e.g 1"
+											classNamePrefix="react-select"
+											isClearable
+											styles={errors?.home ? invalidStyle : defaultStyle}
+										/>
+									)}
+								/>
+								{errors?.home && (
+									<ErrorMessage
+										message={errors?.home && errors?.home.message?.toString()}
+									/>
+								)}
+							</div>
+
+							{/* Away Team Select */}
+							<div className="mt-4">
+								<label htmlFor="away" className="mb-2 block">
+									<P className="text-[#222222] text-sm">Away Team</P>
+								</label>
+								<Controller
+									control={control}
+									name="away"
+									rules={{
+										required: "Select an away team",
+									}}
+									render={({ field: { onChange, value, ref } }) => (
+										<Select
+											ref={ref}
+											onChange={onChange}
+											options={countries?.items}
+											value={value}
+											isLoading={isFetchingTeams}
+											components={{
+												// DropdownIndicator,
+												IndicatorSeparator,
+											}}
+											getOptionValue={(option) => option["id"]}
+											getOptionLabel={(option) => option["name"]}
+											maxMenuHeight={300}
+											placeholder="e.g 1"
+											classNamePrefix="react-select"
+											isClearable
+											menuPlacement="auto"
+											styles={errors?.away ? invalidStyle : defaultStyle}
+										/>
+									)}
+								/>
+								{errors?.away && (
+									<ErrorMessage
+										message={errors?.away && errors?.away.message?.toString()}
+									/>
+								)}
+							</div>
+						</>
+					)}
 
 					{/* Match Date */}
 					<div className="mt-4">

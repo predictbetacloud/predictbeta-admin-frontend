@@ -24,7 +24,8 @@ export interface IPlayer {
 
 export interface IClub {
 	name: string;
-	clubLogo: string;
+	clubLogo?: string;
+	flag?: string;
 	createdAt: string;
 	id: number;
 	region: null;
@@ -70,6 +71,7 @@ export interface IPaginatedClubTeams {
 
 export interface TeamState {
 	clubTeams: IPaginatedClubTeams | null;
+	countryTeams: IPaginatedClubTeams | null;
 	searchQuery: string;
 	specificTeam: IClub | null;
 	specificTeamPlayers: IPlayer[];
@@ -110,6 +112,10 @@ export interface IMatch {
 	createdAt: string;
 	fixtureDateTime: string;
 	week: IWeek;
+	homeForm: string;
+	awayForm: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	head2head: any;
 }
 
 export const predictionEnum = {
@@ -123,12 +129,18 @@ export type Result = {
 	result: "HOME" | "AWAY" | "DRAW";
 };
 
+export type TCompetitions = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	[key: string]: any;
+}[];
+
 export interface FixtureState {
 	seasons: ISeason[];
 	specificSeason: ISeason | null;
 	weeks: IWeek[];
 	dropDownWeeks: IWeek[];
 	matches: IMatch[];
+	competitions: TCompetitions[];
 	isCreatingSeason: boolean;
 	isCreatingWeek: boolean;
 	isCreatingMatch: boolean;
@@ -139,6 +151,7 @@ export interface FixtureState {
 	isFetchingSpecificWeek: boolean;
 	isPublishingWeek: boolean;
 	isSubmittingWeekResult: boolean;
+	isFetchingCompetitions: boolean;
 	isFetchingMatches: boolean;
 	isEditingMatch: boolean;
 	isDeletingMatch: boolean;

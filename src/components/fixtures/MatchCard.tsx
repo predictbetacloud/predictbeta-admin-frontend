@@ -63,7 +63,11 @@ const Prediction = ({
 
 const Team = ({ team }: { team: IClub }) => (
 	<div className="flex items-center">
-		<img src={team?.clubLogo} className="h-6 w-6 mr-3" alt={team?.name} />
+		<img
+			src={team?.clubLogo || team?.flag}
+			className="h-6 w-6 mr-3"
+			alt={team?.name}
+		/>
 		<P className="text-[#000301] text-[0.8em]">{team?.name}</P>
 	</div>
 );
@@ -156,7 +160,7 @@ export const MatchCard = ({
 					<hr className="my-4" />
 					<div className="md:flex items-center justify-between gap-4">
 						<p className="text-[#8C97A7] text-sm">
-							{dfn.format(matchTime, "eee dd MMM, HH:mm ")}
+							{matchTime ? dfn.format(matchTime, "eee dd MMM, HH:mm ") : ""}
 						</p>
 						<div className="flex items-center justify-between gap-4">
 							<Button.Outline

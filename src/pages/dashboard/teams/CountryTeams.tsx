@@ -12,21 +12,21 @@ import { P } from "../../../components/Texts";
 import Table from "../../../components/Table";
 
 import {
-	selectAllClubTeams,
+	selectAllCountryTeams,
 	selectIsFetchingTeams,
 } from "../../../state/slices/teams";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
-import { getAllClubTeamsAPI } from "../../../api/teamsAPI";
+import { getAllCountryTeamsAPI } from "../../../api/teamsAPI";
 import { IClub } from "../../../types/types";
 
-const ClubTeams = () => {
+const CountryTeams = () => {
 	const l = useLocation();
 
 	const queries = queryString.parse(l.search);
 	const page = queries?.page;
 
-	const club = useAppSelector(selectAllClubTeams);
-	const isFetchingClubs = useAppSelector(selectIsFetchingTeams);
+	const country = useAppSelector(selectAllCountryTeams);
+	const isFetchingCountries = useAppSelector(selectIsFetchingTeams);
 	const dispatch = useAppDispatch();
 
 	const [, setSearchParams] = useSearchParams();
@@ -34,7 +34,7 @@ const ClubTeams = () => {
 	useMemo(
 		() =>
 			dispatch(
-				getAllClubTeamsAPI({
+				getAllCountryTeamsAPI({
 					params: {
 						limit: 10,
 						page,
@@ -56,7 +56,7 @@ const ClubTeams = () => {
 	const columns = useMemo<ColumnDef<IClub>[]>(
 		() => [
 			{
-				header: "CLUB NAME",
+				header: "COUNTRY NAME",
 				accessorKey: "name",
 				cell: (info) => {
 					const clubName = info.getValue();
@@ -64,7 +64,7 @@ const ClubTeams = () => {
 					return (
 						<div className="flex items-center space-x-4">
 							<img
-								src={info.row.original.clubLogo}
+								src={info.row.original.flag}
 								alt={String(clubName)}
 								className="w-8 h-8"
 							/>
@@ -143,7 +143,7 @@ const ClubTeams = () => {
 					/>
 				</div>
 
-				<Link to="/dashboard/teams/new-club">
+				<Link to="/dashboard/teams/new-country">
 					<Button
 						title=""
 						content={
@@ -157,11 +157,11 @@ const ClubTeams = () => {
 			</section>
 			<section className="w-full p-8">
 				<Table
-					data={club?.items ?? []}
+					data={country?.items ?? []}
 					columns={columns}
 					rows={10}
-					loading={isFetchingClubs}
-					totalPages={club?.meta?.totalPages ?? 1}
+					loading={isFetchingCountries}
+					totalPages={country?.meta?.totalPages ?? 1}
 					current_page={Number(page ?? 1)}
 					setCurrentPage={(page: number): void => {
 						setSearchParams({
@@ -174,4 +174,4 @@ const ClubTeams = () => {
 	);
 };
 
-export default ClubTeams;
+export default CountryTeams;

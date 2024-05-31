@@ -4,6 +4,7 @@ import { FieldValues } from "react-hook-form";
 import axiosInstance from "../connection/defaultClient";
 import { toastError, toastSuccess } from "../utils/toast";
 import {
+	setCompetitions,
 	setDropdownWeeks,
 	setIsCreatingMatch,
 	setIsCreatingSeason,
@@ -12,6 +13,7 @@ import {
 	setIsEditingMatch,
 	setIsFetchingAllSeasons,
 	setIsFetchingAllWeeks,
+	setIsFetchingCompetitions,
 	setIsFetchingMatches,
 	setIsFetchingSpecificSeason,
 	setIsFetchingSpecificWeek,
@@ -218,7 +220,14 @@ export const getSpecificWeekAPI = createAsyncThunk(
 export const createMatchAPI = createAsyncThunk(
 	"fixtures/createMatch",
 	(
-		{ homeTeamId, awayTeamId, weekId, seasonId, fixtureDateTime }: FieldValues,
+		{
+			homeTeamId,
+			awayTeamId,
+			weekId,
+			seasonId,
+			fixtureDateTime,
+			leagueId,
+		}: FieldValues,
 		{ dispatch }
 	) => {
 		dispatch(setIsCreatingMatch(true));
@@ -229,6 +238,7 @@ export const createMatchAPI = createAsyncThunk(
 				awayTeamId,
 				weekId,
 				seasonId,
+				leagueId,
 				fixtureDateTime,
 			})
 			.then((data) => {
@@ -318,6 +328,24 @@ export const getAllMatchesAPI = createAsyncThunk(
 			})
 			.catch((error) => {
 				dispatch(setIsFetchingMatches(false));
+				toastError(error?.response?.data?.message);
+			});
+	}
+);
+
+export const getAllCompetitionsByTypeAPI = createAsyncThunk(
+	"fixtures/getAllCompetitionsByType",
+	({ type }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingCompetitions(true));
+		axiosInstance
+			.get(`/teams/league/type/${type}`)
+			.then((data) => {
+				dispatch(setIsFetchingCompetitions(false));
+				const competitions = data?.data?.data;
+				dispatch(setCompetitions(competitions));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingCompetitions(false));
 				toastError(error?.response?.data?.message);
 			});
 	}

@@ -27,6 +27,7 @@ import AllPrivateLeagues from "./pages/dashboard/privateLeague/AllPrivateLeagues
 import PrivateLeagueWeekLeaderboard from "./pages/dashboard/privateLeague/PrivateLeagueWeekLeaderboard";
 import MonthLeaderboard from "./pages/dashboard/leaderboard/MonthLeaderboard";
 import SeasonLeaderboard from "./pages/dashboard/leaderboard/SeasonLeaderboard";
+import CountryTeams from "./pages/dashboard/teams/CountryTeams";
 
 function App() {
 	const navigate = useNavigate();
@@ -88,6 +89,7 @@ function App() {
 					path="/dashboard/private-league"
 					element={<AllPrivateLeagues />}
 				/>
+				<Route path="/dashboard/teams/country" element={<CountryTeams />} />
 				<Route path="/dashboard/teams" element={<ClubTeams />} />
 				<Route path="/dashboard/teams/new-club" element={<AddClubTeam />} />
 				<Route

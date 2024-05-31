@@ -6,6 +6,7 @@ import { toastError, toastSuccess } from "../utils/toast";
 import {
 	setAllPlayers,
 	setClubTeams,
+	setCountryTeams,
 	setIsCreatingPlayer,
 	setIsCreatingTeam,
 	setIsFetchingAllPlayers,
@@ -80,7 +81,7 @@ export const getAllClubTeamsAPI = createAsyncThunk(
 	({ params }: FieldValues, { dispatch }) => {
 		dispatch(setIsFetchingAllTeams(true));
 		axiosInstance
-			.get(`/teams`, { params })
+			.get(`/teams/clubs`, { params })
 			.then((data) => {
 				dispatch(setIsFetchingAllTeams(false));
 				dispatch(setClubTeams(data.data?.data));
@@ -111,6 +112,57 @@ export const getSpecificClubTeamAPI = createAsyncThunk(
 
 export const getSpecificClubPlayersAPI = createAsyncThunk(
 	"teams/getSpecificClubPlayers",
+	({ clubId }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingSpecificTeamPlayers(true));
+		axiosInstance
+			.get(`/teams/${clubId}/players`)
+			.then((data) => {
+				dispatch(setIsFetchingSpecificTeamPlayers(false));
+				dispatch(setSpecificTeamPlayers(data.data?.data));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingSpecificTeamPlayers(false));
+				toastError(error?.response?.data?.message);
+			});
+	}
+);
+
+export const getAllCountryTeamsAPI = createAsyncThunk(
+	"teams/getAllCountryTeams",
+	({ params }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingAllTeams(true));
+		axiosInstance
+			.get(`/teams/countries`, { params })
+			.then((data) => {
+				dispatch(setIsFetchingAllTeams(false));
+				dispatch(setCountryTeams(data.data?.data));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingAllTeams(false));
+				toastError(error?.response?.data?.message);
+			});
+	}
+);
+
+export const getSpecificCountryTeamAPI = createAsyncThunk(
+	"teams/getSpecificCountry",
+	({ clubId }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingSpecificTeam(true));
+		axiosInstance
+			.get(`/teams/${clubId}`)
+			.then((data) => {
+				dispatch(setIsFetchingSpecificTeam(false));
+				dispatch(setSpecificTeam(data.data?.data));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingSpecificTeam(false));
+				toastError(error?.response?.data?.message);
+			});
+	}
+);
+
+export const getSpecificCountryPlayersAPI = createAsyncThunk(
+	"teams/getSpecificCountryPlayers",
 	({ clubId }: FieldValues, { dispatch }) => {
 		dispatch(setIsFetchingSpecificTeamPlayers(true));
 		axiosInstance

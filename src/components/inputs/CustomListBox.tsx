@@ -28,8 +28,6 @@ const CustomListBox = ({
 		(option) => option.value === defaultOption
 	);
 
-	console.log(options, defaultOption);
-
 	const [selected, setSelected] = useState<OptionType | null>(
 		checkedDefaultOption ?? null
 	);
