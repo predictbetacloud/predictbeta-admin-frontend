@@ -78,19 +78,17 @@ const Results = () => {
 	} = useForm();
 
 	// Set matches
-	useMemo(() => {
+	if (matches?.[0]?.id !== allMatches?.[0]?.id) {
 		setMatches(allMatches);
 		allMatches?.forEach((match) => {
 			register(String(match.id), {
 				required: "Select result for match",
 			});
 		});
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [allMatches]);
+	}
 
 	// Get all Season
-	useMemo(() => {
+	useEffect(() => {
 		dispatch(getAllSeasonsAPI({}));
 		dispatch(getAllPlayersAPI({}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +110,7 @@ const Results = () => {
 				const activeWeek = allWeeks.find(
 					(_week) => _week.number === Number(query_week)
 				);
-				if (activeWeek) {
+				if (activeWeek?.id) {
 					setSelectedWeek({
 						id: String(activeWeek?.id),
 						number: String(activeWeek?.number),
@@ -137,13 +135,15 @@ const Results = () => {
 				(_season) => _season.name === query_season
 			);
 
-			dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+			if (activeSeason?.id) {
+				dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+			}
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [seasons, query_season]);
 
-	useMemo(() => {
+	useEffect(() => {
 		if (seasons?.[0]?.id && selectedWeek?.id) {
 			dispatch(
 				getAllMatchesAPI({
