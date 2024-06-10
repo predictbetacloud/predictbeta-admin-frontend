@@ -96,7 +96,7 @@ const AllFixtures = () => {
 				const activeWeek = allWeeks.find(
 					(_week) => _week.number === Number(query_week)
 				);
-				if (activeWeek) {
+				if (activeWeek?.id) {
 					setSelectedWeek({
 						id: String(activeWeek?.id),
 						number: String(activeWeek?.number),
@@ -121,7 +121,9 @@ const AllFixtures = () => {
 				(_season) => _season.name === query_season
 			);
 
-			dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+			if (activeSeason?.id) {
+				dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+			}
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps

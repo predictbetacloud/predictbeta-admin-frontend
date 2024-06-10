@@ -43,11 +43,45 @@ export function formatDateToDateTimeLocal(utcString: string): string {
 	const year: string = date.getFullYear().toString();
 	const month: string = pad(date.getMonth() + 1); // getMonth() returns 0-11
 	const day: string = pad(date.getDate());
-	const hours: string = pad(date.getHours());
+	// Remove one hour because of UTC
+	const hours: string = pad(date.getHours() - 1);
 	const minutes: string = pad(date.getMinutes());
 
 	// Combine into the final string
 	return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+export function formatUTCDateToDateString(utcString: string): string {
+	const date: Date = new Date(utcString);
+
+	// Padding function to ensure two digits
+	function pad(number: number): string {
+		return (number < 10 ? "0" : "") + number.toString();
+	}
+
+	// Format year, month, day, hours, and minutes
+	const year: string = date.getFullYear().toString();
+	const month: string = pad(date.getMonth() + 1); // getMonth() returns 0-11
+	const day: string = pad(date.getDate());
+
+	// Combine into the final string
+	return `${year}-${month}-${day}`;
+}
+
+export function formatUTCDateToTimeString(utcString: string): string {
+	const date: Date = new Date(utcString);
+
+	// Padding function to ensure two digits
+	function pad(number: number): string {
+		return (number < 10 ? "0" : "") + number.toString();
+	}
+
+	// Format year, month, day, hours, and minutes
+	const hours: string = pad(date.getHours() - 1);
+	const minutes: string = pad(date.getMinutes());
+
+	// Combine into the final string
+	return `${hours}:${minutes}`;
 }
 
 // Format currency

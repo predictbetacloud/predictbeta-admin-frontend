@@ -114,8 +114,11 @@ export interface IMatch {
 	week: IWeek;
 	homeForm: string;
 	awayForm: string;
+	leagueId: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	head2head: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	league: Record<string, any>;
 }
 
 export const predictionEnum = {

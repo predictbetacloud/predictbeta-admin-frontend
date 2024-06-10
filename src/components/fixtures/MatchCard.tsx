@@ -9,18 +9,18 @@ import { colors } from "../../utils/colors";
 import { RiDeleteBin5Line, RiEdit2Line } from "react-icons/ri";
 import Button from "../Buttons";
 
-const Style = styled.div<{ invalid: "true" | "false" }>`
+const Style = styled.div<{ $invalid: "true" | "false" }>`
 	border: 1px solid;
 	border-color: ${(props) =>
-		props.invalid === "true" ? "#EB1536" : "#e1e7ec"};
+		props.$invalid === "true" ? "#EB1536" : "#e1e7ec"};
 `;
 
 interface PredictionStyle {
-	isSelected: boolean;
+	$isSelected: boolean;
 }
 
 const PredictionStyle = styled.div<PredictionStyle>`
-	background: ${(props) => (props.isSelected ? "#EB1536" : "#051B30")};
+	background: ${(props) => (props.$isSelected ? "#EB1536" : "#051B30")};
 	padding: 8px 14px;
 `;
 
@@ -44,14 +44,12 @@ const Prediction = ({
 	value: any;
 }) => (
 	<PredictionStyle
-		className={
-			"flex items-center justify-center " + inactive
-				? ""
-				: "cursor-pointer" + className
-		}
+		className={`flex items-center justify-center  ${
+			inactive ? "" : "cursor-pointer"
+		} ${className ? className : ""}`}
 		style={style}
 		onClick={inactive ? () => {} : () => onClick(value)}
-		isSelected={selectedPrediction === value}
+		$isSelected={selectedPrediction === value}
 	>
 		{locked ? (
 			<IoIosLock color="white" width="14px" className="cursor-not-allowed" />
@@ -109,7 +107,7 @@ export const MatchCard = ({
 	};
 
 	return (
-		<Style className="p-4 rounded-md" invalid={invalid ? "true" : "false"}>
+		<Style className="p-4 rounded-md" $invalid={invalid ? "true" : "false"}>
 			<div className="md:flex items-center justify-between">
 				<div className="md:space-y-2 flex md:block items-center justify-between mb-4 md:mb-0">
 					<Team team={home} />
@@ -160,7 +158,9 @@ export const MatchCard = ({
 					<hr className="my-4" />
 					<div className="md:flex items-center justify-between gap-4">
 						<p className="text-[#8C97A7] text-sm">
-							{matchTime ? dfn.format(matchTime, "eee dd MMM, HH:mm ") : ""}
+							{matchTime
+								? dfn.format(dfn.subHours(matchTime, 1), "eee dd MMM, HH:mm ")
+								: ""}
 						</p>
 						<div className="flex items-center justify-between gap-4">
 							<Button.Outline

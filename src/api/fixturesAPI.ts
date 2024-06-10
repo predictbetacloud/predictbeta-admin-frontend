@@ -227,6 +227,8 @@ export const createMatchAPI = createAsyncThunk(
 			seasonId,
 			fixtureDateTime,
 			leagueId,
+			competitionType,
+			teamType,
 		}: FieldValues,
 		{ dispatch }
 	) => {
@@ -240,6 +242,8 @@ export const createMatchAPI = createAsyncThunk(
 				seasonId,
 				leagueId,
 				fixtureDateTime,
+				competitionType,
+				teamType,
 			})
 			.then((data) => {
 				dispatch(setIsCreatingMatch(false));
@@ -265,6 +269,7 @@ export const editMatchAPI = createAsyncThunk(
 			seasonId,
 			fixtureDateTime,
 			matchId,
+			leagueId,
 		}: FieldValues,
 		{ dispatch }
 	) => {
@@ -276,6 +281,7 @@ export const editMatchAPI = createAsyncThunk(
 				awayTeamId,
 				weekId,
 				seasonId,
+				leagueId,
 				fixtureDateTime,
 			})
 			.then((data) => {

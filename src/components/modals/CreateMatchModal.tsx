@@ -69,9 +69,13 @@ const CreateMatchModal = () => {
 		week,
 		home,
 		away,
-		fixtureDateTime,
+		fixtureDate,
+		fixtureTime,
 		competition,
+		competitionType,
+		clubOrCountry,
 	}: FieldValues) => {
+		const fixtureDateTime = `${fixtureDate}T${fixtureTime}`;
 		dispatch(
 			createMatchAPI({
 				seasonId: season.id,
@@ -79,6 +83,8 @@ const CreateMatchModal = () => {
 				homeTeamId: home.id,
 				awayTeamId: away.id,
 				leagueId: competition.leagueId,
+				competitionType: competitionType.id,
+				teamType: clubOrCountry.id,
 				fixtureDateTime,
 			})
 		);
@@ -87,15 +93,17 @@ const CreateMatchModal = () => {
 	const season = watch("season");
 	const clubOrCountry = watch("clubOrCountry");
 	const competitionType = watch("competitionType");
-	const competition = watch("competition");
-
-	console.log("comp", competition);
 
 	useMemo(() => {
 		resetField("home");
 		resetField("away");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clubOrCountry]);
+
+	useMemo(() => {
+		resetField("competition");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [competitionType]);
 
 	useEffect(() => {
 		dispatch(getAllSeasonsAPI({}));
@@ -248,46 +256,49 @@ const CreateMatchModal = () => {
 					</div>
 
 					{/* Competition Select */}
-					<div className="mt-4">
-						<label htmlFor="competition" className="mb-2 block">
-							<P className="text-[#222222] text-sm">Competition</P>
-						</label>
-						<Controller
-							control={control}
-							name="competition"
-							rules={{
-								required: "Select a competition",
-							}}
-							render={({ field: { onChange, value, ref } }) => (
-								<Select
-									ref={ref}
-									onChange={onChange}
-									options={competitions}
-									value={value}
-									isLoading={isFetchingCompetitions}
-									components={{
-										IndicatorSeparator,
-									}}
-									getOptionValue={(option) => option["leagueId"]}
-									getOptionLabel={(option) =>
-										`${option["country"]?.name} - ${option["name"]}`
+					{competitionType && (
+						<div className="mt-4">
+							<label htmlFor="competition" className="mb-2 block">
+								<P className="text-[#222222] text-sm">Competition</P>
+							</label>
+							<Controller
+								control={control}
+								name="competition"
+								rules={{
+									required: "Select a competition",
+								}}
+								render={({ field: { onChange, value, ref } }) => (
+									<Select
+										ref={ref}
+										onChange={onChange}
+										options={competitions}
+										value={value}
+										isLoading={isFetchingCompetitions}
+										components={{
+											IndicatorSeparator,
+										}}
+										getOptionValue={(option) => option["leagueId"]}
+										getOptionLabel={(option) =>
+											`${option["country"]?.name} - ${option["name"]}`
+										}
+										maxMenuHeight={300}
+										placeholder="e.g 1"
+										classNamePrefix="react-select"
+										isClearable
+										styles={errors?.competition ? invalidStyle : defaultStyle}
+									/>
+								)}
+							/>
+							{errors?.competition && (
+								<ErrorMessage
+									message={
+										errors?.competition &&
+										errors?.competition.message?.toString()
 									}
-									maxMenuHeight={300}
-									placeholder="e.g 1"
-									classNamePrefix="react-select"
-									isClearable
-									styles={errors?.competition ? invalidStyle : defaultStyle}
 								/>
 							)}
-						/>
-						{errors?.competition && (
-							<ErrorMessage
-								message={
-									errors?.competition && errors?.competition.message?.toString()
-								}
-							/>
-						)}
-					</div>
+						</div>
+					)}
 
 					{/* Club Or Country Select */}
 					<div className="mt-4">
@@ -298,7 +309,7 @@ const CreateMatchModal = () => {
 							control={control}
 							name="clubOrCountry"
 							rules={{
-								required: "Select a match type",
+								required: "Select a team type",
 							}}
 							render={({ field: { onChange, value, ref } }) => (
 								<Select
@@ -501,29 +512,55 @@ const CreateMatchModal = () => {
 					)}
 
 					{/* Match Date */}
-					<div className="mt-4">
-						<label htmlFor="fixtureDateTime" className="mb-2 block">
-							<P className="text-[#222222] text-sm">Match Time</P>
-						</label>
-						<Input
-							id="fixtureDateTime"
-							type="datetime-local"
-							placeholder="e.g enter date"
-							{...register("fixtureDateTime", {
-								required: "Match time is required",
-							})}
-							className={`w-full input ${
-								errors?.fixtureDateTime ? "invalid" : ""
-							}`}
-						/>
-						{errors?.fixtureDateTime && (
-							<ErrorMessage
-								message={
-									errors?.fixtureDateTime &&
-									errors?.fixtureDateTime.message?.toString()
-								}
+					<div className="mt-4 grid grid-cols-2 gap-4">
+						<div>
+							<label htmlFor="fixtureDate" className="mb-2 block">
+								<P className="text-[#222222] text-sm">Match Date</P>
+							</label>
+							<Input
+								id="fixtureDate"
+								type="date"
+								placeholder="e.g enter date"
+								{...register("fixtureDate", {
+									required: "Match date is required",
+								})}
+								className={`w-full input ${
+									errors?.fixtureDate ? "invalid" : ""
+								}`}
 							/>
-						)}
+							{errors?.fixtureDate && (
+								<ErrorMessage
+									message={
+										errors?.fixtureDate &&
+										errors?.fixtureDate.message?.toString()
+									}
+								/>
+							)}
+						</div>
+						<div>
+							<label htmlFor="fixtureTime" className="mb-2 block">
+								<P className="text-[#222222] text-sm">Match Time</P>
+							</label>
+							<Input
+								id="fixtureTime"
+								type="time"
+								placeholder="e.g enter Time"
+								{...register("fixtureTime", {
+									required: "Match time is required",
+								})}
+								className={`w-full input ${
+									errors?.fixtureTime ? "invalid" : ""
+								}`}
+							/>
+							{errors?.fixtureTime && (
+								<ErrorMessage
+									message={
+										errors?.fixtureTime &&
+										errors?.fixtureTime.message?.toString()
+									}
+								/>
+							)}
+						</div>
 					</div>
 
 					<Button

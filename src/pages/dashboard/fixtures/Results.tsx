@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import queryString from "query-string";
 import Select from "react-select";
 
@@ -94,14 +94,6 @@ const Results = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// Get all weeks in the latest season
-	useMemo(() => {
-		if (seasons?.[0]?.id) {
-			dispatch(getAllWeeksAPI({ seasonId: seasons?.[0]?.id }));
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [seasons?.[0]?.id]);
-
 	// Make latest week the active week
 	useEffect(() => {
 		if (allWeeks?.[0]?.number) {
@@ -137,6 +129,10 @@ const Results = () => {
 
 			if (activeSeason?.id) {
 				dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
+			}
+		} else {
+			if (seasons?.[0]?.id) {
+				dispatch(getAllWeeksAPI({ seasonId: seasons?.[0]?.id }));
 			}
 		}
 
