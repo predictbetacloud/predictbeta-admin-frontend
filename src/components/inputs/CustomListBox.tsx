@@ -42,7 +42,7 @@ const CustomListBox = ({
 	}, [defaultOption]);
 
 	useEffect(() => {
-		if (selected !== null) {
+		if (selected !== null && selected.value !== checkedDefaultOption?.value) {
 			onChange(String(selected.value));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

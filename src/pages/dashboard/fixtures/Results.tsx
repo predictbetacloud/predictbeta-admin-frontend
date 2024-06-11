@@ -68,6 +68,8 @@ const Results = () => {
 
 	const [matches, setMatches] = useState(allMatches);
 
+	const activeSeason = seasons.find((_season) => _season.name === query_season);
+
 	const {
 		register,
 		setValue,
@@ -90,7 +92,6 @@ const Results = () => {
 	// Get all Season
 	useEffect(() => {
 		dispatch(getAllSeasonsAPI({}));
-		dispatch(getAllPlayersAPI({}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -123,10 +124,6 @@ const Results = () => {
 	// Make latest season the active season
 	useEffect(() => {
 		if (query_season) {
-			const activeSeason = seasons.find(
-				(_season) => _season.name === query_season
-			);
-
 			if (activeSeason?.id) {
 				dispatch(getAllWeeksAPI({ seasonId: activeSeason?.id }));
 			}
@@ -144,6 +141,11 @@ const Results = () => {
 			dispatch(
 				getAllMatchesAPI({
 					seasonId: seasons?.[0]?.id,
+					weekId: selectedWeek?.id,
+				})
+			);
+			dispatch(
+				getAllPlayersAPI({
 					weekId: selectedWeek?.id,
 				})
 			);
@@ -175,6 +177,7 @@ const Results = () => {
 
 		dispatch(
 			submitWeekResultAPI({
+				seasonId: activeSeason?.id,
 				weekId: Number(selectedWeek?.id),
 				scorers: _scorers,
 				timeOfFirstGoal: Number(timeOfFirstGoal),

@@ -243,13 +243,12 @@ export const deletetPlayerAPI = createAsyncThunk(
 
 export const getAllPlayersAPI = createAsyncThunk(
 	"teams/getAllPlayers",
-	(_: FieldValues, { dispatch }) => {
+	({ weekId }: FieldValues, { dispatch }) => {
 		dispatch(setIsFetchingAllPlayers(true));
 		axiosInstance
-			.get(`/players`)
+			.get(`/players/week/${weekId}`)
 			.then((data) => {
 				dispatch(setIsFetchingAllPlayers(false));
-				console.log(data);
 				dispatch(setAllPlayers(data.data?.data));
 			})
 			.catch((error) => {
