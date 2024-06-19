@@ -137,10 +137,29 @@ export type TCompetitions = {
 	[key: string]: any;
 }[];
 
+export interface IWeekResult {
+	fixtures: {
+		fixture: {
+			id: number;
+			createdAt: string;
+			deletedAt: string | null;
+			weekId: number;
+			fixtureDateTime: string;
+			homeTeam: IClub;
+			awayTeam: IClub;
+		};
+		id: number;
+		result: "HOME" | "AWAY" | "DRAW";
+	}[];
+	timeOfFirstGoal: number;
+	scorers: { player: IPlayer }[] | undefined;
+}
+
 export interface FixtureState {
 	seasons: ISeason[];
 	specificSeason: ISeason | null;
 	weeks: IWeek[];
+	specificWeekResults: IWeekResult | null;
 	dropDownWeeks: IWeek[];
 	matches: IMatch[];
 	competitions: TCompetitions[];
@@ -152,6 +171,7 @@ export interface FixtureState {
 	isFetchingSpecificSeason: boolean;
 	isFetchingWeeks: boolean;
 	isFetchingSpecificWeek: boolean;
+	isFetchingSpecificWeekResults: boolean;
 	isPublishingWeek: boolean;
 	isSubmittingWeekResult: boolean;
 	isFetchingCompetitions: boolean;

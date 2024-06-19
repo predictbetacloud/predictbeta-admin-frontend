@@ -10,13 +10,16 @@ import {
 	selectIsFetchingAllSeasons,
 	selectIsFetchingAllWeeks,
 	selectIsFetchingMatches,
+	selectIsFetchingSpecificWeekResults,
 	selectIsSubmittingWeekResult,
 	selectMatches,
+	selectSpecificWeekResults,
 } from "../../../state/slices/fixtures";
 import {
 	getAllMatchesAPI,
 	getAllSeasonsAPI,
 	getAllWeeksAPI,
+	getSpecificWeekResultsAPI,
 	submitWeekResultAPI,
 } from "../../../api/fixturesAPI";
 import { VscFilter } from "react-icons/vsc";
@@ -31,6 +34,7 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import {
 	formatPredictionsFromObjectToArray,
 	formatScorersFromObjectToArray,
+	reverseFormatScorersFromObjectToArray,
 } from "../../../utils/utils";
 import ErrorMessage from "../../../components/inputs/ErrorMessage";
 import {
@@ -52,12 +56,14 @@ const Results = () => {
 
 	const isFetchingWeeks = useAppSelector(selectIsFetchingAllWeeks);
 	const isFetchingMatches = useAppSelector(selectIsFetchingMatches);
+	const isFetchingResult = useAppSelector(selectIsFetchingSpecificWeekResults);
 	const isFetchingAllPlayers = useAppSelector(selectIsFetchingAllPlayers);
 	const isFetchingSeasons = useAppSelector(selectIsFetchingAllSeasons);
 	const isSubmittingResults = useAppSelector(selectIsSubmittingWeekResult);
 
 	const allWeeks = useAppSelector(selectAllWeeks);
 	const allMatches = useAppSelector(selectMatches);
+	const results = useAppSelector(selectSpecificWeekResults);
 	const seasons = useAppSelector(selectAllSeasons);
 	const allPlayers = useAppSelector(selectAllPlayers);
 
@@ -146,6 +152,11 @@ const Results = () => {
 			);
 			dispatch(
 				getAllPlayersAPI({
+					weekId: selectedWeek?.id,
+				})
+			);
+			dispatch(
+				getSpecificWeekResultsAPI({
 					weekId: selectedWeek?.id,
 				})
 			);
@@ -247,7 +258,10 @@ const Results = () => {
 			</section>
 
 			{/* Matches */}
-			{isFetchingMatches || isFetchingWeeks || isFetchingSeasons ? (
+			{isFetchingMatches ||
+			isFetchingResult ||
+			isFetchingWeeks ||
+			isFetchingSeasons ? (
 				<PageLoading />
 			) : (
 				<form onSubmit={handleSubmit(onSubmit)} className="py-10 px-8 md:w-4/5">
@@ -264,6 +278,11 @@ const Results = () => {
 												id={match.id}
 												matchTime={match.fixtureDateTime}
 												prediction={match.prediction}
+												result={
+													results?.fixtures?.find(
+														(_match) => _match.fixture.id === match.id
+													)?.result
+												}
 												onChange={updateSelection}
 												invalid={!!errors?.[match?.id]}
 											/>
@@ -294,13 +313,16 @@ const Results = () => {
 											rules={{
 												required: "Make a selection",
 											}}
+											defaultValue={reverseFormatScorersFromObjectToArray(
+												results?.scorers
+											)}
 											render={({ field: { onChange, value, ref } }) => (
 												<Select
 													ref={ref}
 													onChange={onChange}
 													options={allPlayers}
 													value={value}
-													isLoading={isFetchingAllPlayers}
+													isLoading={isFetchingAllPlayers || isFetchingResult}
 													components={{
 														IndicatorSeparator,
 													}}
@@ -311,6 +333,9 @@ const Results = () => {
 													classNamePrefix="react-select"
 													isMulti
 													isClearable
+													defaultValue={reverseFormatScorersFromObjectToArray(
+														results?.scorers
+													)}
 													styles={errors?.scorers ? invalidStyle : defaultStyle}
 												/>
 											)}
@@ -342,7 +367,9 @@ const Results = () => {
 													value: 1,
 													message: "Please enter a valid number",
 												},
+												value: results?.timeOfFirstGoal ?? "",
 											})}
+											defaultValue={results?.timeOfFirstGoal}
 											className={`w-full input ${
 												errors?.timeOfFirstGoal ? "invalid" : ""
 											}`}

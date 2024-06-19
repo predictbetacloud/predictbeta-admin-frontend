@@ -16,11 +16,17 @@ const Style = styled.div<{ $invalid: "true" | "false" }>`
 `;
 
 interface PredictionStyle {
-	$isSelected: boolean;
+	$isSelected: "true" | "false";
+	$isCorrect: "true" | "false";
 }
 
 const PredictionStyle = styled.div<PredictionStyle>`
-	background: ${(props) => (props.$isSelected ? "#EB1536" : "#051B30")};
+	background: ${(props) =>
+		props.$isCorrect === "true"
+			? colors.green700
+			: props.$isSelected === "true"
+			? "#EB1536"
+			: "#051B30"};
 	padding: 8px 14px;
 `;
 
@@ -33,6 +39,7 @@ const Prediction = ({
 	style,
 	locked,
 	inactive,
+	result,
 }: {
 	className?: string;
 	onClick: (value: any) => void;
@@ -42,6 +49,7 @@ const Prediction = ({
 	locked: boolean;
 	inactive: boolean;
 	value: any;
+	result: "" | "HOME" | "DRAW" | "AWAY" | undefined;
 }) => (
 	<PredictionStyle
 		className={`flex items-center justify-center  ${
@@ -49,7 +57,8 @@ const Prediction = ({
 		} ${className ? className : ""}`}
 		style={style}
 		onClick={inactive ? () => {} : () => onClick(value)}
-		$isSelected={selectedPrediction === value}
+		$isCorrect={result === value ? "true" : "false"}
+		$isSelected={selectedPrediction === value ? "true" : "false"}
 	>
 		{locked ? (
 			<IoIosLock color="white" width="14px" className="cursor-not-allowed" />
@@ -83,9 +92,8 @@ export const MatchCard = ({
 	adminSet,
 	toggleUpdateModal,
 	toggleDeleteModal,
-}: // isScoreSet,
-// score,
-{
+	result,
+}: {
 	away: any;
 	home: any;
 	id: number;
@@ -96,6 +104,7 @@ export const MatchCard = ({
 	invalid?: boolean;
 
 	isScoreSet?: boolean;
+	result?: "" | "AWAY" | "DRAW" | "HOME";
 	prediction?: "" | "HOME" | "DRAW" | "AWAY";
 	score?: "" | "AWAY" | "DRAW" | "HOME";
 	adminSet?: boolean;
@@ -122,6 +131,7 @@ export const MatchCard = ({
 							locked={locked}
 							title="H"
 							selectedPrediction={prediction}
+							result={result}
 							style={{
 								borderRadius: "5px 0px 0px 5px",
 							}}
@@ -134,6 +144,7 @@ export const MatchCard = ({
 							locked={locked}
 							title="X"
 							selectedPrediction={prediction}
+							result={result}
 							style={{
 								borderRight: `1px solid ${colors.grey500}`,
 								borderLeft: `1px solid ${colors.grey500}`,
@@ -146,6 +157,7 @@ export const MatchCard = ({
 							locked={locked}
 							onClick={captureSelection}
 							selectedPrediction={prediction}
+							result={result}
 							style={{
 								borderRadius: "0px 5px 5px 0px",
 							}}

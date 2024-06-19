@@ -1,5 +1,11 @@
 import { NavigateFunction, Location } from "react-router-dom";
-import { IClub, Result, SharingFormularType } from "../types/types";
+import {
+	IClub,
+	IPlayer,
+	IWeekResult,
+	Result,
+	SharingFormularType,
+} from "../types/types";
 import { toastSuccess } from "./toast";
 
 export const globalRouter = { navigate: null } as {
@@ -118,6 +124,20 @@ export function formatScorersFromObjectToArray(
 	return scorers.map((scorer) => ({
 		playerId: scorer.id,
 	}));
+}
+
+// Format Scorers
+export function reverseFormatScorersFromObjectToArray(
+	scorers: IWeekResult["scorers"]
+): IPlayer[] {
+	const list = [];
+
+	if (Array.isArray(scorers) && scorers.length > 0) {
+		for (const scorer of scorers) {
+			list.push(scorer.player);
+		}
+	}
+	return list;
 }
 
 // create positions array

@@ -6,6 +6,7 @@ import {
 	IMatch,
 	ISeason,
 	IWeek,
+	IWeekResult,
 	TCompetitions,
 } from "../../types/types";
 
@@ -15,12 +16,14 @@ const initialState: FixtureState = {
 	weeks: [],
 	dropDownWeeks: [],
 	specificWeek: null,
+	specificWeekResults: null,
 	matches: [],
 	competitions: [],
 	isFetchingSeasons: true,
 	isFetchingSpecificSeason: true,
 	isFetchingWeeks: true,
 	isFetchingSpecificWeek: true,
+	isFetchingSpecificWeekResults: true,
 	isPublishingWeek: false,
 	isSubmittingWeekResult: false,
 	isFetchingCompetitions: false,
@@ -59,6 +62,9 @@ export const fixtureSlice = createSlice({
 		setSpecificWeek: (state, action: PayloadAction<IWeek>) => {
 			state.specificWeek = action.payload;
 		},
+		setSpecificWeekResults: (state, action: PayloadAction<IWeekResult>) => {
+			state.specificWeekResults = action.payload;
+		},
 		setMatches: (state, action: PayloadAction<IMatch[]>) => {
 			state.matches = action.payload;
 		},
@@ -88,6 +94,12 @@ export const fixtureSlice = createSlice({
 			action: PayloadAction<FixtureState["isFetchingSpecificWeek"]>
 		) => {
 			state.isFetchingSpecificWeek = action.payload;
+		},
+		setIsFetchingSpecificWeekResults: (
+			state,
+			action: PayloadAction<FixtureState["isFetchingSpecificWeekResults"]>
+		) => {
+			state.isFetchingSpecificWeekResults = action.payload;
 		},
 		setIsSubmittingWeekResult: (
 			state,
@@ -188,6 +200,7 @@ export const {
 	setDropdownWeeks,
 	setSpecificSeason,
 	setSpecificWeek,
+	setSpecificWeekResults,
 	setCompetitions,
 	setIsFetchingCompetitions,
 	setMatches,
@@ -195,6 +208,7 @@ export const {
 	setIsFetchingAllWeeks,
 	setIsFetchingSpecificSeason,
 	setIsFetchingSpecificWeek,
+	setIsFetchingSpecificWeekResults,
 	setIsFetchingMatches,
 	setIsPublishingWeek,
 	setIsSubmittingWeekResult,
@@ -225,6 +239,9 @@ export const selectDropdownWeeks = (state: RootState) =>
 export const selectSpecificWeek = (state: RootState) =>
 	state.fixtures.specificWeek;
 
+export const selectSpecificWeekResults = (state: RootState) =>
+	state.fixtures.specificWeekResults;
+
 export const selectCompetitions = (state: RootState) =>
 	state.fixtures.competitions;
 
@@ -241,6 +258,9 @@ export const selectIsFetchingAllWeeks = (state: RootState) =>
 
 export const selectIsFetchingSpecificWeek = (state: RootState) =>
 	state.fixtures.isFetchingSpecificWeek;
+
+export const selectIsFetchingSpecificWeekResults = (state: RootState) =>
+	state.fixtures.isFetchingSpecificWeekResults;
 
 export const selectIsPublishingWeek = (state: RootState) =>
 	state.fixtures.isPublishingWeek;

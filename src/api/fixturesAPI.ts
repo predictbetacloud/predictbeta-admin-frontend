@@ -17,6 +17,7 @@ import {
 	setIsFetchingMatches,
 	setIsFetchingSpecificSeason,
 	setIsFetchingSpecificWeek,
+	setIsFetchingSpecificWeekResults,
 	setIsPublishingWeek,
 	setIsSubmittingWeekResult,
 	setMatches,
@@ -29,6 +30,7 @@ import {
 	setShowPublishWeekModal,
 	setSpecificSeason,
 	setSpecificWeek,
+	setSpecificWeekResults,
 	setWeeks,
 } from "../state/slices/fixtures";
 
@@ -315,6 +317,24 @@ export const deleteMatchAPI = createAsyncThunk(
 				dispatch(setIsDeletingMatch(false));
 				toastError(error?.response?.data?.message);
 				console.error(error);
+			});
+	}
+);
+
+export const getSpecificWeekResultsAPI = createAsyncThunk(
+	"fixtures/getSpecificWeekResults",
+	({ weekId }: FieldValues, { dispatch }) => {
+		dispatch(setIsFetchingSpecificWeekResults(true));
+		axiosInstance
+			.get(`/weeks/${weekId}/result`)
+			.then((data) => {
+				dispatch(setIsFetchingSpecificWeekResults(false));
+				const results = data?.data?.data;
+				dispatch(setSpecificWeekResults(results));
+			})
+			.catch((error) => {
+				dispatch(setIsFetchingSpecificWeekResults(false));
+				toastError(error?.response?.data?.message);
 			});
 	}
 );
