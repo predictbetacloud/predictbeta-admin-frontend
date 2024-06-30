@@ -54,10 +54,16 @@ export const fixtureSlice = createSlice({
 			state.specificSeason = action.payload;
 		},
 		setWeeks: (state, action: PayloadAction<IWeek[]>) => {
-			state.weeks = action.payload;
+			const weeks = Array.isArray(action.payload)
+				? action.payload.reverse()
+				: [];
+			state.weeks = weeks;
 		},
 		setDropdownWeeks: (state, action: PayloadAction<IWeek[]>) => {
-			state.dropDownWeeks = action.payload;
+			const weeks = Array.isArray(action.payload)
+				? action.payload.reverse()
+				: [];
+			state.dropDownWeeks = weeks;
 		},
 		setSpecificWeek: (state, action: PayloadAction<IWeek>) => {
 			state.specificWeek = action.payload;
@@ -66,7 +72,10 @@ export const fixtureSlice = createSlice({
 			state.specificWeekResults = action.payload;
 		},
 		setMatches: (state, action: PayloadAction<IMatch[]>) => {
-			state.matches = action.payload;
+			const matches = Array.isArray(action.payload)
+				? action.payload.reverse()
+				: [];
+			state.matches = matches;
 		},
 		setCompetitions: (state, action: PayloadAction<TCompetitions[]>) => {
 			state.competitions = action.payload;

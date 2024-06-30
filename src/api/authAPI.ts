@@ -12,6 +12,7 @@ import {
 } from "../state/slices/auth";
 import { toastError, toastSuccess } from "../utils/toast";
 import { globalRouter } from "../utils/utils";
+import axios from "axios";
 
 const sessionName = import.meta.env.VITE_REACT_APP_SLUG + "_session";
 
@@ -139,6 +140,8 @@ export const logOutAPI = createAsyncThunk(
 	}
 );
 
+let refreshRequestCancelToken: AbortController;
+
 export const refreshTokenAPI = createAsyncThunk(
 	"auth/refresh",
 	async (_, { dispatch }) => {
@@ -150,6 +153,13 @@ export const refreshTokenAPI = createAsyncThunk(
 
 		const retry = Number(retryCount) < maxCount ? true : false;
 
+		if (refreshRequestCancelToken) {
+			refreshRequestCancelToken.abort("Operation canceled due to new request.");
+		}
+
+		refreshRequestCancelToken = new AbortController();
+		const { signal } = refreshRequestCancelToken;
+
 		if (retry) {
 			axiosInstance
 				.post(
@@ -159,6 +169,7 @@ export const refreshTokenAPI = createAsyncThunk(
 						headers: {
 							Authorization: `Bearer ${refresh_token}`,
 						},
+						signal,
 					}
 				)
 				.then((data) => {
@@ -172,31 +183,38 @@ export const refreshTokenAPI = createAsyncThunk(
 					dispatch(updateRetryCount(String(0)));
 				})
 				.catch((error) => {
-					dispatch(
-						updateRetryCount(retry ? (Number(retryCount) + 1).toString() : "0")
-					);
-
-					if (
-						(error && error.response && error.response.status === 401) ||
-						(error.data &&
-							error?.data?.error &&
-							error.data.error.code === 401) ||
-						(error && error.response && error.response.status === 403) ||
-						(error.data && error?.data?.error && error.data.error.code === 403)
-					) {
-						localStorage.removeItem(sessionName);
+					if (axios.isCancel(error) || error.name === "AbortError") {
+						console.log("Request canceled:", error.message);
+					} else {
 						dispatch(
-							updateAuth({
-								user: null,
-								token: null,
-								refresh_token: null,
-							})
+							updateRetryCount(
+								retry ? (Number(retryCount) + 1).toString() : "0"
+							)
 						);
+						if (
+							(error && error.response && error.response.status === 401) ||
+							(error.data &&
+								error?.data?.error &&
+								error.data.error.code === 401) ||
+							(error && error.response && error.response.status === 403) ||
+							(error.data &&
+								error?.data?.error &&
+								error.data.error.code === 403)
+						) {
+							localStorage.removeItem(sessionName);
+							dispatch(
+								updateAuth({
+									user: null,
+									token: null,
+									refresh_token: null,
+								})
+							);
 
-						if (globalRouter.navigate) {
-							globalRouter.navigate("/", {
-								state: { from: window.location.pathname },
-							});
+							if (globalRouter.navigate) {
+								globalRouter.navigate("/", {
+									state: { from: window.location.pathname },
+								});
+							}
 						}
 					}
 				});

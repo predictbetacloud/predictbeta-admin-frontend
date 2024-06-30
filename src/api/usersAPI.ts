@@ -24,6 +24,7 @@ import {
 	setShowAddUserModal,
 } from "../state/slices/users";
 import { globalRouter } from "../utils/utils";
+import { createCancelableThunk } from "./helper";
 
 export const createUserAPI = createAsyncThunk(
 	"users/create",
@@ -82,55 +83,79 @@ export const updateUserAPI = createAsyncThunk(
 	}
 );
 
-export const getAllUsersAPI = createAsyncThunk(
+// export const getAllUsersAPI = createAsyncThunk(
+// 	"users/getAllUsers",
+// 	({ params }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllUsers(true));
+// 		axiosInstance
+// 			.get(`/users`, { params })
+// 			.then((data) => {
+// 				dispatch(setUsers(data.data.data));
+// 				dispatch(setIsFetchingAllUsers(false));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllUsers(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllUsersAPI = createCancelableThunk(
 	"users/getAllUsers",
-	({ params }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllUsers(true));
-		axiosInstance
-			.get(`/users`, { params })
-			.then((data) => {
-				dispatch(setUsers(data.data.data));
-				dispatch(setIsFetchingAllUsers(false));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllUsers(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllUsers",
+	() => `/users`,
+	setIsFetchingAllUsers,
+	setUsers
 );
 
-export const getSpecificUserAPI = createAsyncThunk(
+// export const getSpecificUserAPI = createAsyncThunk(
+// 	"users/getSpecific",
+// 	({ userId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificUser(true));
+// 		axiosInstance
+// 			.get(`/users/${userId}`)
+// 			.then((data) => {
+// 				dispatch(setSpecificUser(data.data?.data));
+// 				dispatch(setIsFetchingSpecificUser(false));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificUser(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificUserAPI = createCancelableThunk(
 	"users/getSpecific",
-	({ userId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificUser(true));
-		axiosInstance
-			.get(`/users/${userId}`)
-			.then((data) => {
-				dispatch(setSpecificUser(data.data?.data));
-				dispatch(setIsFetchingSpecificUser(false));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificUser(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecific",
+	({ userId }) => `/users/${userId}`,
+	setIsFetchingSpecificUser,
+	setSpecificUser
 );
 
-export const getSpecificUserWalletHistoryAPI = createAsyncThunk(
+// export const getSpecificUserWalletHistoryAPI = createAsyncThunk(
+// 	"users/getSpecificUserWalletHistory",
+// 	({ userId, params }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificUserWalletHistory(true));
+// 		axiosInstance
+// 			.get(`/users/${userId}/wallet-history`, { params })
+// 			.then((data) => {
+// 				dispatch(setSpecificUserWalletHistory(data.data?.data));
+// 				dispatch(setIsFetchingSpecificUserWalletHistory(false));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificUserWalletHistory(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificUserWalletHistoryAPI = createCancelableThunk(
 	"users/getSpecificUserWalletHistory",
-	({ userId, params }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificUserWalletHistory(true));
-		axiosInstance
-			.get(`/users/${userId}/wallet-history`, { params })
-			.then((data) => {
-				dispatch(setSpecificUserWalletHistory(data.data?.data));
-				dispatch(setIsFetchingSpecificUserWalletHistory(false));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificUserWalletHistory(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificUserWalletHistory",
+	({ userId }) => `/users/${userId}/wallet-history`,
+	setIsFetchingSpecificUserWalletHistory,
+	setSpecificUserWalletHistory
 );
 
 export const deletetUserAPI = createAsyncThunk(

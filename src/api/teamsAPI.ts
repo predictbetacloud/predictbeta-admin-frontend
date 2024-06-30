@@ -19,6 +19,7 @@ import {
 	setSpecificTeamPlayers,
 } from "../state/slices/teams";
 import { globalRouter } from "../utils/utils";
+import { createCancelableThunk } from "./helper";
 
 export const createTeamAPI = createAsyncThunk(
 	"teams/create",
@@ -76,106 +77,154 @@ export const updateTeamAPI = createAsyncThunk(
 	}
 );
 
-export const getAllClubTeamsAPI = createAsyncThunk(
+// export const getAllClubTeamsAPI = createAsyncThunk(
+// 	"teams/getAllClubTeams",
+// 	({ params }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllTeams(true));
+// 		axiosInstance
+// 			.get(`/teams/clubs`, { params })
+// 			.then((data) => {
+// 				dispatch(setIsFetchingAllTeams(false));
+// 				dispatch(setClubTeams(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllTeams(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllClubTeamsAPI = createCancelableThunk(
 	"teams/getAllClubTeams",
-	({ params }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllTeams(true));
-		axiosInstance
-			.get(`/teams/clubs`, { params })
-			.then((data) => {
-				dispatch(setIsFetchingAllTeams(false));
-				dispatch(setClubTeams(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllTeams(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllClubTeams",
+	() => `/teams/clubs`,
+	setIsFetchingAllTeams,
+	setClubTeams
 );
 
-export const getSpecificClubTeamAPI = createAsyncThunk(
+// export const getSpecificClubTeamAPI = createAsyncThunk(
+// 	"teams/getSpecificClub",
+// 	({ clubId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificTeam(true));
+// 		axiosInstance
+// 			.get(`/teams/${clubId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificTeam(false));
+// 				dispatch(setSpecificTeam(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificTeam(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificClubTeamAPI = createCancelableThunk(
 	"teams/getSpecificClub",
-	({ clubId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificTeam(true));
-		axiosInstance
-			.get(`/teams/${clubId}`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificTeam(false));
-				dispatch(setSpecificTeam(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificTeam(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificClub",
+	({ clubId }) => `/teams/${clubId}`,
+	setIsFetchingSpecificTeam,
+	setSpecificTeam
 );
 
-export const getSpecificClubPlayersAPI = createAsyncThunk(
+// export const getSpecificClubPlayersAPI = createAsyncThunk(
+// 	"teams/getSpecificClubPlayers",
+// 	({ clubId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificTeamPlayers(true));
+// 		axiosInstance
+// 			.get(`/teams/${clubId}/players`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificTeamPlayers(false));
+// 				dispatch(setSpecificTeamPlayers(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificTeamPlayers(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificClubPlayersAPI = createCancelableThunk(
 	"teams/getSpecificClubPlayers",
-	({ clubId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificTeamPlayers(true));
-		axiosInstance
-			.get(`/teams/${clubId}/players`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificTeamPlayers(false));
-				dispatch(setSpecificTeamPlayers(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificTeamPlayers(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificClubPlayers",
+	({ clubId }) => `/teams/${clubId}/players`,
+	setIsFetchingSpecificTeamPlayers,
+	setSpecificTeamPlayers
 );
 
-export const getAllCountryTeamsAPI = createAsyncThunk(
+// export const getAllCountryTeamsAPI = createAsyncThunk(
+// 	"teams/getAllCountryTeams",
+// 	({ params }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllTeams(true));
+// 		axiosInstance
+// 			.get(`/teams/countries`, { params })
+// 			.then((data) => {
+// 				dispatch(setIsFetchingAllTeams(false));
+// 				dispatch(setCountryTeams(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllTeams(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllCountryTeamsAPI = createCancelableThunk(
 	"teams/getAllCountryTeams",
-	({ params }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllTeams(true));
-		axiosInstance
-			.get(`/teams/countries`, { params })
-			.then((data) => {
-				dispatch(setIsFetchingAllTeams(false));
-				dispatch(setCountryTeams(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllTeams(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllCountryTeams",
+	() => `/teams/countries`,
+	setIsFetchingAllTeams,
+	setCountryTeams
 );
 
-export const getSpecificCountryTeamAPI = createAsyncThunk(
+// export const getSpecificCountryTeamAPI = createAsyncThunk(
+// 	"teams/getSpecificCountry",
+// 	({ clubId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificTeam(true));
+// 		axiosInstance
+// 			.get(`/teams/${clubId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificTeam(false));
+// 				dispatch(setSpecificTeam(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificTeam(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificCountryTeamAPI = createCancelableThunk(
 	"teams/getSpecificCountry",
-	({ clubId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificTeam(true));
-		axiosInstance
-			.get(`/teams/${clubId}`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificTeam(false));
-				dispatch(setSpecificTeam(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificTeam(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificCountry",
+	({ clubId }) => `/teams/${clubId}`,
+	setIsFetchingSpecificTeam,
+	setSpecificTeam
 );
 
-export const getSpecificCountryPlayersAPI = createAsyncThunk(
+// export const getSpecificCountryPlayersAPI = createAsyncThunk(
+// 	"teams/getSpecificCountryPlayers",
+// 	({ clubId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificTeamPlayers(true));
+// 		axiosInstance
+// 			.get(`/teams/${clubId}/players`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificTeamPlayers(false));
+// 				dispatch(setSpecificTeamPlayers(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificTeamPlayers(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificCountryPlayersAPI = createCancelableThunk(
 	"teams/getSpecificCountryPlayers",
-	({ clubId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificTeamPlayers(true));
-		axiosInstance
-			.get(`/teams/${clubId}/players`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificTeamPlayers(false));
-				dispatch(setSpecificTeamPlayers(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificTeamPlayers(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificCountryPlayers",
+	({ clubId }) => `/teams/${clubId}/players`,
+	setIsFetchingSpecificTeamPlayers,
+	setSpecificTeamPlayers
 );
 
 export const addPlayerAPI = createAsyncThunk(
@@ -241,19 +290,27 @@ export const deletetPlayerAPI = createAsyncThunk(
 	}
 );
 
-export const getAllPlayersAPI = createAsyncThunk(
+// export const getAllPlayersAPI = createAsyncThunk(
+// 	"teams/getAllPlayers",
+// 	({ weekId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllPlayers(true));
+// 		axiosInstance
+// 			.get(`/players/week/${weekId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingAllPlayers(false));
+// 				dispatch(setAllPlayers(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllPlayers(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllPlayersAPI = createCancelableThunk(
 	"teams/getAllPlayers",
-	({ weekId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllPlayers(true));
-		axiosInstance
-			.get(`/players/week/${weekId}`)
-			.then((data) => {
-				dispatch(setIsFetchingAllPlayers(false));
-				dispatch(setAllPlayers(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllPlayers(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllPlayers",
+	({ weekId }) => `/players/week/${weekId}`,
+	setIsFetchingAllPlayers,
+	setAllPlayers
 );

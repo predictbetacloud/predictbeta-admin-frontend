@@ -33,6 +33,7 @@ import {
 	setSpecificWeekResults,
 	setWeeks,
 } from "../state/slices/fixtures";
+import { createCancelableThunk } from "./helper";
 
 // Season
 export const createSeasonAPI = createAsyncThunk(
@@ -56,38 +57,54 @@ export const createSeasonAPI = createAsyncThunk(
 	}
 );
 
-export const getAllSeasonsAPI = createAsyncThunk(
+// export const getAllSeasonsAPI = createAsyncThunk(
+// 	"fixtures/getAllSeasons",
+// 	({ params }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllSeasons(true));
+// 		axiosInstance
+// 			.get(`/seasons`, { params })
+// 			.then((data) => {
+// 				dispatch(setIsFetchingAllSeasons(false));
+// 				dispatch(setSeasons(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllSeasons(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllSeasonsAPI = createCancelableThunk(
 	"fixtures/getAllSeasons",
-	({ params }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllSeasons(true));
-		axiosInstance
-			.get(`/seasons`, { params })
-			.then((data) => {
-				dispatch(setIsFetchingAllSeasons(false));
-				dispatch(setSeasons(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllSeasons(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllSeasons",
+	() => `/seasons`,
+	setIsFetchingAllSeasons,
+	setSeasons
 );
 
-export const getSpecificSeasonAPI = createAsyncThunk(
+// export const getSpecificSeasonAPI = createAsyncThunk(
+// 	"fixtures/getSpecificSeason",
+// 	({ seasonId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificSeason(true));
+// 		axiosInstance
+// 			.get(`/seasons/${seasonId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificSeason(false));
+// 				dispatch(setSpecificSeason(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificSeason(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificSeasonAPI = createCancelableThunk(
 	"fixtures/getSpecificSeason",
-	({ seasonId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificSeason(true));
-		axiosInstance
-			.get(`/seasons/${seasonId}`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificSeason(false));
-				dispatch(setSpecificSeason(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificSeason(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificSeason",
+	({ seasonId }) => `/seasons/${seasonId}`,
+	setIsFetchingSpecificSeason,
+	setSpecificSeason
 );
 
 // Weeks
@@ -161,61 +178,85 @@ export const publishWeekAPI = createAsyncThunk(
 	}
 );
 
-export const getAllWeeksAPI = createAsyncThunk(
+// export const getAllWeeksAPI = createAsyncThunk(
+// 	"fixtures/getAllWeeks",
+// 	({ seasonId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllWeeks(true));
+// 		axiosInstance
+// 			.get(`/weeks/season/${seasonId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingAllWeeks(false));
+// 				const weeks = Array.isArray(data?.data?.data)
+// 					? data?.data?.data.reverse()
+// 					: [];
+// 				dispatch(setWeeks(weeks));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllWeeks(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllWeeksAPI = createCancelableThunk(
 	"fixtures/getAllWeeks",
-	({ seasonId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllWeeks(true));
-		axiosInstance
-			.get(`/weeks/season/${seasonId}`)
-			.then((data) => {
-				dispatch(setIsFetchingAllWeeks(false));
-				const weeks = Array.isArray(data?.data?.data)
-					? data?.data?.data.reverse()
-					: [];
-				dispatch(setWeeks(weeks));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllWeeks(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllWeeks",
+	({ seasonId }) => `/weeks/season/${seasonId}`,
+	setIsFetchingAllWeeks,
+	setWeeks
 );
 
-export const getWeeksForDropdownAPI = createAsyncThunk(
+// export const getWeeksForDropdownAPI = createAsyncThunk(
+// 	"fixtures/getWeeksForDropdown",
+// 	({ seasonId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingAllWeeks(true));
+// 		axiosInstance
+// 			.get(`/weeks/season/${seasonId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingAllWeeks(false));
+// 				const weeks = Array.isArray(data?.data?.data)
+// 					? data?.data?.data.reverse()
+// 					: [];
+// 				dispatch(setDropdownWeeks(weeks));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingAllWeeks(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getWeeksForDropdownAPI = createCancelableThunk(
 	"fixtures/getWeeksForDropdown",
-	({ seasonId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingAllWeeks(true));
-		axiosInstance
-			.get(`/weeks/season/${seasonId}`)
-			.then((data) => {
-				dispatch(setIsFetchingAllWeeks(false));
-				const weeks = Array.isArray(data?.data?.data)
-					? data?.data?.data.reverse()
-					: [];
-				dispatch(setDropdownWeeks(weeks));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingAllWeeks(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getWeeksForDropdown",
+	({ seasonId }) => `/weeks/season/${seasonId}`,
+	setIsFetchingAllWeeks,
+	setDropdownWeeks
 );
 
-export const getSpecificWeekAPI = createAsyncThunk(
+// export const getSpecificWeekAPI = createAsyncThunk(
+// 	"fixtures/getSpecificWeek",
+// 	({ weekId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificWeek(true));
+// 		axiosInstance
+// 			.get(`/weeks/${weekId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificWeek(false));
+// 				dispatch(setSpecificWeek(data.data?.data));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificWeek(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificWeekAPI = createCancelableThunk(
 	"fixtures/getSpecificWeek",
-	({ weekId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificWeek(true));
-		axiosInstance
-			.get(`/weeks/${weekId}`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificWeek(false));
-				dispatch(setSpecificWeek(data.data?.data));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificWeek(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificWeek",
+	({ weekId }) => `/weeks/${weekId}`,
+	setIsFetchingSpecificWeek,
+	setSpecificWeek
 );
 
 // Matches
@@ -321,58 +362,82 @@ export const deleteMatchAPI = createAsyncThunk(
 	}
 );
 
-export const getSpecificWeekResultsAPI = createAsyncThunk(
+// export const getSpecificWeekResultsAPI = createAsyncThunk(
+// 	"fixtures/getSpecificWeekResults",
+// 	({ weekId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingSpecificWeekResults(true));
+// 		axiosInstance
+// 			.get(`/weeks/${weekId}/result`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingSpecificWeekResults(false));
+// 				const results = data?.data?.data;
+// 				dispatch(setSpecificWeekResults(results));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingSpecificWeekResults(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getSpecificWeekResultsAPI = createCancelableThunk(
 	"fixtures/getSpecificWeekResults",
-	({ weekId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingSpecificWeekResults(true));
-		axiosInstance
-			.get(`/weeks/${weekId}/result`)
-			.then((data) => {
-				dispatch(setIsFetchingSpecificWeekResults(false));
-				const results = data?.data?.data;
-				dispatch(setSpecificWeekResults(results));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingSpecificWeekResults(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getSpecificWeekResults",
+	({ weekId }) => `/weeks/${weekId}/result`,
+	setIsFetchingSpecificWeekResults,
+	setSpecificWeekResults
 );
 
-export const getAllMatchesAPI = createAsyncThunk(
+// export const getAllMatchesAPI = createAsyncThunk(
+// 	"fixtures/getAllMatches",
+// 	({ seasonId, weekId }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingMatches(true));
+// 		axiosInstance
+// 			.get(`/fixtures/season/${seasonId}/week/${weekId}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingMatches(false));
+// 				const matches = Array.isArray(data?.data?.data)
+// 					? data?.data?.data.reverse()
+// 					: [];
+// 				dispatch(setMatches(matches));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingMatches(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllMatchesAPI = createCancelableThunk(
 	"fixtures/getAllMatches",
-	({ seasonId, weekId }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingMatches(true));
-		axiosInstance
-			.get(`/fixtures/season/${seasonId}/week/${weekId}`)
-			.then((data) => {
-				dispatch(setIsFetchingMatches(false));
-				const matches = Array.isArray(data?.data?.data)
-					? data?.data?.data.reverse()
-					: [];
-				dispatch(setMatches(matches));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingMatches(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllMatches",
+	({ seasonId, weekId }) => `/fixtures/season/${seasonId}/week/${weekId}`,
+	setIsFetchingMatches,
+	setMatches
 );
 
-export const getAllCompetitionsByTypeAPI = createAsyncThunk(
+// export const getAllCompetitionsByTypeAPI = createAsyncThunk(
+// 	"fixtures/getAllCompetitionsByType",
+// 	({ type }: FieldValues, { dispatch }) => {
+// 		dispatch(setIsFetchingCompetitions(true));
+// 		axiosInstance
+// 			.get(`/teams/league/type/${type}`)
+// 			.then((data) => {
+// 				dispatch(setIsFetchingCompetitions(false));
+// 				const competitions = data?.data?.data;
+// 				dispatch(setCompetitions(competitions));
+// 			})
+// 			.catch((error) => {
+// 				dispatch(setIsFetchingCompetitions(false));
+// 				toastError(error?.response?.data?.message);
+// 			});
+// 	}
+// );
+
+export const getAllCompetitionsByTypeAPI = createCancelableThunk(
 	"fixtures/getAllCompetitionsByType",
-	({ type }: FieldValues, { dispatch }) => {
-		dispatch(setIsFetchingCompetitions(true));
-		axiosInstance
-			.get(`/teams/league/type/${type}`)
-			.then((data) => {
-				dispatch(setIsFetchingCompetitions(false));
-				const competitions = data?.data?.data;
-				dispatch(setCompetitions(competitions));
-			})
-			.catch((error) => {
-				dispatch(setIsFetchingCompetitions(false));
-				toastError(error?.response?.data?.message);
-			});
-	}
+	"getAllCompetitionsByType",
+	({ type }) => `/teams/league/type/${type}`,
+	setIsFetchingCompetitions,
+	setCompetitions
 );

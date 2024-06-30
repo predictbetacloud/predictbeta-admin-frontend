@@ -34,10 +34,10 @@ const routes: { path: string; title: string }[] = [
 	// 	path: "/dashboard/payouts",
 	// 	title: "Payout",
 	// },
-	{
-		path: "/dashboard/private-league",
-		title: "Private leagues",
-	},
+	// {
+	// 	path: "/dashboard/private-league",
+	// 	title: "Private leagues",
+	// },
 	{
 		path: "/dashboard/leaderboard",
 		title: "Leaderboard",

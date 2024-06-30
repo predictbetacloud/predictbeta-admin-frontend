@@ -104,7 +104,7 @@ const SeasonLeaderboard = () => {
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedSeason]);
+	}, [selectedSeason, page]);
 
 	const columns = useMemo<ColumnDef<LeaderboardItem>[]>(
 		() => [
@@ -182,6 +182,7 @@ const SeasonLeaderboard = () => {
 					current_page={Number(page ?? 1)}
 					setCurrentPage={(page: number): void => {
 						setSearchParams({
+							season: String(query_season),
 							page: String(page),
 						});
 					}}
