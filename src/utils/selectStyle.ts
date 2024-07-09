@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { StylesConfig } from "react-select";
+
 export const defaultStyle = {
 	control: (baseStyles: any, state: { isFocused: any }) => ({
 		...baseStyles,
@@ -30,7 +32,7 @@ export const defaultStyle = {
 	}),
 	menuContainer: (baseStyles: any) => ({
 		...baseStyles,
-		zIndex: 20
+		zIndex: 20,
 	}),
 	option: (baseStyles: any, state: { isFocused: any; isSelected: any }) => ({
 		...baseStyles,
@@ -82,4 +84,40 @@ export const invalidStyle = {
 		fontSize: "14px",
 		lineHeight: "22px",
 	}),
+};
+
+export const correctStyle: StylesConfig = {
+	control: (baseStyles: any, state: { isFocused: any }) => ({
+		...baseStyles,
+		background: "#e2f4eb",
+		border: state.isFocused ? "1px solid #55b486" : "1px solid #55b486",
+		borderRadius: "4px",
+		padding: "0 5px",
+		minHeight: "43px",
+		color: "#55b486",
+	}),
+	singleValue: (baseStyles: any) => ({
+		...baseStyles,
+		color: "#55b486",
+		padding: 0,
+		fontFamily: "Rubik",
+		fontStyle: "normal",
+		fontWeight: 400,
+		fontSize: "14px",
+		lineHeight: "22px",
+	}),
+	placeholder: (baseStyles: any) => ({
+		...baseStyles,
+		color: "#55b486",
+		padding: 0,
+		fontFamily: "Rubik",
+		fontStyle: "normal",
+		fontWeight: 400,
+		fontSize: "14px",
+		lineHeight: "22px",
+	}),
+	// dropdownIndicator: () => ({
+	// ...baseStyles,
+	// color: "#eb1536",
+	// }),
 };

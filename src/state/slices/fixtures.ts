@@ -6,6 +6,7 @@ import {
 	IMatch,
 	ISeason,
 	IWeek,
+	IWeekPrediction,
 	IWeekResult,
 	TCompetitions,
 } from "../../types/types";
@@ -19,6 +20,7 @@ const initialState: FixtureState = {
 	specificWeekResults: null,
 	matches: [],
 	competitions: [],
+	specificWeekPrediction: null,
 	isFetchingSeasons: true,
 	isFetchingSpecificSeason: true,
 	isFetchingWeeks: true,
@@ -27,6 +29,7 @@ const initialState: FixtureState = {
 	isPublishingWeek: false,
 	isSubmittingWeekResult: false,
 	isFetchingCompetitions: false,
+	isFetchingSpecificWeekPrediction: false,
 	isFetchingMatches: true,
 	isCreatingSeason: false,
 	isCreatingWeek: false,
@@ -80,6 +83,12 @@ export const fixtureSlice = createSlice({
 		setCompetitions: (state, action: PayloadAction<TCompetitions[]>) => {
 			state.competitions = action.payload;
 		},
+		setSpecificWeekPrediction: (
+			state,
+			action: PayloadAction<IWeekPrediction | null>
+		) => {
+			state.specificWeekPrediction = action.payload;
+		},
 		setIsFetchingAllSeasons: (
 			state,
 			action: PayloadAction<FixtureState["isFetchingSeasons"]>
@@ -127,6 +136,12 @@ export const fixtureSlice = createSlice({
 			action: PayloadAction<FixtureState["isFetchingCompetitions"]>
 		) => {
 			state.isFetchingCompetitions = action.payload;
+		},
+		setIsFetchingSpecificWeekPrediction: (
+			state,
+			action: PayloadAction<FixtureState["isFetchingSpecificWeekPrediction"]>
+		) => {
+			state.isFetchingSpecificWeekPrediction = action.payload;
 		},
 		setIsFetchingMatches: (
 			state,
@@ -213,11 +228,13 @@ export const {
 	setCompetitions,
 	setIsFetchingCompetitions,
 	setMatches,
+	setSpecificWeekPrediction,
 	setIsFetchingAllSeasons,
 	setIsFetchingAllWeeks,
 	setIsFetchingSpecificSeason,
 	setIsFetchingSpecificWeek,
 	setIsFetchingSpecificWeekResults,
+	setIsFetchingSpecificWeekPrediction,
 	setIsFetchingMatches,
 	setIsPublishingWeek,
 	setIsSubmittingWeekResult,
@@ -256,6 +273,9 @@ export const selectCompetitions = (state: RootState) =>
 
 export const selectMatches = (state: RootState) => state.fixtures.matches;
 
+export const selectSpecificWeekPrediction = (state: RootState) =>
+	state.fixtures.specificWeekPrediction;
+
 export const selectIsFetchingAllSeasons = (state: RootState) =>
 	state.fixtures.isFetchingSeasons;
 
@@ -276,6 +296,9 @@ export const selectIsPublishingWeek = (state: RootState) =>
 
 export const selectIsSubmittingWeekResult = (state: RootState) =>
 	state.fixtures.isSubmittingWeekResult;
+
+export const selectIsFetchingSpecificWeekPrediction = (state: RootState) =>
+	state.fixtures.isFetchingSpecificWeekPrediction;
 
 export const selectIsFetchingCompetitions = (state: RootState) =>
 	state.fixtures.isFetchingCompetitions;

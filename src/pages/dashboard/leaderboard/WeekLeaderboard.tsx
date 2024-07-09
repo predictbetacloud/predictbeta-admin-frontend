@@ -14,7 +14,7 @@ import {
 	selectIsFetchingAllSeasons,
 	selectIsFetchingAllWeeks,
 } from "../../../state/slices/fixtures";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { getAllSeasonsAPI, getAllWeeksAPI } from "../../../api/fixturesAPI";
 import {
 	selectIsFetchingWeekLeaderboard,
@@ -147,7 +147,16 @@ const WeekLeaderboard = () => {
 			{
 				header: "POSITION",
 				accessorKey: "position",
-				cell: (info) => info.getValue(),
+				cell: (info) => {
+					return (
+						<Link
+							className="block"
+							to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
+						>
+							{String(info.getValue())}
+						</Link>
+					);
+				},
 				sortingFn: "alphanumeric",
 				enableSorting: true,
 			},
@@ -156,16 +165,32 @@ const WeekLeaderboard = () => {
 				accessorKey: "username",
 				cell: (info) => {
 					const username = String(info.getValue());
-					return <p className="capitalize">{username}</p>;
+					return (
+						<Link
+							className="block"
+							to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
+						>
+							<p className="capitalize">{username}</p>
+						</Link>
+					);
 				},
 			},
 			{
 				header: "POINTS",
 				accessorKey: "points",
-				cell: (info) => Number(info.getValue()).toLocaleString(),
+				cell: (info) => {
+					return (
+						<Link
+							className="block"
+							to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
+						>
+							{Number(info.getValue()).toLocaleString()}
+						</Link>
+					);
+				},
 			},
 		],
-		[]
+		[query_season, query_week]
 	);
 
 	return (

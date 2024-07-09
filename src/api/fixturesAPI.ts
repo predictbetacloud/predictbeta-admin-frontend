@@ -17,6 +17,7 @@ import {
 	setIsFetchingMatches,
 	setIsFetchingSpecificSeason,
 	setIsFetchingSpecificWeek,
+	setIsFetchingSpecificWeekPrediction,
 	setIsFetchingSpecificWeekResults,
 	setIsPublishingWeek,
 	setIsSubmittingWeekResult,
@@ -30,6 +31,7 @@ import {
 	setShowPublishWeekModal,
 	setSpecificSeason,
 	setSpecificWeek,
+	setSpecificWeekPrediction,
 	setSpecificWeekResults,
 	setWeeks,
 } from "../state/slices/fixtures";
@@ -133,7 +135,7 @@ export const createWeekAPI = createAsyncThunk(
 export const submitWeekResultAPI = createAsyncThunk(
 	"fixtures/submit-result",
 	(
-		{ seasonId, weekId, fixtureResults, scorers, timeOfFirstGoal }: FieldValues,
+		{ weekId, fixtureResults, scorers, timeOfFirstGoal }: FieldValues,
 		{ dispatch }
 	) => {
 		dispatch(setIsSubmittingWeekResult(true));
@@ -147,7 +149,7 @@ export const submitWeekResultAPI = createAsyncThunk(
 			.then((data) => {
 				dispatch(setIsSubmittingWeekResult(false));
 				toastSuccess(data?.data?.message ?? "Result submitted successfully");
-				dispatch(getAllMatchesAPI({ seasonId, weekId }));
+				window.location.reload();
 			})
 			.catch((error) => {
 				dispatch(setIsSubmittingWeekResult(false));
@@ -440,4 +442,13 @@ export const getAllCompetitionsByTypeAPI = createCancelableThunk(
 	({ type }) => `/teams/league/type/${type}`,
 	setIsFetchingCompetitions,
 	setCompetitions
+);
+
+export const getSpecificUserWeekPredictionAPI = createCancelableThunk(
+	"fixtures/getSpecificUserWeekPrediction",
+	"getSpecificUserWeekPrediction",
+	({ username, weekId }) =>
+		`/leaderboard/predictions/user/${username}/week/${weekId}`,
+	setIsFetchingSpecificWeekPrediction,
+	setSpecificWeekPrediction
 );

@@ -104,6 +104,7 @@ export interface IWeek {
 	createdAt: string;
 }
 export interface IMatch {
+	outcome?: "win" | "lose";
 	prediction: "" | "HOME" | "DRAW" | "AWAY" | undefined;
 	awayTeam: IClub;
 	homeTeam: IClub;
@@ -163,6 +164,7 @@ export interface FixtureState {
 	dropDownWeeks: IWeek[];
 	matches: IMatch[];
 	competitions: TCompetitions[];
+	specificWeekPrediction: IWeekPrediction | null;
 	isCreatingSeason: boolean;
 	isCreatingWeek: boolean;
 	isCreatingMatch: boolean;
@@ -172,6 +174,7 @@ export interface FixtureState {
 	isFetchingWeeks: boolean;
 	isFetchingSpecificWeek: boolean;
 	isFetchingSpecificWeekResults: boolean;
+	isFetchingSpecificWeekPrediction: boolean;
 	isPublishingWeek: boolean;
 	isSubmittingWeekResult: boolean;
 	isFetchingCompetitions: boolean;
@@ -262,6 +265,46 @@ export interface UserState {
 	showUnblockUserModal: boolean;
 	showDeleteUserModal: boolean;
 	showEditUserModal: boolean;
+}
+
+export interface IWeekPrediction {
+	score: number;
+
+	predictions: {
+		fixtures: {
+			fixture: {
+				id: number;
+				createdAt: string;
+				deletedAt: string | null;
+				weekId: number;
+				fixtureDateTime: string;
+				homeTeam: IClub;
+				awayTeam: IClub;
+			};
+			result: "HOME" | "AWAY" | "DRAW";
+		}[];
+		timeOfFirstGoal: number;
+		mostLikelyToScore: IPlayer;
+		moreLikelyToScore: IPlayer;
+		likelyToScore: IPlayer;
+	};
+
+	results: {
+		fixtures: {
+			fixture: {
+				id: number;
+				createdAt: string;
+				deletedAt: string | null;
+				weekId: number;
+				fixtureDateTime: string;
+				homeTeam: IClub;
+				awayTeam: IClub;
+			};
+			result: "HOME" | "AWAY" | "DRAW";
+		}[];
+		timeOfFirstGoal: number;
+		scorers: IPlayer[];
+	};
 }
 
 export interface LeaderboardItem {
