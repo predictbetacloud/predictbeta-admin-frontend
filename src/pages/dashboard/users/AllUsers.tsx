@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
@@ -19,6 +19,7 @@ import {
 } from "../../../state/slices/users";
 import { getAllUsersAPI } from "../../../api/usersAPI";
 import CreateUserModal from "../../../components/modals/CreateUserModal";
+import { Input } from "../../../components/inputs/Input";
 
 const AllUsers = () => {
 	const l = useLocation();
@@ -32,6 +33,8 @@ const AllUsers = () => {
 	const dispatch = useAppDispatch();
 
 	const [, setSearchParams] = useSearchParams();
+
+	const [search, setSearch] = useState('')
 
 	useMemo(
 		() =>
@@ -105,10 +108,20 @@ const AllUsers = () => {
 		[]
 	);
 
+	console.log(allUsers)
+
 	return (
 		<DashboardLayout title="User management">
-			<section className="predictbeta-header w-full px-8 py-4  flex items-center justify-end">
+			<section className="predictbeta-header w-full px-8 py-4  flex items-center justify-between">
 				{/* <Link to="/dashboard/users/new-club"> */}
+				<div>
+					<Input
+						type="text"
+						placeholder="Search playername..."
+						onChange={(e)=>setSearch(e.target.value)}
+						className={`w-full md:flex-1`}
+					/>
+				</div>
 				<Button
 					title=""
 					onClick={() => dispatch(setShowAddUserModal(true))}
@@ -123,7 +136,7 @@ const AllUsers = () => {
 			</section>
 			<section className="w-full p-8">
 				<Table
-					data={allUsers?.items ?? []}
+					data={allUsers?.items.filter((user)=>{return user.username?.toLowerCase() === '' ? user : user.username?.toLowerCase().includes(search.toLowerCase())}) ?? []}
 					columns={columns}
 					rows={10}
 					loading={isFetchingUsers}

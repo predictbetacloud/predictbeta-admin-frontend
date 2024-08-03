@@ -18,7 +18,7 @@ import {
 	selectIsFetchingSeasonLeaderboard,
 	selectLeaderboard,
 } from "../../../state/slices/leaderboard";
-import { InputPlaceholder } from "../../../components/inputs/Input";
+import { Input, InputPlaceholder } from "../../../components/inputs/Input";
 import { AiOutlineLoading } from "react-icons/ai";
 import CustomListBox from "../../../components/inputs/CustomListBox";
 import { VscFilter } from "react-icons/vsc";
@@ -46,6 +46,8 @@ const SeasonLeaderboard = () => {
 		id: string;
 		name: string;
 	} | null>(null);
+
+	const [search, setSearch] = useState('')
 
 	// Get all Season
 	useMemo(() => {
@@ -134,14 +136,22 @@ const SeasonLeaderboard = () => {
 
 	return (
 		<DashboardLayout title="Leaderboard">
-			<section className="predictbeta-header bg-white w-full px-4 md:px-8 flex lg:items-end lg:justify-between flex-col-reverse lg:flex-row gap-4 lg:gap-0">
+			<section className="predictbeta-header bg-white w-full px-4 md:px-8 flex lg:items-between lg:justify-between flex-col-reverse lg:flex-row gap-4 lg:gap-0">
 				<TabNav
 					tabs={[
 						{ path: "/dashboard/leaderboard", title: "Week" },
-						{ path: "/dashboard/leaderboard/month", title: "Month" },
 						{ path: "/dashboard/leaderboard/season", title: "Season" },
 					]}
 				/>
+				<div>
+					<Input
+						id="password"
+						type="text"
+						placeholder="Search playername..."
+						onChange={(e)=>setSearch(e.target.value)}
+						className={`w-full md:flex-1`}
+					/>
+				</div>
 				{/* season select */}
 				<div className="flex items-center gap-4 py-3">
 					{isFetchingSeasons || !seasons ? (
@@ -173,7 +183,7 @@ const SeasonLeaderboard = () => {
 			</section>
 			<section className="w-full p-4 md:p-8">
 				<Table
-					data={leaderboard?.data ?? []}
+					data={leaderboard?.data.filter((lead)=>{return search.toLowerCase()=== '' ? lead : lead.username.toLowerCase().includes(search.toLowerCase())}) ?? []}
 					columns={columns}
 					rows={10}
 					loading={isFetchingSeasons || isFetchingSeasonLeaderboard}
