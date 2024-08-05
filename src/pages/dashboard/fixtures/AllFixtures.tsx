@@ -67,6 +67,12 @@ const AllFixtures = () => {
 	const allMatches = useAppSelector(selectMatches);
 	const seasons = useAppSelector(selectAllSeasons);
 
+	const [activeSeason, setActiveSeason] = useState<{
+		id: number;
+		name: string;
+	} | null>(null);
+
+
 	const [selectedWeek, setSelectedWeek] = useState<{
 		id: string;
 		number: string;
@@ -87,6 +93,32 @@ const AllFixtures = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [seasons?.[0]?.id]);
+
+	// Make latest week the active week
+	useEffect(() => {
+		if (seasons?.[0]?.name) {
+			// if week is in query use that week
+			if (query_season) {
+				const season = seasons.find(
+					(_season) => _season.name === query_season
+				);
+				if (season?.id) {
+					setActiveSeason({
+						id: Number(season?.id),
+						name: String(season?.name),
+					});
+				}
+			} else {
+				setSearchParams({
+					season: query_season
+						? String(query_season)
+						: String(seasons?.[0]?.name),
+					week: String(allWeeks?.[0]?.number),
+				});
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [allWeeks, query_week]);
 
 	// Make latest week the active week
 	useEffect(() => {
@@ -133,7 +165,7 @@ const AllFixtures = () => {
 		if (seasons?.[0]?.id && selectedWeek?.id) {
 			dispatch(
 				getAllMatchesAPI({
-					seasonId: seasons?.[0]?.id,
+					seasonId: activeSeason?.id,
 					weekId: selectedWeek?.id,
 				})
 			);
@@ -164,7 +196,9 @@ const AllFixtures = () => {
 								setSearchParams({
 									season: String(value),
 									week: "",
-								});
+								}
+							
+							);
 							}}
 							defaultOption={String(query_season)}
 							title={"Season"}
