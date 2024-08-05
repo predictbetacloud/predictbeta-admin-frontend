@@ -311,8 +311,8 @@ const AllFixtures = () => {
 			{showPublishWeekModal ? (
 				<PublishWeekModal
 					weekId={Number(selectedWeek?.id)}
-					seasonId={seasons?.[0]?.id}
-					season={seasons?.[0]?.name}
+					seasonId={Number(activeSeason?.id)}
+					season={String(activeSeason?.name)}
 					week={Number(selectedWeek?.number)}
 				/>
 			) : null}
