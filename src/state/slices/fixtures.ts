@@ -51,7 +51,7 @@ export const fixtureSlice = createSlice({
 	reducers: {
 		// Use the PayloadAction type to declare the contents of `action.payload`
 		setSeasons: (state, action: PayloadAction<ISeason[]>) => {
-			state.seasons = action.payload;
+			state.seasons = action.payload.reverse();
 		},
 		setSpecificSeason: (state, action: PayloadAction<ISeason>) => {
 			state.specificSeason = action.payload;
