@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -29,11 +29,11 @@ import {
 } from "../../api/fixturesAPI";
 import { defaultStyle, invalidStyle } from "../../utils/selectStyle";
 import {
-	selectAllClubTeams,
 	selectAllCountryTeams,
 	selectIsFetchingTeams,
 } from "../../state/slices/teams";
 import { getAllClubTeamsAPI, getAllCountryTeamsAPI } from "../../api/teamsAPI";
+import axios from "axios";
 
 const IndicatorSeparator = () => {
 	return null;
@@ -44,7 +44,6 @@ const CreateMatchModal = () => {
 
 	const seasons = useAppSelector(selectAllSeasons);
 	const weeks = useAppSelector(selectDropdownWeeks);
-	const clubs = useAppSelector(selectAllClubTeams);
 	const countries = useAppSelector(selectAllCountryTeams);
 	const competitions = useAppSelector(selectCompetitions);
 	const isFetchingCompetitions = useAppSelector(selectIsFetchingCompetitions);
@@ -93,6 +92,9 @@ const CreateMatchModal = () => {
 	const season = watch("season");
 	const clubOrCountry = watch("clubOrCountry");
 	const competitionType = watch("competitionType");
+	const league = watch("competition")
+	const [teams, setTeams] = useState([])
+	const [loading, setLoading] = useState(false)
 
 	useMemo(() => {
 		resetField("home");
@@ -125,6 +127,26 @@ const CreateMatchModal = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [season?.id]);
+
+
+	// fetch clubs and country based its specific league or country
+	useEffect(() => {
+		const endpoint = `https://predict-beta-api-prod-hpcmx2pcya-uc.a.run.app/teams?teamType=${clubOrCountry?.id}&leagueId=${league?.id}&competitionType=${competitionType?.id}`;
+
+		axios.get(endpoint)
+		.then(response => {
+			setTeams(response?.data?.data?.items); // Assuming response.data contains the data you need
+			setLoading(false);
+		})
+		.catch(error => {
+			console.log(error)
+		});
+  	}, [clubOrCountry?.id, league?.id, competitionType?.id]);
+
+
+
+
+
 
 	return (
 		<Modal
@@ -361,9 +383,9 @@ const CreateMatchModal = () => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={clubs?.items}
+											options={teams}
 											value={value}
-											isLoading={isFetchingTeams}
+											isLoading={loading}
 											components={{
 												// DropdownIndicator,
 												IndicatorSeparator,
@@ -400,9 +422,9 @@ const CreateMatchModal = () => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={clubs?.items}
+											options={teams}
 											value={value}
-											isLoading={isFetchingTeams}
+											isLoading={loading}
 											components={{
 												// DropdownIndicator,
 												IndicatorSeparator,
@@ -484,7 +506,7 @@ const CreateMatchModal = () => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={countries?.items}
+										 	options={countries?.items}
 											value={value}
 											isLoading={isFetchingTeams}
 											components={{
