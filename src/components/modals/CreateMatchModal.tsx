@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -29,11 +29,11 @@ import {
 } from "../../api/fixturesAPI";
 import { defaultStyle, invalidStyle } from "../../utils/selectStyle";
 import {
+	selectAllClubLeagueTeams,
 	selectAllCountryTeams,
 	selectIsFetchingTeams,
 } from "../../state/slices/teams";
-import { getAllClubTeamsAPI, getAllCountryTeamsAPI } from "../../api/teamsAPI";
-import axios from "axios";
+import { getAllClubLeagueTeamsAPI, getAllClubTeamsAPI, getAllCountryTeamsAPI } from "../../api/teamsAPI";
 
 const IndicatorSeparator = () => {
 	return null;
@@ -45,6 +45,7 @@ const CreateMatchModal = () => {
 	const seasons = useAppSelector(selectAllSeasons);
 	const weeks = useAppSelector(selectDropdownWeeks);
 	const countries = useAppSelector(selectAllCountryTeams);
+	const clubs = useAppSelector(selectAllClubLeagueTeams);
 	const competitions = useAppSelector(selectCompetitions);
 	const isFetchingCompetitions = useAppSelector(selectIsFetchingCompetitions);
 	const isFetchingSeasons = useAppSelector(selectIsFetchingAllSeasons);
@@ -52,6 +53,8 @@ const CreateMatchModal = () => {
 	const isFetchingTeams = useAppSelector(selectIsFetchingTeams);
 	const isCreatingMatch = useAppSelector(selectIsCreatingMatch);
 	const showCreateMatchModal = useAppSelector(selectShowCreateMatchModal);
+
+	console.log("Clubs", clubs)
 
 	const {
 		register,
@@ -93,8 +96,6 @@ const CreateMatchModal = () => {
 	const clubOrCountry = watch("clubOrCountry");
 	const competitionType = watch("competitionType");
 	const league = watch("competition")
-	const [teams, setTeams] = useState([])
-	const [loading, setLoading] = useState(false)
 
 	useMemo(() => {
 		resetField("home");
@@ -111,6 +112,7 @@ const CreateMatchModal = () => {
 		dispatch(getAllSeasonsAPI({}));
 		dispatch(getAllClubTeamsAPI({}));
 		dispatch(getAllCountryTeamsAPI({}));
+		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryID:clubOrCountry?.id, leagueId:league?.id, competitionTypeId:competitionType?.id}))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -131,21 +133,8 @@ const CreateMatchModal = () => {
 
 	// fetch clubs and country based its specific league or country
 	useEffect(() => {
-		const endpoint = `https://predict-beta-api-prod-hpcmx2pcya-uc.a.run.app/teams?teamType=${clubOrCountry?.id}&leagueId=${league?.id}&competitionType=${competitionType?.id}`;
-
-		axios.get(endpoint)
-		.then(response => {
-			setTeams(response?.data?.data?.items); // Assuming response.data contains the data you need
-			setLoading(false);
-		})
-		.catch(error => {
-			console.log(error)
-		});
+		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:clubOrCountry?.id, leagueId:league?.id, competitionTypeId:competitionType?.id}))
   	}, [clubOrCountry?.id, league?.id, competitionType?.id]);
-
-
-
-
 
 
 	return (
@@ -383,9 +372,9 @@ const CreateMatchModal = () => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={teams}
+											options={clubs?.items}
 											value={value}
-											isLoading={loading}
+											isLoading={isFetchingTeams}
 											components={{
 												// DropdownIndicator,
 												IndicatorSeparator,
@@ -422,9 +411,9 @@ const CreateMatchModal = () => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={teams}
+											options={clubs?.items}
 											value={value}
-											isLoading={loading}
+											isLoading={isFetchingTeams}
 											components={{
 												// DropdownIndicator,
 												IndicatorSeparator,

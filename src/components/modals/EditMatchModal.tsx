@@ -32,8 +32,9 @@ import {
 	selectAllClubTeams,
 	selectAllCountryTeams,
 	selectIsFetchingTeams,
+	selectAllClubLeagueTeams,
 } from "../../state/slices/teams";
-import { getAllClubTeamsAPI, getAllCountryTeamsAPI } from "../../api/teamsAPI";
+import { getAllClubTeamsAPI, getAllCountryTeamsAPI, getAllClubLeagueTeamsAPI } from "../../api/teamsAPI";
 import { IMatch } from "../../types/types";
 import { formatDateToDateTimeLocal } from "../../utils/utils";
 
@@ -47,6 +48,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 	const seasons = useAppSelector(selectAllSeasons);
 	const weeks = useAppSelector(selectAllWeeks);
 	const clubs = useAppSelector(selectAllClubTeams);
+	const leagueClubs = useAppSelector(selectAllClubLeagueTeams);
 	const countries = useAppSelector(selectAllCountryTeams);
 	const competitions = useAppSelector(selectCompetitions);
 	const isFetchingCompetitions = useAppSelector(selectIsFetchingCompetitions);
@@ -95,6 +97,13 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 	const season = watch("season");
 	const clubOrCountry = watch("clubOrCountry");
 	const competitionType = watch("competitionType");
+	const league = watch("competition")
+
+	console.log("Match", match?.homeTeam?.league?.leagueId);
+	console.log("cluborCOuuntry", clubOrCountry);
+	console.log("Competition", competitionType);
+	console.log("LeagueClubs", leagueClubs)
+	console.log("MatchLeag", match)
 
 	useMemo(() => {
 		resetField("home");
@@ -127,6 +136,16 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [season?.id]);
+
+	// fetch clubs and country based its specific league or country
+	useEffect(() => {
+		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:"club", leagueId:match?.homeTeam?.league?.id, competitionTypeId:match?.league?.type}))
+  	}, []);
+	useEffect(() => {
+		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:clubOrCountry?.id, leagueId:league?.id, competitionTypeId:competitionType?.id}))
+  	}, [clubOrCountry?.id, league?.id, competitionType?.id]);
+	
+
 	return (
 		<Modal
 			closeModal={() => {
@@ -422,7 +441,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={clubs?.items}
+											options={leagueClubs?.items}
 											value={value}
 											isLoading={isFetchingTeams}
 											components={{
@@ -469,7 +488,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 										<Select
 											ref={ref}
 											onChange={onChange}
-											options={clubs?.items}
+											options={leagueClubs?.items}
 											value={value}
 											isLoading={isFetchingTeams}
 											components={{

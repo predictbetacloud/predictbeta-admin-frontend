@@ -71,6 +71,7 @@ export interface IPaginatedClubTeams {
 
 export interface TeamState {
 	clubTeams: IPaginatedClubTeams | null;
+	clubLeagueTeams:IPaginatedClubTeams | null,
 	countryTeams: IPaginatedClubTeams | null;
 	searchQuery: string;
 	specificTeam: IClub | null;
