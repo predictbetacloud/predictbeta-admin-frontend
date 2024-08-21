@@ -135,6 +135,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 	useEffect(() => {
 		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:match?.homeTeam?.teamType, leagueId:match?.homeTeam?.league?.id, competitionTypeId:match?.league?.type}))
   	}, []);
+	
 	useEffect(() => {
 		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:clubOrCountry?.id, leagueId:league?.id, competitionTypeId:competitionType?.id}))
   	}, [clubOrCountry?.id, league?.id, competitionType?.id]);

@@ -31,6 +31,10 @@ export interface IClub {
 	region: null;
 	shortName: string;
 	players: [] | undefined;
+	teamType?:string,
+	league?:{
+		id:string
+	}
 }
 
 export interface ICreateClub {
