@@ -99,12 +99,6 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 	const competitionType = watch("competitionType");
 	const league = watch("competition")
 
-	console.log("Match", match?.homeTeam?.league?.leagueId);
-	console.log("cluborCOuuntry", clubOrCountry);
-	console.log("Competition", competitionType);
-	console.log("LeagueClubs", leagueClubs)
-	console.log("MatchLeag", match)
-
 	useMemo(() => {
 		resetField("home");
 		resetField("away");
@@ -139,7 +133,7 @@ const EditMatchModal = ({ match }: { match: IMatch | null }) => {
 
 	// fetch clubs and country based its specific league or country
 	useEffect(() => {
-		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:"club", leagueId:match?.homeTeam?.league?.id, competitionTypeId:match?.league?.type}))
+		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:match?.homeTeam?.teamType, leagueId:match?.homeTeam?.league?.id, competitionTypeId:match?.league?.type}))
   	}, []);
 	useEffect(() => {
 		dispatch(getAllClubLeagueTeamsAPI({clubOrCountryId:clubOrCountry?.id, leagueId:league?.id, competitionTypeId:competitionType?.id}))
