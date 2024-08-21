@@ -106,7 +106,7 @@ export const getAllClubTeamsAPI = createCancelableThunk(
 export const getAllClubLeagueTeamsAPI = createCancelableThunk(
 	"teams/getAllClubLeagueTeams",
 	"getAllClubLeagueTeams",
-	({clubOrCountryId, leagueId, competitionTypeId}) => `/teams?teamType=${clubOrCountryId}&leagueId=${leagueId}&competitionType=${competitionTypeId}`,
+	({clubOrCountryId, leagueId, competitionTypeId}:FieldValues) => `/teams?teamType=${clubOrCountryId}&leagueId=${leagueId}&competitionType=${competitionTypeId}`,
 	setIsFetchingAllTeams,
 	setClubLeagueTeams
 );
