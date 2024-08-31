@@ -8,6 +8,7 @@ const search_query = localStorage.getItem(sessionName + "_search_query");
 
 const initialState: TeamState = {
 	clubTeams: null,
+	clubLeagueTeams:null,
 	countryTeams: null,
 	searchQuery: search_query || "",
 	specificTeam: null,
@@ -35,6 +36,9 @@ export const teamsSlice = createSlice({
 	initialState,
 	reducers: {
 		// Use the PayloadAction type to declare the contents of `action.payload`
+		setClubLeagueTeams: (state, action: PayloadAction<IPaginatedClubTeams>) => {
+			state.clubLeagueTeams = action.payload;
+		},
 		setClubTeams: (state, action: PayloadAction<IPaginatedClubTeams>) => {
 			state.clubTeams = action.payload;
 		},
@@ -138,6 +142,7 @@ export const teamsSlice = createSlice({
 export const {
 	setSearchQuery,
 	setClubTeams,
+	setClubLeagueTeams,
 	setCountryTeams,
 	setSpecificTeam,
 	setSpecificTeamPlayers,
@@ -159,6 +164,8 @@ export const {
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectAllClubTeams = (state: RootState) => state.teams.clubTeams;
+
+export const selectAllClubLeagueTeams = (state: RootState) => state.teams.clubLeagueTeams;
 
 export const selectAllCountryTeams = (state: RootState) => state.teams.countryTeams;
 

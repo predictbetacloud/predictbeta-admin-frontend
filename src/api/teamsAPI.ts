@@ -5,6 +5,7 @@ import axiosInstance from "../connection/defaultClient";
 import { toastError, toastSuccess } from "../utils/toast";
 import {
 	setAllPlayers,
+	setClubLeagueTeams,
 	setClubTeams,
 	setCountryTeams,
 	setIsCreatingPlayer,
@@ -100,6 +101,14 @@ export const getAllClubTeamsAPI = createCancelableThunk(
 	() => `/teams/clubs`,
 	setIsFetchingAllTeams,
 	setClubTeams
+);
+
+export const getAllClubLeagueTeamsAPI = createCancelableThunk(
+	"teams/getAllClubLeagueTeams",
+	"getAllClubLeagueTeams",
+	({clubOrCountryId, leagueId, competitionTypeId}:FieldValues) => `/teams?teamType=${clubOrCountryId}&leagueId=${leagueId}&competitionType=${competitionTypeId}`,
+	setIsFetchingAllTeams,
+	setClubLeagueTeams
 );
 
 // export const getSpecificClubTeamAPI = createAsyncThunk(

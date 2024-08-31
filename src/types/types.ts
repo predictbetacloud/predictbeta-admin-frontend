@@ -31,6 +31,10 @@ export interface IClub {
 	region: null;
 	shortName: string;
 	players: [] | undefined;
+	teamType?:string,
+	league?:{
+		id:string
+	}
 }
 
 export interface ICreateClub {
@@ -71,6 +75,7 @@ export interface IPaginatedClubTeams {
 
 export interface TeamState {
 	clubTeams: IPaginatedClubTeams | null;
+	clubLeagueTeams:IPaginatedClubTeams | null,
 	countryTeams: IPaginatedClubTeams | null;
 	searchQuery: string;
 	specificTeam: IClub | null;
