@@ -36,6 +36,8 @@ const AllUsers = () => {
 
 	const [search, setSearch] = useState('')
 
+	console.log(allUsers);
+
 	useMemo(
 		() =>
 			dispatch(
@@ -43,7 +45,6 @@ const AllUsers = () => {
 					params: {
 						limit: 10,
 						page,
-						// ...params,
 					},
 				})
 			),
@@ -59,10 +60,24 @@ const AllUsers = () => {
 		}
 	});
 
+	useEffect(() => {
+	  	dispatch(
+			getAllUsersAPI({
+				params: {
+					limit: 10,
+					page:1,
+					searchQuery: search
+					// ...params,
+				},
+			})
+		)
+	}, [search])
+	
+
 	const columns = useMemo<ColumnDef<IUser>[]>(
 		() => [
 			{
-				header: "USER NAME",
+				header: "FULLNAME",
 				accessorKey: "firstName",
 				cell: (info) => {
 					const firstName = info.getValue();
@@ -84,11 +99,11 @@ const AllUsers = () => {
 				accessorKey: "email",
 				cell: (info) => info.getValue(),
 			},
-			{
-				header: "PHONE NUMBER",
-				accessorKey: "mobileNumber",
-				cell: (info) => info.getValue(),
-			},
+			// {
+			// 	header: "PHONE NUMBER",
+			// 	accessorKey: "mobileNumber",
+			// 	cell: (info) => info.getValue(),
+			// },
 			{
 				header: "ACTION",
 				accessorKey: "id",
@@ -108,11 +123,9 @@ const AllUsers = () => {
 		[]
 	);
 
-	console.log(allUsers)
-
 	return (
 		<DashboardLayout title="User management">
-			<section className="predictbeta-header w-full px-8 py-4  flex items-center justify-between">
+			<section className="predictbeta-header w-full px-8 py-4 bg-white flex items-center justify-between sticky top-[90px]">
 				{/* <Link to="/dashboard/users/new-club"> */}
 				<div>
 					<Input
@@ -134,9 +147,9 @@ const AllUsers = () => {
 				/>
 				{/* </Link> */}
 			</section>
-			<section className="w-full p-8">
+			<section className="w-full p-8 overscroll-y-auto">
 				<Table
-					data={allUsers?.items.filter((user)=>{return user.username?.toLowerCase() === '' ? user : user.username?.toLowerCase().includes(search.toLowerCase())}) ?? []}
+					data={allUsers?.items ?? []}
 					columns={columns}
 					rows={10}
 					loading={isFetchingUsers}
