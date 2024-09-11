@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import queryString from "query-string";
+import * as _ from "lodash";
 
 import Button from "../../../components/Buttons";
 import DashboardLayout from "../../../components/layout/DashboardLayout";
@@ -26,17 +27,13 @@ const AllUsers = () => {
 
 	const queries = queryString.parse(l.search);
 	const page = queries?.page;
+	const [searchParams, setSearchParams] = useSearchParams();
+	const search = searchParams.get("search") || "";
 
 	const allUsers = useAppSelector(selectAllUsers);
 	const showAddUserModal = useAppSelector(selectShowAddUserModal);
 	const isFetchingUsers = useAppSelector(selectIsFetchingAllUsers);
 	const dispatch = useAppDispatch();
-
-	const [, setSearchParams] = useSearchParams();
-
-	const [search, setSearch] = useState('')
-
-	console.log(allUsers);
 
 	useMemo(
 		() =>
@@ -45,11 +42,13 @@ const AllUsers = () => {
 					params: {
 						limit: 10,
 						page,
+						search,
+						// ...params,
 					},
 				})
 			),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[page]
+		[page, search]
 	);
 
 	useEffect(() => {
@@ -60,19 +59,17 @@ const AllUsers = () => {
 		}
 	});
 
-	useEffect(() => {
-	  	dispatch(
-			getAllUsersAPI({
-				params: {
-					limit: 10,
-					page:1,
-					searchQuery: search
-					// ...params,
-				},
-			})
-		)
-	}, [search])
-	
+	const debouncedSearch = _.debounce((search) => {
+		setSearchParams({
+			search,
+			page: String(1),
+		});
+	}, 1000);
+
+	const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
+		const value = event?.currentTarget?.value;
+		debouncedSearch(value);
+	};
 
 	const columns = useMemo<ColumnDef<IUser>[]>(
 		() => [
@@ -125,14 +122,15 @@ const AllUsers = () => {
 
 	return (
 		<DashboardLayout title="User management">
-			<section className="predictbeta-header w-full px-8 py-4 bg-white flex items-center justify-between sticky top-[90px]">
-				{/* <Link to="/dashboard/users/new-club"> */}
-				<div>
+			<section className="predictbeta-header w-full px-8 py-4  flex items-center justify-between">
+				<div className="">
 					<Input
+						id="search"
 						type="text"
-						placeholder="Search playername..."
-						onChange={(e)=>setSearch(e.target.value)}
-						className={`w-full md:flex-1`}
+						placeholder="Search user"
+						onChange={handleSearch}
+						defaultValue={search}
+						className={`w-96 input`}
 					/>
 				</div>
 				<Button

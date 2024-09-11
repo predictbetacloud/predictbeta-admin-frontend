@@ -61,7 +61,7 @@ const MonthLeaderboard = () => {
 
 	const columns = useMemo<ColumnDef<LeaderboardItem>[]>(
 		() => [
-			{
+			{ 
 				header: "POSITION",
 				accessorKey: "position",
 				cell: (info) => info.getValue(),
