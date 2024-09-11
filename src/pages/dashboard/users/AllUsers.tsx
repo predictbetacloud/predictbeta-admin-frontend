@@ -74,7 +74,7 @@ const AllUsers = () => {
 	const columns = useMemo<ColumnDef<IUser>[]>(
 		() => [
 			{
-				header: "USER NAME",
+				header: "FULLNAME",
 				accessorKey: "firstName",
 				cell: (info) => {
 					const firstName = info.getValue();
@@ -96,11 +96,11 @@ const AllUsers = () => {
 				accessorKey: "email",
 				cell: (info) => info.getValue(),
 			},
-			{
-				header: "PHONE NUMBER",
-				accessorKey: "mobileNumber",
-				cell: (info) => info.getValue(),
-			},
+			// {
+			// 	header: "PHONE NUMBER",
+			// 	accessorKey: "mobileNumber",
+			// 	cell: (info) => info.getValue(),
+			// },
 			{
 				header: "ACTION",
 				accessorKey: "id",
@@ -145,7 +145,7 @@ const AllUsers = () => {
 				/>
 				{/* </Link> */}
 			</section>
-			<section className="w-full p-8">
+			<section className="w-full p-8 overscroll-y-auto">
 				<Table
 					data={allUsers?.items ?? []}
 					columns={columns}
