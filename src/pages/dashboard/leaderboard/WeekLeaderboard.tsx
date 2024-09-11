@@ -197,14 +197,15 @@ const WeekLeaderboard = () => {
 
 	return (
 		<DashboardLayout title="Leaderboard">
-			<section className="predictbeta-header bg-white w-full px-4 md:px-8 flex lg:justify-between flex-col-reverse lg:flex-row gap-4 lg:gap-0 lg:items-center" >
+			<section className="predictbeta-header bg-white w-full px-4 md:px-8 flex lg:justify-between flex-col-reverse lg:flex-row gap-4 lg:gap-0 lg:items-end" >
 				<TabNav
 					tabs={[
 						{ path: "/dashboard/leaderboard", title: "Week" },
+						{ path: "/dashboard/leaderboard/month", title: "Month" },
 						{ path: "/dashboard/leaderboard/season", title: "Season" },
 					]}
 				/>
-				<div>
+				<div className="py-3">
 					<Input
 						id="password"
 						type="text"
