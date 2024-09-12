@@ -42,7 +42,7 @@ const AllUsers = () => {
 					params: {
 						limit: 10,
 						page,
-						search,
+						searchQuery: search,
 						// ...params,
 					},
 				})
