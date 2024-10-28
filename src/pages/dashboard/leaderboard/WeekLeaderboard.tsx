@@ -6,7 +6,7 @@ import DashboardLayout from "../../../components/layout/DashboardLayout";
 import Table from "../../../components/Table";
 
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
-import { LeaderboardItem } from "../../../types/types";
+import { UserPosition } from "../../../types/types";
 import { getWeekLeaderboardAPI } from "../../../api/leaderboardAPI";
 import {
 	selectAllSeasons,
@@ -144,158 +144,173 @@ const WeekLeaderboard = () => {
 	// 	}
 	// });
 
-	const columns = useMemo<ColumnDef<LeaderboardItem>[]>(
-		() => [
-			{
-				header: "POSITION",
-				accessorKey: "position",
-				cell: (info) => {
-					return (
-						<Link
-							className="block"
-							to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
-						>
-							{String(info.getValue())}
-						</Link>
-					);
-				},
-				sortingFn: "alphanumeric",
-				enableSorting: true,
-			},
-			{
-				header: "PLAYER NAME",
-				accessorKey: "username",
-				cell: (info) => {
-					const username = String(info.getValue());
-					return (
-						<Link
-							className="block"
-							to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
-						>
-							<p className="capitalize">{username}</p>
-						</Link>
-					);
-				},
-			},
-			{
-				header: "POINTS",
-				accessorKey: "points",
-				cell: (info) => {
-					return (
-						<Link
-							className="block"
-							to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
-						>
-							{Number(info.getValue()).toLocaleString()}
-						</Link>
-					);
-				},
-			},
-		],
-		[query_season, query_week]
-	);
+	const columns = useMemo<ColumnDef<UserPosition>[]>(
+    () => [
+      {
+        header: "POSITION",
+        accessorKey: "position",
+        cell: (info) => {
+          return (
+            <Link
+              className="block"
+              to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
+            >
+              {String(info.getValue())}
+            </Link>
+          );
+        },
+        sortingFn: "alphanumeric",
+        enableSorting: true,
+      },
+      {
+        header: "PLAYER NAME",
+        accessorKey: "username",
+        cell: (info) => {
+          const username = String(info.getValue());
+          return (
+            <Link
+              className="block"
+              to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
+            >
+              <p className="capitalize">{username}</p>
+            </Link>
+          );
+        },
+      },
+      {
+        header: "POINTS",
+        accessorKey: "points",
+        cell: (info) => {
+          return (
+            <Link
+              className="block"
+              to={`/dashboard/leaderboard/user-prediction-history/${info.row.original.username}?season=${query_season}&week=${query_week}`}
+            >
+              {Number(info.getValue()).toLocaleString()}
+            </Link>
+          );
+        },
+      },
+    ],
+    [query_season, query_week]
+  );
+
+useEffect(() => console.log("leaderboard", leaderboard), [leaderboard]);
 
 	return (
-		<DashboardLayout title="Leaderboard">
-			<section className="predictbeta-header bg-white w-full px-4 md:px-8 flex lg:justify-between flex-col-reverse lg:flex-row gap-4 lg:gap-0 lg:items-end" >
-				<TabNav
-					tabs={[
-						{ path: "/dashboard/leaderboard", title: "Week" },
-						{ path: "/dashboard/leaderboard/month", title: "Month" },
-						{ path: "/dashboard/leaderboard/season", title: "Season" },
-					]}
-				/>
-				<div className="py-3">
-					<Input
-						id="password"
-						type="text"
-						placeholder="Search playername..."
-						onChange={(e)=>setSearch(e.target.value)}
-						className={`w-full md:flex-1`}
-					/>
-				</div>
-				{/* season select */}
-				<div className="flex items-center gap-4 py-3">
-					{isFetchingSeasons || !seasons ? (
-						<InputPlaceholder>
-							<AiOutlineLoading
-								className="animate-spin"
-								color="#5D65F6"
-								size={16}
-							/>
-						</InputPlaceholder>
-					) : (
-						<CustomListBox
-							options={seasons?.map((season) => ({
-								name: season.name,
-								value: String(season.name),
-							}))}
-							onChange={(value: string): void => {
-								setSearchParams({
-									season: String(value),
-									week: "",
-									page: String(1),
-								});
-							}}
-							defaultOption={String(query_season)}
-							title={"Season"}
-							icon={<VscFilter />}
-						/>
-					)}
+    <DashboardLayout title="Leaderboard">
+      <section className="predictbeta-header bg-white w-full px-4 md:px-8 flex lg:justify-between flex-col-reverse lg:flex-row gap-4 lg:gap-0 lg:items-end">
+        <TabNav
+          tabs={[
+            { path: "/dashboard/leaderboard", title: "Week" },
+            { path: "/dashboard/leaderboard/month", title: "Month" },
+            { path: "/dashboard/leaderboard/season", title: "Season" },
+          ]}
+        />
+        <div className="py-3">
+          <Input
+            id="password"
+            type="text"
+            placeholder="Search playername..."
+            onChange={(e) => setSearch(e.target.value)}
+            className={`w-full md:flex-1`}
+          />
+        </div>
+        {/* season select */}
+        <div className="flex items-center gap-4 py-3">
+          {isFetchingSeasons || !seasons ? (
+            <InputPlaceholder>
+              <AiOutlineLoading
+                className="animate-spin"
+                color="#5D65F6"
+                size={16}
+              />
+            </InputPlaceholder>
+          ) : (
+            <CustomListBox
+              options={seasons?.map((season) => ({
+                name: season.name,
+                value: String(season.name),
+              }))}
+              onChange={(value: string): void => {
+                setSearchParams({
+                  season: String(value),
+                  week: "",
+                  page: String(1),
+                });
+              }}
+              defaultOption={String(query_season)}
+              title={"Season"}
+              icon={<VscFilter />}
+            />
+          )}
 
-					{/* week select */}
-					{isFetchingWeeks || !allWeeks ? (
-						<InputPlaceholder>
-							<AiOutlineLoading
-								className="animate-spin"
-								color="#5D65F6"
-								size={16}
-							/>
-						</InputPlaceholder>
-					) : (
-						<CustomListBox
-							options={allWeeks?.map((week) => ({
-								name: `Week ${week.number}`,
-								value: String(week.number),
-							}))}
-							onChange={(value: string): void => {
-								setSearchParams({
-									season: String(query_season),
-									week: String(value),
-									page: String(1),
-								});
-							}}
-							defaultOption={selectedWeek?.number}
-							title={"Week"}
-							icon={<VscFilter />}
-						/>
-					)}
-				</div>
-			</section>
-			<section className="w-full p-4 md:p-8">
-				<Table
-					data={leaderboard?.data.filter((lead)=>{return search.toLowerCase()=== '' ? lead : lead.username.toLowerCase().includes(search.toLowerCase())}) ?? []}
-					columns={columns}
-					rows={10}
-					loading={
-						isFetchingSeasons || isFetchingWeeks || isFetchingWeekLeaderboard
-					}
-					totalPages={leaderboard?.totalPages ?? 1}
-					isLeaderboardTable
-					current_page={Number(page ?? 1)}
-					setCurrentPage={(page: number): void => {
-						setSearchParams({
-							season: String(query_season),
-							week: String(query_week),
-							page: String(page),
-						});
-					}}
-					empty_message="No leaderboard"
-					empty_sub_message="There is no leaderboard for this week"
-				/>
-			</section>
-		</DashboardLayout>
-	);
+          {/* week select */}
+          {isFetchingWeeks || !allWeeks ? (
+            <InputPlaceholder>
+              <AiOutlineLoading
+                className="animate-spin"
+                color="#5D65F6"
+                size={16}
+              />
+            </InputPlaceholder>
+          ) : (
+            <CustomListBox
+              options={allWeeks?.map((week) => ({
+                name: `Week ${week.number}`,
+                value: String(week.number),
+              }))}
+              onChange={(value: string): void => {
+                setSearchParams({
+                  season: String(query_season),
+                  week: String(value),
+                  page: String(1),
+                });
+              }}
+              defaultOption={selectedWeek?.number}
+              title={"Week"}
+              icon={<VscFilter />}
+            />
+          )}
+        </div>
+      </section>
+      <section className="w-full p-4 md:p-8">
+        <Table
+        //   data={
+        //     leaderboard?.data.filter((lead) => {
+        //       return search.toLowerCase() === ""
+        //         ? lead
+        //         : lead.username.toLowerCase().includes(search.toLowerCase());
+        //     }) ?? []
+        //   }
+          data={
+            leaderboard?.result?.data?.filter((lead) => {
+              return search.toLowerCase() === ""
+                ? lead
+                : lead.username.toLowerCase().includes(search.toLowerCase());
+            }) ?? []
+          }
+          columns={columns}
+          rows={10}
+          loading={
+            isFetchingSeasons || isFetchingWeeks || isFetchingWeekLeaderboard
+          }
+          totalPages={leaderboard?.result?.totalPages ?? 1}
+          isLeaderboardTable
+          current_page={Number(page ?? 1)}
+          setCurrentPage={(page: number): void => {
+            setSearchParams({
+              season: String(query_season),
+              week: String(query_week),
+              page: String(page),
+            });
+          }}
+          empty_message="No leaderboard"
+          empty_sub_message="There is no leaderboard for this week"
+        />
+      </section>
+    </DashboardLayout>
+  );
 };
 
 export default WeekLeaderboard;
