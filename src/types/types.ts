@@ -312,19 +312,24 @@ export interface IWeekPrediction {
 	};
 }
 
-export interface LeaderboardItem {
-	position: number;
-	username: string;
-	location: string | null;
-	points: number;
+export interface LeaderboardResult {
+  data: UserPosition[];
+  totalPages: number;
+  totalElements: number;
+  elementsPerPage: string;
 }
 
 export interface IPaginatedLeaderboard {
-	data: LeaderboardItem[];
-	totalElements: number;
-	elementsPerPage: number;
-	totalPages: number;
-	currentPage: number;
+  result: LeaderboardResult;
+  userPosition: UserPosition;
+}
+
+export interface UserPosition {
+  position: number;
+  userId: string;
+  username: string;
+  location: null;
+  points: number;
 }
 export interface LeaderboardState {
 	leaderboard: IPaginatedLeaderboard | null;
@@ -348,7 +353,7 @@ export interface PrivateLeagueItem {
 export interface PrivateLeagueState {
 	allPrivateLeagues: PrivateLeagueItem[];
 	specificPrivateLeague: PrivateLeagueItem | null;
-	specificPrivateLeagueLeaderboard: LeaderboardItem[];
+	specificPrivateLeagueLeaderboard: UserPosition[];
 	isFetchingAllPrivateLeagues: boolean;
 	isFetchingSpecificPrivateLeague: boolean;
 	isFetchingSpecificPrivateLeagueWeekLeaderboard: boolean;

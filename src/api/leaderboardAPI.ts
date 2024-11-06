@@ -38,7 +38,7 @@ import { createCancelableThunk } from "./helper";
 export const getWeekLeaderboardAPI = createCancelableThunk(
 	"leaderboard/getWeekLeaderboard",
 	"getWeekLeaderboard",
-	({ weekId }) => `/leaderboard/week/${weekId}`,
+	({ weekId }) => `/leaderboard/week/${weekId}/public`,
 	setIsFetchingWeekLeaderboard,
 	setLeaderboard,
 	{
@@ -82,7 +82,7 @@ export const getWeekLeaderboardAPI = createCancelableThunk(
 export const getMonthLeaderboardAPI = createCancelableThunk(
 	"leaderboard/getWeekLeaderboard",
 	"getWeekLeaderboard",
-	() => `/leaderboard/month`,
+	() => `/leaderboard/month/public`,
 	setIsFetchingMonthLeaderboard,
 	setLeaderboard,
 	{
@@ -126,7 +126,7 @@ export const getMonthLeaderboardAPI = createCancelableThunk(
 export const getSeasonLeaderboardAPI = createCancelableThunk(
 	"leaderboard/getSeasonLeaderboard",
 	"getSeasonLeaderboard",
-	({ seasonId }) => `/leaderboard/season/${seasonId}`,
+	({ seasonId }) => `/leaderboard/season/${seasonId}/public`,
 	setIsFetchingSeasonLeaderboard,
 	setLeaderboard,
 	{
