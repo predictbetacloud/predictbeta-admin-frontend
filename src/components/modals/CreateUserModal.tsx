@@ -85,7 +85,7 @@ const CreateUserModal = () => {
 						<Input
 							id="lastName"
 							type="text"
-							placeholder="Enter first name"
+							placeholder="Enter last name"
 							{...register("lastName", {
 								required: "Last name is required",
 							})}

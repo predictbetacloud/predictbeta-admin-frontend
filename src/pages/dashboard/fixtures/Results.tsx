@@ -394,7 +394,7 @@ const Results = () => {
 					) : (
 						<div className="flex items-center justify-center py-20 lg:py-32 flex-col">
 							<h3 className="font-bold text-3xl mb-2">
-								There no matches for this week
+								There are no matches for this week
 							</h3>
 							<p className="">
 								Matches will show here once they are published.

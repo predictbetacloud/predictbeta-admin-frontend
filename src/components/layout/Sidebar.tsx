@@ -46,6 +46,10 @@ const routes: { path: string; title: string }[] = [
 	// 	path: "/dashboard/predictions",
 	// 	title: "Predictions",
 	// },
+	{
+		path: "/dashboard/affiliates",
+		title: "Affiliates",
+	},
 ];
 
 const Sidebar = () => {

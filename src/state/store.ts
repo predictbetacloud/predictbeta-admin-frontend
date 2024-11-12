@@ -5,6 +5,7 @@ import { fixtureSlice } from "./slices/fixtures";
 import { userSlice } from "./slices/users";
 import { leaderboardSlice } from "./slices/leaderboard";
 import { privateLeagueSlice } from "./slices/privateLeague";
+import { affiliatesSlice } from "./slices/affiliates";
 // ...
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
 		users: userSlice.reducer,
 		leaderboard: leaderboardSlice.reducer,
 		privateLeague: privateLeagueSlice.reducer,
+		affiliates: affiliatesSlice.reducer,
 	},
 });
 
