@@ -26,10 +26,6 @@ const CreateInfluencerModal = () => {
     formState: { errors },
   } = useForm();
 
-  //   const addInfluencer = (data: FieldValues) => {
-  //     console.log(data);
-  //   }
-
   const addInfluencer = async ({
     firstName,
     lastName,

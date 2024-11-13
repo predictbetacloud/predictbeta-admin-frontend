@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import queryString from "query-string";
 import * as _ from "lodash";
@@ -17,12 +17,17 @@ import {
   selectAllInfluencers,
   selectIsFetchingAllInfluencers,
   selectShowAddInfluencerModal,
+  selectShowDeleteInfluencerModal,
+  selectSpecificInfluencer,
   setShowAddInfluencerModal,
+  setShowDeleteInfluencerModal,
 } from "../../../state/slices/affiliates";
 import { getAllInfluencersAPI } from "../../../api/affiliatesAPI";
 import { Input } from "../../../components/inputs/Input";
 import CreateInfluencerModal from "../../../components/modals/CreateInfluencerModal";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FiMoreHorizontal } from "react-icons/fi";
+import DeleteInfluencerModal from "../../../components/modals/DeleteInfluencerModal";
 
 const AllAffiliates = () => {
   const l = useLocation();
@@ -36,7 +41,11 @@ const AllAffiliates = () => {
   );
 
   const allInfluencers = useAppSelector(selectAllInfluencers);
+  const specificInfluencer = useAppSelector(selectSpecificInfluencer);
   const showAddInfluencerModal = useAppSelector(selectShowAddInfluencerModal);
+  const showDeleteInfluencerModal = useAppSelector(
+    selectShowDeleteInfluencerModal
+  );
   const isFetchingInfluencers = useAppSelector(selectIsFetchingAllInfluencers);
   const dispatch = useAppDispatch();
 
@@ -78,8 +87,6 @@ const AllAffiliates = () => {
     debouncedSearch(value);
   };
 
-  console.log(searchQuery);
-
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
       {
@@ -114,9 +121,41 @@ const AllAffiliates = () => {
           console.log(userID);
           return (
             <div className="flex space-x-2">
-              {/* <Link to={`/dashboard/affiliates/view/${userID}`}> */}
-              <Button.Outline title="" content={<FiMoreHorizontal />} />
-              {/* </Link> */}
+              <Menu>
+                <MenuButton className="">
+                  <Button.Outline title="" content={<FiMoreHorizontal />} />
+                </MenuButton>
+
+                <MenuItems
+                  transition
+                  anchor="bottom end"
+                  className="bg-white text-[#5F6B7A] w-52 origin-top-right !border-0 rounded-[6px] p-1 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-0 !ring-2 !ring-gray-200 !outline-0 data-[closed]:scale-95 data-[closed]:opacity-0"
+                >
+                  <MenuItem>
+                    <Link
+                      to={`/dashboard/affiliates/view/${userID}`}
+                      className="group hover:bg-gray-100 hover:text-gray-800 flex w-full items-center gap-2 rounded-[6px] py-1.5 px-3"
+                    >
+                      View Details
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <button className="group hover:bg-gray-100 hover:text-gray-800 flex w-full items-center gap-2 rounded-[6px] py-1.5 px-3">
+                      Send Email
+                    </button>
+                  </MenuItem>
+                  <MenuItem>
+                    <button
+                      onClick={() =>
+                        dispatch(setShowDeleteInfluencerModal(true))
+                      }
+                      className="group text-[#EB1536] hover:bg-gray-100 flex w-full items-center gap-2 rounded-[6px] py-1.5 px-3"
+                    >
+                      Remove Affiliate
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
             </div>
           );
         },
@@ -184,6 +223,9 @@ const AllAffiliates = () => {
       </section>
 
       {showAddInfluencerModal ? <CreateInfluencerModal /> : null}
+      {showDeleteInfluencerModal ? (
+        <DeleteInfluencerModal user={specificInfluencer?.user} />
+      ) : null}
     </DashboardLayout>
   );
 };

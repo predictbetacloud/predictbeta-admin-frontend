@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@headlessui-float/react": "^0.13.3",
-    "@headlessui/react": "^1.7.18",
+    "@headlessui/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@tanstack/react-table": "^8.11.3",
     "axios": "^1.6.5",

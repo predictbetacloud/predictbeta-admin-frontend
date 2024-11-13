@@ -30,6 +30,7 @@ import SeasonLeaderboard from "./pages/dashboard/leaderboard/SeasonLeaderboard";
 import CountryTeams from "./pages/dashboard/teams/CountryTeams";
 import UserPredictionHistory from "./pages/dashboard/fixtures/UserPredictionHistory";
 import AllAffiliates from "./pages/dashboard/affiliates/AllAffiliates";
+import AffiliateItem from "./pages/dashboard/affiliates/AffiliateItem";
 
 function App() {
 	const navigate = useNavigate();
@@ -109,7 +110,7 @@ function App() {
 				<Route path="/dashboard/affiliates" element={<AllAffiliates />} />
 				<Route
 					path="/dashboard/affiliates/view/:affiliateId"
-					element={<SpecificUser />}
+					element={<AffiliateItem />}
 				/>
 				<Route path="*" element={<NotFound />} />
 			</Routes>

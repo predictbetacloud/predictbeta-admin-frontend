@@ -59,7 +59,7 @@ export const getAllInfluencersAPI = createCancelableThunk(
 export const getSpecificInfluencerAPI = createCancelableThunk(
   "influencers/getSpecific",
   "getSpecific",
-  ({ userId }) => `/influencers/${userId}`,
+  ({ id }) => `/influencers/${id}`,
   setIsFetchingSpecificInfluencer,
   setSpecificInfluencer
 );
