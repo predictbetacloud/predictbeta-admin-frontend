@@ -12,7 +12,7 @@ const initialState: InfluencerState = {
   isDeletingInfluencer: false,
   showAddInfluencerModal: false,
   showDeleteInfluencerModal: false,
-  showSendEmailModal: false,
+  showSendInfluencerEmailModal: false,
 };
 
 export const affiliatesSlice = createSlice({
@@ -64,11 +64,11 @@ export const affiliatesSlice = createSlice({
     ) => {
       state.showDeleteInfluencerModal = action.payload;
     },
-    setShowSendEmailModal: (
+    setShowSendInfluencerEmailModal: (
       state,
-      action: PayloadAction<InfluencerState["showSendEmailModal"]>
+      action: PayloadAction<InfluencerState["showSendInfluencerEmailModal"]>
     ) => {
-      state.showSendEmailModal = action.payload;
+      state.showSendInfluencerEmailModal = action.payload;
     },
   },
 });
@@ -82,7 +82,7 @@ export const {
   setIsDeletingInfluencer,
   setShowAddInfluencerModal,
   setShowDeleteInfluencerModal,
-  setShowSendEmailModal,
+  setShowSendInfluencerEmailModal,
 } = affiliatesSlice.actions;
 
 
@@ -109,7 +109,7 @@ export const selectShowDeleteInfluencerModal = (state: RootState) =>
 export const selectShowAddInfluencerModal = (state: RootState) =>
   state.affiliates.showAddInfluencerModal;
 
-export const selectShowSendEmailModal = (state: RootState) => state.affiliates.showSendEmailModal;
+export const selectShowSendInfluencerEmailModal = (state: RootState) => state.affiliates.showSendInfluencerEmailModal;
 
 
 

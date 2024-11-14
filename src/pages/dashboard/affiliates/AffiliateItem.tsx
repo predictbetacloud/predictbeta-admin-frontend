@@ -33,13 +33,13 @@ const AffiliateItem = () => {
   const page = queries?.page;
 
   const dispatch = useAppDispatch();
-  const { userId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const specificInfluencer = useAppSelector(selectSpecificInfluencer);
-   const showDeleteInfluencerModal = useAppSelector(
-     selectShowDeleteInfluencerModal
-   );
+  const showDeleteInfluencerModal = useAppSelector(
+    selectShowDeleteInfluencerModal
+  );
 
   const isFetchingInfluencer = useAppSelector(
     selectIsFetchingSpecificInfluencer
@@ -56,7 +56,7 @@ const AffiliateItem = () => {
   });
 
   useMemo(() => {
-    dispatch(getSpecificInfluencerAPI({ userId }));
+    dispatch(getSpecificInfluencerAPI({ id }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -94,34 +94,37 @@ const AffiliateItem = () => {
               <div className="p-3">
                 <div className="grid grid-cols-2 gap-y-4 text-sm">
                   <div className="text-[#808080] ">First Name</div>
-                  <div>Omalay</div>
+                  <div>{specificInfluencer?.firstName}</div>
 
                   <div className="text-[#808080]">Last Name</div>
-                  <div>Odogwu</div>
+                  <div>{specificInfluencer?.lastName}</div>
 
                   <div className="text-[#808080]">Username</div>
-                  <div>Omalay001</div>
+                  <div>{specificInfluencer?.username || "No Username"}</div>
 
                   <div className="text-[#808080]">Phone Number</div>
-                  <div>+234 80662205304</div>
+                  <div>
+                    {specificInfluencer?.mobileNumber || "No Phone number"}
+                  </div>
 
                   <div className="text-[#808080]">Email Address</div>
-                  <div>omalayodogwu1@gmail.com</div>
+                  <div>{specificInfluencer?.email}</div>
 
                   <div className="text-[#808080]">Referral Link</div>
                   <div>
                     <a
-                      href="http://predict9ja.com/affiliate/p/5YBF-T7UK"
+                      href={`https://predictbeta.com/register?influencer=${specificInfluencer?.code}`}
                       className="text-blue-500 underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      http://predict9ja.com/affiliate/p/5YBF-T7UK
+                      https://predictbeta.com/register?influencer=$
+                      {specificInfluencer?.code}
                     </a>
                   </div>
 
                   <div className="text-[#808080]">No of Referrals</div>
-                  <div>250 users</div>
+                  <div>{specificInfluencer?.referrals || 0}</div>
                 </div>
               </div>
             </div>
@@ -138,7 +141,7 @@ const AffiliateItem = () => {
           </section>
 
           {showDeleteInfluencerModal ? (
-            <DeleteInfluencerModal user={specificInfluencer?.user} />
+            <DeleteInfluencerModal user={specificInfluencer || undefined} />
           ) : null}
         </>
       )}

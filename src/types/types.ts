@@ -213,6 +213,12 @@ export interface IUser {
 	isBlocked: boolean;
 }
 
+export interface IAffiliate extends IUser {
+	id: number;
+	code: string;
+	referrals: number;
+}
+
 export interface WalletHistoryItem {
 	amount: number;
 	balanceAfter: number;
@@ -407,14 +413,14 @@ export const statusEnum = {
 
 export interface InfluencerState {
   influencers: IPaginatedInfluencers | null;
-  specificInfluencer: UserWithWallet | null;
+  specificInfluencer: IAffiliate | null;
   isCreatingInfluencer: boolean;
   isDeletingInfluencer: boolean;
   isFetchingAllInfluencers: boolean;
   isFetchingSpecificInfluencer: boolean;
   showAddInfluencerModal: boolean;
   showDeleteInfluencerModal: boolean;
-  showSendEmailModal: boolean;
+  showSendInfluencerEmailModal: boolean;
 }
 
 export interface IPaginatedInfluencers {

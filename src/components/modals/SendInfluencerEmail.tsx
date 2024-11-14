@@ -5,16 +5,21 @@ import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { Input } from "../inputs/Input";
 import ErrorMessage from "../inputs/ErrorMessage";
 import Button from "../Buttons";
-
+// import { useParams } from "react-router-dom";
 import {
   selectIsCreatingInfluencer,
   selectShowAddInfluencerModal,
-  setShowAddInfluencerModal,
+  // setShowAddInfluencerModal,
+  setShowSendInfluencerEmailModal,
 } from "../../state/slices/affiliates";
-import { createAffiliateAPI } from "../../api/affiliatesAPI";
+// import { createAffiliateAPI } from "../../api/affiliatesAPI";
+import { IUser } from "../../types/types";
 
-const CreateInfluencerModal = () => {
+const SendInfluencerEmail = ({ user }: { user: IUser | undefined }) => {
   const dispatch = useAppDispatch();
+  // const { userId } = useParams();
+
+  // const isSendingInfluencerEmail = useAppSelector(selectIsCreatingInfluencer);
 
   const isCreatingInfluencer = useAppSelector(selectIsCreatingInfluencer);
   const showAddInfluencerModal = useAppSelector(selectShowAddInfluencerModal);
@@ -26,35 +31,38 @@ const CreateInfluencerModal = () => {
     formState: { errors },
   } = useForm();
 
-  const addInfluencer = async ({
-    firstName,
-    lastName,
-    // userName,
-    email,
-  }: FieldValues) => {
-    dispatch(
-      createAffiliateAPI({
-        firstName,
-        surname: lastName,
-        // userName,
-        email,
-      })
-    );
+  const emailInfluencer = ({ data }: FieldValues) => {
+    console.log(data);
   };
+
+  // const emailInfluencer = async ({
+  //   subject,
+  //   message,
+
+  // }: FieldValues) => {
+  //   dispatch(
+  //     emailAffiliateAPI({
+  //       subject,
+  //       message
+  //     })
+  //   );
+  // };
 
   return (
     <Modal
       closeModal={() => {
-        dispatch(setShowAddInfluencerModal(false));
+        dispatch(setShowSendInfluencerEmailModal(false));
         reset();
       }}
       content={
-        <form onSubmit={handleSubmit(addInfluencer)}>
+        <form onSubmit={handleSubmit(emailInfluencer)}>
           <div className="flex items-center gap-3 justify-between">
             {/* First Name */}
             <div className="">
               <label htmlFor="firstName" className="mb-2 block">
-                <p className="text-[#222222] text-sm">First Name</p>
+                <p className="text-[#222222] text-sm">
+                  First {user?.firstName} {user?.surname}{" "}
+                </p>
               </label>
               <Input
                 id="firstName"
@@ -121,4 +129,4 @@ const CreateInfluencerModal = () => {
   );
 };
 
-export default CreateInfluencerModal;
+export default SendInfluencerEmail;

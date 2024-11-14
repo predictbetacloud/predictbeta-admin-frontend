@@ -12,7 +12,7 @@ import {
   setIsDeletingInfluencer,
   setShowAddInfluencerModal,
   setShowDeleteInfluencerModal,
-  // setShowSendEmailModal,
+  // setShowSendInfluencerEmailModal,
 } from "../state/slices/affiliates";
 import { globalRouter } from "../utils/utils";
 import { createCancelableThunk } from "./helper";
@@ -20,7 +20,7 @@ import { createCancelableThunk } from "./helper";
 export const createAffiliateAPI = createAsyncThunk(
   "influencers/create",
   (
-    { firstName, surname, email }: FieldValues,
+    { firstName, surname, email, }: FieldValues,
     { dispatch }
   ) => {
     dispatch(setIsCreatingInfluencer(true));
@@ -66,11 +66,11 @@ export const getSpecificInfluencerAPI = createCancelableThunk(
 
 export const deletetInfluencerAPI = createAsyncThunk(
   "influencers/deleteUser",
-  ({ userId }: FieldValues, { dispatch }) => {
+  ({ id }: FieldValues, { dispatch }) => {
     dispatch(setIsDeletingInfluencer(true));
 
     axiosInstance
-      .delete(`/influencers/${userId}`)
+      .delete(`/influencers/${id}`)
       .then((data) => {
         dispatch(setIsDeletingInfluencer(false));
         dispatch(setShowDeleteInfluencerModal(false));

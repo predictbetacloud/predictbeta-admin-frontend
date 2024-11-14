@@ -18,9 +18,11 @@ import {
   selectIsFetchingAllInfluencers,
   selectShowAddInfluencerModal,
   selectShowDeleteInfluencerModal,
+  selectShowSendInfluencerEmailModal,
   selectSpecificInfluencer,
   setShowAddInfluencerModal,
   setShowDeleteInfluencerModal,
+  setShowSendInfluencerEmailModal,
 } from "../../../state/slices/affiliates";
 import { getAllInfluencersAPI } from "../../../api/affiliatesAPI";
 import { Input } from "../../../components/inputs/Input";
@@ -28,6 +30,7 @@ import CreateInfluencerModal from "../../../components/modals/CreateInfluencerMo
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import DeleteInfluencerModal from "../../../components/modals/DeleteInfluencerModal";
+import SendInfluencerEmail from "../../../components/modals/SendInfluencerEmail";
 
 const AllAffiliates = () => {
   const l = useLocation();
@@ -45,6 +48,9 @@ const AllAffiliates = () => {
   const showAddInfluencerModal = useAppSelector(selectShowAddInfluencerModal);
   const showDeleteInfluencerModal = useAppSelector(
     selectShowDeleteInfluencerModal
+  );
+  const showSendInfleuncerEmailModal = useAppSelector(
+    selectShowSendInfluencerEmailModal
   );
   const isFetchingInfluencers = useAppSelector(selectIsFetchingAllInfluencers);
   const dispatch = useAppDispatch();
@@ -118,7 +124,6 @@ const AllAffiliates = () => {
         accessorKey: "id",
         cell: (info) => {
           const userID = info.getValue();
-          console.log(userID);
           return (
             <div className="flex space-x-2">
               <Menu>
@@ -140,7 +145,12 @@ const AllAffiliates = () => {
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <button className="group hover:bg-gray-100 hover:text-gray-800 flex w-full items-center gap-2 rounded-[6px] py-1.5 px-3">
+                    <button
+                      onClick={() =>
+                        dispatch(setShowSendInfluencerEmailModal(true))
+                      }
+                      className="group hover:bg-gray-100 hover:text-gray-800 flex w-full items-center gap-2 rounded-[6px] py-1.5 px-3"
+                    >
                       Send Email
                     </button>
                   </MenuItem>
@@ -163,6 +173,8 @@ const AllAffiliates = () => {
     ],
     []
   );
+
+  console.log(allInfluencers);
 
   return (
     <DashboardLayout title="Affiliates">
@@ -224,7 +236,10 @@ const AllAffiliates = () => {
 
       {showAddInfluencerModal ? <CreateInfluencerModal /> : null}
       {showDeleteInfluencerModal ? (
-        <DeleteInfluencerModal user={specificInfluencer?.user} />
+        <DeleteInfluencerModal user={specificInfluencer || undefined} />
+      ) : null}
+      {showSendInfleuncerEmailModal ? (
+        <SendInfluencerEmail user={specificInfluencer || undefined} />
       ) : null}
     </DashboardLayout>
   );

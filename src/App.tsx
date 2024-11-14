@@ -109,7 +109,7 @@ function App() {
 				/>
 				<Route path="/dashboard/affiliates" element={<AllAffiliates />} />
 				<Route
-					path="/dashboard/affiliates/view/:affiliateId"
+					path="/dashboard/affiliates/view/:id"
 					element={<AffiliateItem />}
 				/>
 				<Route path="*" element={<NotFound />} />

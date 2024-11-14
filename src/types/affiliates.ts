@@ -1,8 +1,8 @@
-import { IUser, UserWithWallet } from "./types";
+import { IUser } from "./types";
 
 export interface InfluencerState {
   influencers: IPaginatedInfluencers | null;
-  specificInfluencer: UserWithWallet | null;
+  specificInfluencer: IUser | null;
   isCreatingInfluencer: boolean;
   isDeletingInfluencer: boolean;
   isFetchingAllInfluencers: boolean;
@@ -10,7 +10,7 @@ export interface InfluencerState {
   showAddInfluencerModal: boolean;
   showDeleteInfluencerModal: boolean;
   showSendEmailModal: boolean;
-};
+}
 
 export interface IPaginatedInfluencers {
   items: IUser[];

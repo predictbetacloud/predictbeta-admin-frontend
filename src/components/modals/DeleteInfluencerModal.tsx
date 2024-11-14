@@ -12,7 +12,7 @@ import { deletetInfluencerAPI } from "../../api/affiliatesAPI";
 
 const DeleteInfluencerModal = ({ user }: { user: IUser | undefined }) => {
   const dispatch = useAppDispatch();
-  const { userId } = useParams();
+  const { id } = useParams();
 
   const isDeletingInfluencer = useAppSelector(selectIsDeletingInfluencer);
   const showDeleteInfluencerModal = useAppSelector(
@@ -21,7 +21,7 @@ const DeleteInfluencerModal = ({ user }: { user: IUser | undefined }) => {
   const deleteInfluencer = async () => {
     dispatch(
       deletetInfluencerAPI({
-        userId,
+        id,
       })
     );
   };
@@ -35,7 +35,7 @@ const DeleteInfluencerModal = ({ user }: { user: IUser | undefined }) => {
           <p className="text-[#6D7786] mt-6 text-sm">
             You are about to delete{" "}
             <span className="font-medium">
-              {user?.firstName} {user?.surname}
+              {user?.firstName} {user?.lastName}
             </span>
             . Are you really sure about this? This action cannot be undone.
           </p>
