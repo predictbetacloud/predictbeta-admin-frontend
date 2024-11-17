@@ -6,13 +6,13 @@ import {
   selectShowDeleteInfluencerModal,
   setShowDeleteInfluencerModal,
 } from "../../state/slices/affiliates";
-import { useParams } from "react-router-dom";
-import { IUser } from "../../types/types";
+
+import { IAffiliate } from "../../types/types";
 import { deletetInfluencerAPI } from "../../api/affiliatesAPI";
 
-const DeleteInfluencerModal = ({ user }: { user: IUser | undefined }) => {
+const DeleteInfluencerModal = ({ user }: { user: IAffiliate | undefined }) => {
   const dispatch = useAppDispatch();
-  const { id } = useParams();
+
 
   const isDeletingInfluencer = useAppSelector(selectIsDeletingInfluencer);
   const showDeleteInfluencerModal = useAppSelector(
@@ -21,10 +21,12 @@ const DeleteInfluencerModal = ({ user }: { user: IUser | undefined }) => {
   const deleteInfluencer = async () => {
     dispatch(
       deletetInfluencerAPI({
-        id,
+        id: user?.id,
       })
     );
   };
+
+
   return (
     <Modal
       closeModal={() => {

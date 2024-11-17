@@ -12,7 +12,7 @@ import { P } from "../../../components/Texts";
 import Table from "../../../components/Table";
 
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
-import { IUser } from "../../../types/types";
+import { IAffiliate } from "../../../types/types";
 import {
   selectAllInfluencers,
   selectIsFetchingAllInfluencers,
@@ -42,6 +42,8 @@ const AllAffiliates = () => {
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
   );
+  const [selectedInfluencer, setSelectedInfluencer] =
+    useState<IAffiliate | null>();
 
   const allInfluencers = useAppSelector(selectAllInfluencers);
   const specificInfluencer = useAppSelector(selectSpecificInfluencer);
@@ -49,7 +51,7 @@ const AllAffiliates = () => {
   const showDeleteInfluencerModal = useAppSelector(
     selectShowDeleteInfluencerModal
   );
-  const showSendInfleuncerEmailModal = useAppSelector(
+  const showSendInfluencerEmailModal = useAppSelector(
     selectShowSendInfluencerEmailModal
   );
   const isFetchingInfluencers = useAppSelector(selectIsFetchingAllInfluencers);
@@ -93,7 +95,11 @@ const AllAffiliates = () => {
     debouncedSearch(value);
   };
 
-  const columns = useMemo<ColumnDef<IUser>[]>(
+  // useEffect(() => {
+  //   console.log("Specific Influencer:", specificInfluencer);
+  // }, [specificInfluencer]);
+
+  const columns = useMemo<ColumnDef<IAffiliate>[]>(
     () => [
       {
         id: "FULL NAME",
@@ -102,7 +108,7 @@ const AllAffiliates = () => {
       {
         header: "USERNAME",
         accessorKey: "username",
-        cell: (info) => info.getValue() || "null",
+        cell: (info) => info.getValue() || "N/A",
       },
       {
         header: "EMAIL ADDRESS",
@@ -112,7 +118,7 @@ const AllAffiliates = () => {
       {
         header: "REFERRAL COUNT",
         accessorKey: "userId",
-        cell: (info) => info.getValue() || "null",
+        cell: (info) => info.getValue() || "N/A",
       },
       {
         header: "REFERRAL LINK",
@@ -123,7 +129,13 @@ const AllAffiliates = () => {
         header: "ACTION",
         accessorKey: "id",
         cell: (info) => {
-          const userID = info.getValue();
+          const userID = info.row.original.id;
+
+          const handleRemoveAffiliate = () => {
+            setSelectedInfluencer(info.row.original);
+            dispatch(setShowDeleteInfluencerModal(true));
+          };
+
           return (
             <div className="flex space-x-2">
               <Menu>
@@ -156,9 +168,7 @@ const AllAffiliates = () => {
                   </MenuItem>
                   <MenuItem>
                     <button
-                      onClick={() =>
-                        dispatch(setShowDeleteInfluencerModal(true))
-                      }
+                      onClick={handleRemoveAffiliate}
                       className="group text-[#EB1536] hover:bg-gray-100 flex w-full items-center gap-2 rounded-[6px] py-1.5 px-3"
                     >
                       Remove Affiliate
@@ -173,8 +183,6 @@ const AllAffiliates = () => {
     ],
     []
   );
-
-  console.log(allInfluencers);
 
   return (
     <DashboardLayout title="Affiliates">
@@ -236,9 +244,9 @@ const AllAffiliates = () => {
 
       {showAddInfluencerModal ? <CreateInfluencerModal /> : null}
       {showDeleteInfluencerModal ? (
-        <DeleteInfluencerModal user={specificInfluencer || undefined} />
+        <DeleteInfluencerModal user={selectedInfluencer || undefined} />
       ) : null}
-      {showSendInfleuncerEmailModal ? (
+      {showSendInfluencerEmailModal ? (
         <SendInfluencerEmail user={specificInfluencer || undefined} />
       ) : null}
     </DashboardLayout>
