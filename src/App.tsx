@@ -29,6 +29,8 @@ import MonthLeaderboard from "./pages/dashboard/leaderboard/MonthLeaderboard";
 import SeasonLeaderboard from "./pages/dashboard/leaderboard/SeasonLeaderboard";
 import CountryTeams from "./pages/dashboard/teams/CountryTeams";
 import UserPredictionHistory from "./pages/dashboard/fixtures/UserPredictionHistory";
+import AllAffiliates from "./pages/dashboard/affiliates/AllAffiliates";
+import AffiliateItem from "./pages/dashboard/affiliates/AffiliateItem";
 
 function App() {
 	const navigate = useNavigate();
@@ -104,6 +106,11 @@ function App() {
 				<Route
 					path="/dashboard/teams/view/:clubId"
 					element={<SpecificClubTeam />}
+				/>
+				<Route path="/dashboard/affiliates" element={<AllAffiliates />} />
+				<Route
+					path="/dashboard/affiliates/view/:id"
+					element={<AffiliateItem />}
 				/>
 				<Route path="*" element={<NotFound />} />
 			</Routes>

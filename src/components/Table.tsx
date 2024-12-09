@@ -20,6 +20,7 @@ import {
   UserPosition,
   PrivateLeagueItem,
   WalletHistoryItem,
+  IAffiliate,
 } from "../types/types";
 import { P } from "./Texts";
 import { TextSkeleton } from "./loaders/TextSkeleton";
@@ -84,14 +85,16 @@ type Props = {
     | WalletHistoryItem[]
     | UserPosition[]
     | PrivateLeagueItem[]
-    | IUser[];
+    | IUser[]
+    | IAffiliate[];
   columns:
     | ColumnDef<IClub>[]
     | ColumnDef<IPlayer>[]
     | ColumnDef<WalletHistoryItem>[]
     | ColumnDef<UserPosition>[]
     | ColumnDef<IUser>[]
-    | ColumnDef<PrivateLeagueItem>[];
+    | ColumnDef<PrivateLeagueItem>[]
+    | ColumnDef<IAffiliate>[];
   rows: number;
   loading?: boolean;
   isLeaderboardTable?: boolean;
