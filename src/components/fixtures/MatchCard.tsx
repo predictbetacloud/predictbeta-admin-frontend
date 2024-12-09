@@ -49,7 +49,7 @@ const Prediction = ({
 	locked: boolean;
 	inactive: boolean;
 	value: any;
-	result: "" | "HOME" | "DRAW" | "AWAY" | undefined;
+	result: "" | "HOME" | "DRAW" | "AWAY" | "NULL" | undefined;
 }) => (
 	<PredictionStyle
 		className={`flex items-center justify-center  ${
@@ -104,9 +104,9 @@ export const MatchCard = ({
 	invalid?: boolean;
 
 	isScoreSet?: boolean;
-	result?: "" | "AWAY" | "DRAW" | "HOME";
-	prediction?: "" | "HOME" | "DRAW" | "AWAY";
-	score?: "" | "AWAY" | "DRAW" | "HOME";
+	result?: "" | "AWAY" | "DRAW" | "HOME" | "NULL";
+	prediction?: "" | "HOME" | "DRAW" | "AWAY" | "NULL";
+	score?: "" | "AWAY" | "DRAW" | "HOME" | "NULL";
 	adminSet?: boolean;
 	toggleUpdateModal?: () => void;
 	toggleDeleteModal?: () => void;
@@ -123,7 +123,7 @@ export const MatchCard = ({
 					<Team team={away} />
 				</div>
 				<div>
-					<div className="grid grid-cols-3 w-fit ml-auto">
+					<div className="grid grid-cols-4 w-fit ml-auto">
 						<Prediction
 							value={"HOME"}
 							onClick={captureSelection}
@@ -153,6 +153,19 @@ export const MatchCard = ({
 						<Prediction
 							value={"AWAY"}
 							title="A"
+							inactive={inactive}
+							locked={locked}
+							onClick={captureSelection}
+							selectedPrediction={prediction}
+							result={result}
+							style={{
+								borderRight: `1px solid ${colors.grey500}`,
+								borderLeft: `1px solid ${colors.grey500}`,
+							}}
+						/>
+						<Prediction
+							value={"NULL"}
+							title="NULL"
 							inactive={inactive}
 							locked={locked}
 							onClick={captureSelection}

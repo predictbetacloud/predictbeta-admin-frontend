@@ -110,7 +110,7 @@ export interface IWeek {
 }
 export interface IMatch {
 	outcome?: "win" | "lose";
-	prediction: "" | "HOME" | "DRAW" | "AWAY" | undefined;
+	prediction: "" | "HOME" | "DRAW" | "AWAY" | "NULL" | undefined;
 	awayTeam: IClub;
 	homeTeam: IClub;
 	id: number;
@@ -131,11 +131,12 @@ export const predictionEnum = {
 	AWAY: "AWAY",
 	HOME: "HOME",
 	DRAW: "DRAW",
+	NULL: "NULL",
 };
 
 export type Result = {
 	id: number;
-	result: "HOME" | "AWAY" | "DRAW";
+	result: "HOME" | "AWAY" | "DRAW" | "NULL";
 };
 
 export type TCompetitions = {
@@ -144,21 +145,21 @@ export type TCompetitions = {
 }[];
 
 export interface IWeekResult {
-	fixtures: {
-		fixture: {
-			id: number;
-			createdAt: string;
-			deletedAt: string | null;
-			weekId: number;
-			fixtureDateTime: string;
-			homeTeam: IClub;
-			awayTeam: IClub;
-		};
-		id: number;
-		result: "HOME" | "AWAY" | "DRAW";
-	}[];
-	timeOfFirstGoal: number;
-	scorers: { player: IPlayer }[] | undefined;
+  fixtures: {
+    fixture: {
+      id: number;
+      createdAt: string;
+      deletedAt: string | null;
+      weekId: number;
+      fixtureDateTime: string;
+      homeTeam: IClub;
+      awayTeam: IClub;
+    };
+    id: number;
+    result: "HOME" | "AWAY" | "DRAW" | "NULL";
+  }[];
+  timeOfFirstGoal: number;
+  scorers: { player: IPlayer }[] | undefined;
 }
 
 export interface FixtureState {
@@ -293,7 +294,7 @@ export interface IWeekPrediction {
 				homeTeam: IClub;
 				awayTeam: IClub;
 			};
-			result: "HOME" | "AWAY" | "DRAW";
+			result: "HOME" | "AWAY" | "DRAW" | "NULL";
 		}[];
 		timeOfFirstGoal: number;
 		mostLikelyToScore: IPlayer;
@@ -312,7 +313,7 @@ export interface IWeekPrediction {
 				homeTeam: IClub;
 				awayTeam: IClub;
 			};
-			result: "HOME" | "AWAY" | "DRAW";
+			result: "HOME" | "AWAY" | "DRAW" | "NULL";
 		}[];
 		timeOfFirstGoal: number;
 		scorers: IPlayer[];

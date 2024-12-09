@@ -167,7 +167,7 @@ const Results = () => {
 	// Update Selection
 	const updateSelection = (
 		matchId: number,
-		prediction: "" | "HOME" | "DRAW" | "AWAY" | undefined
+		prediction: "" | "HOME" | "DRAW" | "AWAY" | "NULL" | undefined
 	) => {
 		// Update form value for match
 		setValue(String(matchId), prediction);
@@ -264,7 +264,7 @@ const Results = () => {
 			isFetchingSeasons ? (
 				<PageLoading />
 			) : (
-				<form onSubmit={handleSubmit(onSubmit)} className="py-10 px-8 md:w-4/5">
+				<form onSubmit={handleSubmit(onSubmit)} className="py-10 px-8 md:w-full">
 					{matches?.length > 0 ? (
 						<section className="flex ">
 							<div className="flex-grow bg-white p-3 md:p-5 border rounded-lg">
