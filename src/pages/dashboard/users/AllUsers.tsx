@@ -158,6 +158,7 @@ const AllUsers = () => {
 					setCurrentPage={(page: number): void => {
 						setSearchParams({
 							page: String(page),
+							search: String(search || ""),
 						});
 					}}
 				/>
