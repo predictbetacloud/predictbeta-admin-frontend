@@ -108,6 +108,14 @@ export interface IWeek {
 	number: number;
 	createdAt: string;
 }
+
+export interface IGetSpecificWeekDeciders {
+	id: number;
+	question: string;
+	week: string;
+}
+
+// export interface 
 export interface IMatch {
 	outcome?: "win" | "lose";
 	prediction: "" | "HOME" | "DRAW" | "AWAY" | "NULL" | undefined;
@@ -163,36 +171,40 @@ export interface IWeekResult {
 }
 
 export interface FixtureState {
-	seasons: ISeason[];
-	specificSeason: ISeason | null;
-	weeks: IWeek[];
-	specificWeekResults: IWeekResult | null;
-	dropDownWeeks: IWeek[];
-	matches: IMatch[];
-	competitions: TCompetitions[];
-	specificWeekPrediction: IWeekPrediction | null;
-	isCreatingSeason: boolean;
-	isCreatingWeek: boolean;
-	isCreatingMatch: boolean;
-	specificWeek: IWeek | null;
-	isFetchingSeasons: boolean;
-	isFetchingSpecificSeason: boolean;
-	isFetchingWeeks: boolean;
-	isFetchingSpecificWeek: boolean;
-	isFetchingSpecificWeekResults: boolean;
-	isFetchingSpecificWeekPrediction: boolean;
-	isPublishingWeek: boolean;
-	isSubmittingWeekResult: boolean;
-	isFetchingCompetitions: boolean;
-	isFetchingMatches: boolean;
-	isEditingMatch: boolean;
-	isDeletingMatch: boolean;
-	showCreateSeasonModal: boolean;
-	showCreateWeekModal: boolean;
-	showCreateMatchModal: boolean;
-	showEditMatchModal: boolean;
-	showDeleteMatchModal: boolean;
-	showPublishWeekModal: boolean;
+  seasons: ISeason[];
+  specificSeason: ISeason | null;
+  weeks: IWeek[];
+  specificWeekResults: IWeekResult | null;
+  dropDownWeeks: IWeek[];
+  matches: IMatch[];
+  competitions: TCompetitions[];
+  specificWeekPrediction: IWeekPrediction | null;
+  isCreatingSeason: boolean;
+  isCreatingWeek: boolean;
+  isCreatingDeciders: boolean;
+  isCreatingMatch: boolean;
+  specificWeek: IWeek | null;
+  isFetchingSeasons: boolean;
+  isFetchingSpecificSeason: boolean;
+  isFetchingWeeks: boolean;
+  isFetchingSpecificWeek: boolean;
+  isFetchingSpecificWeekResults: boolean;
+  isFetchingSpecificWeekPrediction: boolean;
+  isPublishingWeek: boolean;
+  isSubmittingWeekResult: boolean;
+  isFetchingCompetitions: boolean;
+  isFetchingMatches: boolean;
+  isEditingMatch: boolean;
+  isDeletingMatch: boolean;
+  showCreateSeasonModal: boolean;
+  showCreateWeekModal: boolean;
+  showCreateMatchModal: boolean;
+  showEditMatchModal: boolean;
+  showDeleteMatchModal: boolean;
+  showPublishWeekModal: boolean;
+  showCreateDecidersModal: boolean;
+  specificWeekDeciders: IGetSpecificWeekDeciders;
+  isFetchingSpecificWeekDeciders: boolean;
 }
 
 export interface WalletType {

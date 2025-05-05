@@ -100,7 +100,7 @@ export const formatCurrency = (number: number) => {
 
 // Format Predictions
 export function formatPredictionsFromObjectToArray(results: {
-	[key: number]: "HOME" | "AWAY" | "DRAW";
+	[key: number]: "HOME" | "AWAY" | "DRAW" | "NULL";
 }): Result[] {
 	return Object.entries(results).map(([key, value]) => ({
 		id: parseInt(key),
